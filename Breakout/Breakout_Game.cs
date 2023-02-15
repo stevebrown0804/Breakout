@@ -1,14 +1,23 @@
-﻿using Breakout.Subsystems;
+﻿using Breakout.Game_states;
+using Breakout.Subsystems;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
 namespace Breakout
 {
+    internal enum GameStatesEnum
+    {
+        unset = 0  //TODO: define this enum
+    }
     public class Breakout_Game : Game
     {
         private GraphicsDeviceManager graphics;
         private SpriteBatch spriteBatch;
+
+        //Game state stuff
+        GameStatesEnum gameStateEnum;
+        IGameState gameState;
 
         //Subsystems
         InputProcessor inputProcessor;
@@ -39,12 +48,13 @@ namespace Breakout
 
             // TODO: use this.Content to load your game content here
 
-            sprites = new();
+            sprites = new(this, spriteBatch);
+            //...then use sprites' dictionar(y/ies) to get Texture2Ds
         }
 
         protected override void Update(GameTime gameTime)
         {
-            inputProcessor.ProcessInput(gameTime);
+            inputProcessor.ProcessInput(gameTime, keyboard);
 
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();

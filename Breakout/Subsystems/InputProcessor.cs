@@ -13,7 +13,7 @@ namespace Breakout.Subsystems
             //TODO: InputProcesser (constructor)
         }
 
-        internal void ProcessInput(GameTime gameTime)
+        internal void ProcessInput(GameTime gameTime, BO_Keyboard keyboard)
         {
             //TODO: ProcessInput()
         }
