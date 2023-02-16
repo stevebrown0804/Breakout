@@ -1,28 +1,39 @@
 ﻿using Breakout.Game_states;
 using Breakout.Subsystems;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
+//TODO: Incorporate the prof's code into this file
+
 namespace Breakout
 {
-    internal enum GameStatesEnum
+    public enum GameStateEnum
     {
-        unset = 0  //TODO: define this enum
+        //unset = 0  //enum's definition stolen from prof. mathias!
+        MainMenu,
+        GamePlay,
+        HighScores,
+        Options,
+        Help,
+        About,
+        Exit
     }
+
     public class Breakout_Game : Game
     {
         private GraphicsDeviceManager graphics;
         private SpriteBatch spriteBatch;
 
         //Game state stuff
-        GameStatesEnum gameStateEnum;
+        GameStateEnum gameStateEnum;
         IGameState gameState;
 
         //Subsystems
         InputProcessor inputProcessor;
         BO_Keyboard keyboard;
-        Sprites sprites;
+        Sprites sprites;  //TODO: See if we need to use this AND ContentManager
         Renderer renderer;
 
         public Breakout_Game()
