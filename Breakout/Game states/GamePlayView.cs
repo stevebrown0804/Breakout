@@ -28,13 +28,13 @@ namespace Breakout.Game_states
 
         public override void render(GameTime gameTime)
         {
-            m_spriteBatch.Begin();
+            spriteBatch.Begin();
 
             Vector2 stringSize = m_font.MeasureString(MESSAGE);
-            m_spriteBatch.DrawString(m_font, MESSAGE,
-                new Vector2(m_graphics.PreferredBackBufferWidth / 2 - stringSize.X / 2, m_graphics.PreferredBackBufferHeight / 2 - stringSize.Y), Color.Yellow);
+            spriteBatch.DrawString(m_font, MESSAGE,
+                new Vector2(graphics.PreferredBackBufferWidth / 2 - stringSize.X / 2, graphics.PreferredBackBufferHeight / 2 - stringSize.Y), Color.Yellow);
 
-            m_spriteBatch.End();
+            spriteBatch.End();
         }
 
         public override void update(GameTime gameTime)

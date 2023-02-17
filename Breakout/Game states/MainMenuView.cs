@@ -16,7 +16,7 @@ namespace Breakout.Game_states
         {
             NewGame,
             HighScores,
-            Help,
+            //Help,
             About,
             Quit
         }
@@ -31,7 +31,10 @@ namespace Breakout.Game_states
         }
         public override GameStateEnum processInput(GameTime gameTime)
         {
-            // This is the technique I'm using to ensure one keypress makes one menu navigation move
+            // This is the technique I'm using to ensure one keypress makes one menu navigation move - the prof
+
+            //TODO: Write the BO_Keyboard class then replace these calls with IsKeyPress() or w/e we call it
+
             if (!m_waitForKeyRelease)
             {
                 // Arrow keys to navigate the menu
@@ -46,7 +49,10 @@ namespace Breakout.Game_states
                     m_waitForKeyRelease = true;
                 }
                 
-                // If enter is pressed, return the appropriate new state
+                // If enter is pressed, return the appropriate new state -- the prof
+
+                //TODO: Rewrite this as an if(...keys.enter) with a switch inside of it
+
                 if (Keyboard.GetState().IsKeyDown(Keys.Enter) && m_currentSelection == MenuState.NewGame)
                 {
                     return GameStateEnum.GamePlay;
@@ -55,10 +61,10 @@ namespace Breakout.Game_states
                 {
                     return GameStateEnum.HighScores;
                 }
-                if (Keyboard.GetState().IsKeyDown(Keys.Enter) && m_currentSelection == MenuState.Help)
+               /* if (Keyboard.GetState().IsKeyDown(Keys.Enter) && m_currentSelection == MenuState.Help)
                 {
                     return GameStateEnum.Help;
-                }
+                }*/
                 if (Keyboard.GetState().IsKeyDown(Keys.Enter) && m_currentSelection == MenuState.About)
                 {
                     return GameStateEnum.About;
@@ -67,42 +73,51 @@ namespace Breakout.Game_states
                 {
                     return GameStateEnum.Exit;
                 }
+
+                //And if ESC is pressed, exit       //REMINDER: this will catch the Esc key presses from the game, about screen and high scores
+                                                    //  so we'll comment it out until we've got a DoKeyPress() method or something written
+               /* if (Keyboard.GetState().IsKeyDown(Keys.Escape))
+                    return GameStateEnum.Exit;*/
+
             }
             else if (Keyboard.GetState().IsKeyUp(Keys.Down) && Keyboard.GetState().IsKeyUp(Keys.Up))
             {
+                //TODO: Add logic to not scroll up past New Game or scroll down past Quit
                 m_waitForKeyRelease = false;
             }
 
             return GameStateEnum.MainMenu;
         }
+
         public override void update(GameTime gameTime)
         {
         }
+
         public override void render(GameTime gameTime)
         {
-            m_spriteBatch.Begin();
+            spriteBatch.Begin();
 
             // I split the first one's parameters on separate lines to help you see them better
             float bottom = drawMenuItem(
                 m_currentSelection == MenuState.NewGame ? m_fontMenuSelect : m_fontMenu, 
                 "New Game",
                 200, 
-                m_currentSelection == MenuState.NewGame ? Color.Yellow : Color.Blue);
-            bottom = drawMenuItem(m_currentSelection == MenuState.HighScores ? m_fontMenuSelect : m_fontMenu, "High Scores", bottom, m_currentSelection == MenuState.HighScores ? Color.Yellow : Color.Blue);
-            bottom = drawMenuItem(m_currentSelection == MenuState.Help ? m_fontMenuSelect : m_fontMenu, "Help", bottom, m_currentSelection == MenuState.Help ? Color.Yellow : Color.Blue);
-            bottom = drawMenuItem(m_currentSelection == MenuState.About ? m_fontMenuSelect : m_fontMenu, "About", bottom, m_currentSelection == MenuState.About ? Color.Yellow : Color.Blue);
-            drawMenuItem(m_currentSelection == MenuState.Quit ? m_fontMenuSelect : m_fontMenu, "Quit", bottom, m_currentSelection == MenuState.Quit ? Color.Yellow : Color.Blue);
+                m_currentSelection == MenuState.NewGame ? Color.Yellow : Color.White);
+            bottom = drawMenuItem(m_currentSelection == MenuState.HighScores ? m_fontMenuSelect : m_fontMenu, "High Scores", bottom, m_currentSelection == MenuState.HighScores ? Color.Yellow : Color.White);
+            //bottom = drawMenuItem(m_currentSelection == MenuState.Help ? m_fontMenuSelect : m_fontMenu, "Help", bottom, m_currentSelection == MenuState.Help ? Color.Yellow : Color.White);
+            bottom = drawMenuItem(m_currentSelection == MenuState.About ? m_fontMenuSelect : m_fontMenu, "About", bottom, m_currentSelection == MenuState.About ? Color.Yellow : Color.White);
+            drawMenuItem(m_currentSelection == MenuState.Quit ? m_fontMenuSelect : m_fontMenu, "Quit", bottom, m_currentSelection == MenuState.Quit ? Color.Yellow : Color.White);
 
-            m_spriteBatch.End();
+            spriteBatch.End();
         }
 
         private float drawMenuItem(SpriteFont font, string text, float y, Color color)
         {
             Vector2 stringSize = font.MeasureString(text);
-            m_spriteBatch.DrawString(
+            spriteBatch.DrawString(
                 font,
                 text,
-                new Vector2(m_graphics.PreferredBackBufferWidth / 2 - stringSize.X / 2, y),
+                new Vector2(graphics.PreferredBackBufferWidth / 2 - stringSize.X / 2, y),
                 color);
 
             return y + stringSize.Y;

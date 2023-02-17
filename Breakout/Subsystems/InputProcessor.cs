@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Breakout.Subsystems
 {
-    internal class InputProcessor
+    /*internal class InputProcessor       //This class (a global inputProcessor) is being replaced by an inputProcessor for each view
     {
         internal InputProcessor()
         {
@@ -17,5 +17,5 @@ namespace Breakout.Subsystems
         {
             //TODO: ProcessInput()
         }
-    }
+    }*/
 }

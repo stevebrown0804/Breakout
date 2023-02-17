@@ -35,7 +35,7 @@ namespace Breakout.Game_elements
         internal Texture2D texture;
         internal Rectangle rect;
         internal Color color;
-        SpriteFont font;
+        internal SpriteFont font;
         internal string text = "";        
 
         internal RenderType renderType;
