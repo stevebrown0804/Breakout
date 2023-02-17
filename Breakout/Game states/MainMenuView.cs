@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Breakout;
+using Breakout.Subsystems;
 
 namespace Breakout.Game_states
 {
@@ -29,7 +30,7 @@ namespace Breakout.Game_states
             m_fontMenu = contentManager.Load<SpriteFont>("Fonts/menu");
             m_fontMenuSelect = contentManager.Load<SpriteFont>("Fonts/menu-select");
         }
-        public override GameStateEnum processInput(GameTime gameTime)
+        public override GameStateEnum processInput(GameTime gameTime, BO_Keyboard keyboard)
         {
             // This is the technique I'm using to ensure one keypress makes one menu navigation move - the prof
 

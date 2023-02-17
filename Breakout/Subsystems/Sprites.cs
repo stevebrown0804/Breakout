@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Breakout.Subsystems
 {
-    internal class Sprites
+    /*internal class Sprites  //TODO: If ContentManager does what we're looking to do here, delete this file
     {
         //TODO: Decide if fonts can go here too, of if we need to make a separate object for them
         //TODO: Make dictionaries for sprites and fonts
@@ -18,5 +18,5 @@ namespace Breakout.Subsystems
             //Loads sprites into texture variables
             //Hand out those texture variables as needed
         }
-    }
+    }*/
 }

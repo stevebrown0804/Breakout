@@ -24,7 +24,12 @@ namespace Breakout.Game_elements
 
     internal enum ElementType
     {
-        unset = 0   //TODO: fill this in with the game's states
+        unset = 0,   //TODO: fill this in with the game's...what we we using this for, again? ElementType?
+        Wall,
+        Brick,
+        Paddle,
+        Ball,
+        Score   //TOOD: What else goes in this list?  TBD
     }
 
 
@@ -77,7 +82,9 @@ namespace Breakout.Game_elements
 
         //END Constructors
 
+        
         //Methods
+
         //END Methods
     }
 }

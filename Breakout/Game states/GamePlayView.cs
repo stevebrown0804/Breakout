@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Breakout.Subsystems;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -9,14 +10,14 @@ namespace Breakout.Game_states
     public class GamePlayView : GameStateView
     {
         private SpriteFont m_font;
-        private const string MESSAGE = "Isn't this game fun!";
+        private const string MESSAGE = "Isn't this game fun!";  //TODO: Comment this out...eventually
 
-        public override void loadContent(ContentManager contentManager)
+        public override void loadContent(ContentManager contentManager)  //TODO: Implement GamePlayView.loadContent()
         {
-            m_font = contentManager.Load<SpriteFont>("Fonts/menu");
+            m_font = contentManager.Load<SpriteFont>("Fonts/menu"); //TODO: Make other fonts for this view
         }
 
-        public override GameStateEnum processInput(GameTime gameTime)
+        public override GameStateEnum processInput(GameTime gameTime, BO_Keyboard keyboard)   //TODO: Implement GamePlayView.processInput()
         {
             if (Keyboard.GetState().IsKeyDown(Keys.Escape))
             {
@@ -26,8 +27,8 @@ namespace Breakout.Game_states
             return GameStateEnum.GamePlay;
         }
 
-        public override void render(GameTime gameTime)
-        {
+        public override void render(GameTime gameTime)  //TODO: Add 'renderer' object to parameters
+        {                                               //TODO: Also, implement GamePlayView.render()
             spriteBatch.Begin();
 
             Vector2 stringSize = m_font.MeasureString(MESSAGE);
@@ -37,7 +38,7 @@ namespace Breakout.Game_states
             spriteBatch.End();
         }
 
-        public override void update(GameTime gameTime)
+        public override void update(GameTime gameTime) //MAYBE: Use this?  I'm not sure we need to, atm
         {
         }
     }

@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Input;
+using Breakout.Subsystems;
 
 namespace Breakout.Game_states
 {
@@ -20,7 +21,7 @@ namespace Breakout.Game_states
             spriteBatch = new SpriteBatch(graphicsDevice);
         }
         public abstract void loadContent(ContentManager contentManager);
-        public abstract GameStateEnum processInput(GameTime gameTime);
+        public abstract GameStateEnum processInput(GameTime gameTime, BO_Keyboard keyboard);
         public abstract void render(GameTime gameTime);
         public abstract void update(GameTime gameTime);
     }

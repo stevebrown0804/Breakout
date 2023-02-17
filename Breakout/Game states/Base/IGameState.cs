@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Breakout.Subsystems;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -17,7 +18,7 @@ namespace Breakout.Game_states
         //note: code stolen from prof. mathias! \(^^ )/
         void initialize(GraphicsDevice graphicsDevice, GraphicsDeviceManager graphics);
         void loadContent(ContentManager contentManager);
-        GameStateEnum processInput(GameTime gameTime);
+        GameStateEnum processInput(GameTime gameTime, BO_Keyboard keyboard);
         void update(GameTime gameTime);
         void render(GameTime gameTime);
     }

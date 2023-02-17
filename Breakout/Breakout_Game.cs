@@ -26,7 +26,7 @@ namespace Breakout
         //private SpriteBatch spriteBatch;
 
         private IGameState currentState;
-        private GameStateEnum gameStateEnum = GameStateEnum.MainMenu;
+        private GameStateEnum gameStateEnum = GameStateEnum.MainMenu;  //we'll start with the main menu
         private Dictionary<GameStateEnum, IGameState> states;
 
         //Subsystems
@@ -52,7 +52,6 @@ namespace Breakout
             //the prof's code
             graphics.PreferredBackBufferWidth = 1920;
             graphics.PreferredBackBufferHeight = 1080;
-
             graphics.ApplyChanges();
 
             // Create all the game states here

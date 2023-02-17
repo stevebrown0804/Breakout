@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Breakout.Subsystems;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -11,14 +12,16 @@ namespace Breakout.Game_states
         private SpriteFont m_font;
         private const string MESSAGE = "These are the high scores";
 
+        //TODO: Implement high scores (once the prof. has lectures on local storage, I suppose)
+
         public override void loadContent(ContentManager contentManager)
         {
-            m_font = contentManager.Load<SpriteFont>("Fonts/menu");
+            m_font = contentManager.Load<SpriteFont>("Fonts/high-scores");
         }
 
-        public override GameStateEnum processInput(GameTime gameTime)
+        public override GameStateEnum processInput(GameTime gameTime, BO_Keyboard keyboard)
         {
-            if (Keyboard.GetState().IsKeyDown(Keys.Escape))
+            if (Keyboard.GetState().IsKeyDown(Keys.Escape)) //TODO: Replace with OnKeyPress (or w/e we call it)
             {
                 return GameStateEnum.MainMenu;
             }
@@ -32,7 +35,7 @@ namespace Breakout.Game_states
 
             Vector2 stringSize = m_font.MeasureString(MESSAGE);
             spriteBatch.DrawString(m_font, MESSAGE,
-                new Vector2(graphics.PreferredBackBufferWidth / 2 - stringSize.X / 2, graphics.PreferredBackBufferHeight / 2 - stringSize.Y), Color.Yellow);
+                                   new Vector2(graphics.PreferredBackBufferWidth / 2 - stringSize.X / 2,                             graphics.PreferredBackBufferHeight / 2 - stringSize.Y),                   Color.White);
 
             spriteBatch.End();
         }

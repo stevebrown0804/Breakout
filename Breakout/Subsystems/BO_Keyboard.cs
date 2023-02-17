@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Breakout.Subsystems
 {
-    internal class BO_Keyboard
+    public class BO_Keyboard
     {
 
         //TODO: Declare a copule keyboard state variables...w/e data types those were
