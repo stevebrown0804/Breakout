@@ -53,34 +53,7 @@ namespace Breakout.Game_states
                     m_waitForKeyRelease = true;
                 }
                 
-                // If enter is pressed, return the appropriate new state -- the prof
-
-                //EVENTUALLY: Remove this
-
-                //: Rewrite this as an if(...keys.enter) with a switch inside of it
-
-                /*if (Keyboard.GetState().IsKeyDown(Keys.Enter) && m_currentSelection == MenuState.NewGame)
-                {
-                    return GameStateEnum.GamePlay;
-                }
-                if (Keyboard.GetState().IsKeyDown(Keys.Enter) && m_currentSelection == MenuState.HighScores)
-                {
-                    return GameStateEnum.HighScores;
-                }
-               *//* if (Keyboard.GetState().IsKeyDown(Keys.Enter) && m_currentSelection == MenuState.Help)
-                {
-                    return GameStateEnum.Help;
-                }*//*
-                if (Keyboard.GetState().IsKeyDown(Keys.Enter) && m_currentSelection == MenuState.About)
-                {
-                    return GameStateEnum.About;
-                }
-                if (Keyboard.GetState().IsKeyDown(Keys.Enter) && m_currentSelection == MenuState.Quit)
-                {
-                    return GameStateEnum.Exit;
-                }*/
-                //END
-
+                // If enter is pressed, return the appropriate new state
                 if (keyboard.IsKeyPressed(Keys.Enter))
                 {
                     switch (m_currentSelection)
@@ -99,11 +72,13 @@ namespace Breakout.Game_states
                     return GameStateEnum.Exit;
 
             }
-            else if (Keyboard.GetState().IsKeyUp(Keys.Down) && Keyboard.GetState().IsKeyUp(Keys.Up))
+            //else if (Keyboard.GetState().IsKeyUp(Keys.Down) && Keyboard.GetState().IsKeyUp(Keys.Up))
+            else if (keyboard.IsKeyUp(Keys.Down) && keyboard.IsKeyUp(Keys.Up))
             {
                 m_waitForKeyRelease = false;
             }
 
+            //Otherwise, continue doing the main menu
             return GameStateEnum.MainMenu;
         }
 

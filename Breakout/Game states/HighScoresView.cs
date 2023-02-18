@@ -1,4 +1,5 @@
-﻿using Breakout.Subsystems;
+﻿using Breakout.Game_elements;
+using Breakout.Subsystems;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -15,9 +16,9 @@ namespace Breakout.Game_states
     public class HighScoresView : GameStateView
     {
         private SpriteFont m_font;
-        private const string MESSAGE = "These are the high scores";
+        private const string MESSAGE = "TODO: High scores";
 
-        //TODO: Implement high scores (once the prof. has lectures on local storage, I suppose)
+        //TODO: Implement high scores (once the prof. has lectured on local storage, I suppose)
 
         public override void loadContent(ContentManager contentManager)
         {
@@ -26,7 +27,7 @@ namespace Breakout.Game_states
 
         public override GameStateEnum processInput(GameTime gameTime, BO_Keyboard keyboard)
         {
-            if (/*Keyboard.GetState().IsKeyDown(Keys.Escape)*/ keyboard.IsKeyPressed(Keys.Escape)) //IN PROGRESS: Replace with OnKeyPress (or w/e we call it)
+            if (keyboard.IsKeyPressed(Keys.Escape))
             {
                 return GameStateEnum.MainMenu;
             }
@@ -36,17 +37,23 @@ namespace Breakout.Game_states
 
         public override void render(GameTime gameTime, Renderer renderer)
         {
-            spriteBatch.Begin();
-
-            Vector2 stringSize = m_font.MeasureString(MESSAGE);
-            spriteBatch.DrawString(m_font, MESSAGE,
-                                   new Vector2(graphics.PreferredBackBufferWidth / 2 - stringSize.X / 2,                             graphics.PreferredBackBufferHeight / 2 - stringSize.Y),                   Color.White);
-
-            spriteBatch.End();
+            base.render(gameTime, renderer);        //one base class to rule them all
         }
 
         public override void update(GameTime gameTime, Renderer renderer)
         {
+            //QUESTION: Empty the renderer list? TBD
+
+            Vector2 stringSize = m_font.MeasureString(MESSAGE);
+            GameElement el = new(RenderType.Text, m_font, MESSAGE,
+                new Vector2(graphics.PreferredBackBufferWidth / 2 - stringSize.X / 2, graphics.PreferredBackBufferHeight / 2 - stringSize.Y),
+                Color.White);
+            renderer.AddToRenderList(el);
+
+            //QUESTION: Now that we're done...empty the renderer list?  TBD
+            //ANSWER: No...not here.  We need stuff in the list for the upcoming 'render' call.
+            //      FOLLOW-UP QUESTION: How about clearing it at the end of the outermost render?
+            //          That sounds promising!  TODO
         }
     }
 }

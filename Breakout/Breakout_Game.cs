@@ -23,8 +23,6 @@ namespace Breakout
     public class Breakout_Game : Game
     {
         private GraphicsDeviceManager graphics;
-        //private SpriteBatch spriteBatch;
-
         private IGameState currentState;
         private GameStateEnum gameStateEnum = GameStateEnum.MainMenu;  //we'll start with the main menu
         private Dictionary<GameStateEnum, IGameState> states;
@@ -94,10 +92,13 @@ namespace Breakout
         {
             keyboard.UpdateCurrentState();            
             gameStateEnum = currentState.processInput(gameTime, keyboard);
+
+            //Now's our chance to exit! ...(/^^)/
             if (gameStateEnum == GameStateEnum.Exit)
             {
                 Exit();
             }
+
             keyboard.SetPreviousStateToCurrentState();
 
             currentState.update(gameTime, renderer);
@@ -107,14 +108,14 @@ namespace Breakout
         protected override void Draw(GameTime gameTime)
         {
             //GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(new Color(32, 32, 32));  //dark gray...which I couldn't find a name for
+                                                          //  Although I didn't look super-hard
 
-            GraphicsDevice.Clear(/*Color.SlateGray*/ new Color(32, 32, 32));
-
-            //The prof's code
             currentState.render(gameTime, renderer);
             currentState = states[gameStateEnum];
-            //END
 
+            renderer.ClearRenderList(); //TODO: See if this is right...I'm still not super-sure
+                                        //FOLLOW-UP: Seems right.  Let's leave the TODO in place, for now.
 
             base.Draw(gameTime);
         }

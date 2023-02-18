@@ -39,6 +39,9 @@ namespace Breakout.Subsystems
 
             //TODO: DoRendering()
             // Translate a list of GameElements into Draw() or DrawString() calls
+
+            //HEY, UH...: GameElement.render() is doing exactly that.  I THINK we can remove this function.
+            // We'll see.
         }
     }
 }
