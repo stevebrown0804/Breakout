@@ -114,10 +114,6 @@ namespace Breakout
         {
             //GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            // TODO: Add your drawing code here
-            //  Retort: Ok!
-            //renderer.DoRendering();
-                        
             GraphicsDevice.Clear(/*Color.SlateGray*/ new Color(32, 32, 32));
 
             //The prof's code

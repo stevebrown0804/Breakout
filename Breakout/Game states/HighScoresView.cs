@@ -4,6 +4,11 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
+/* "High Scores are persisted to the browser's local storage; keep and display up to the top 5 scores." */
+//A browser, you say?
+
+/* "Provide an option in the High Score display to reset the scores; this is for grading purposes." */
+
 namespace Breakout.Game_states
 {
     //also stolen
