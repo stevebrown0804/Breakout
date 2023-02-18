@@ -8,5 +8,9 @@ namespace Breakout.Game_elements
 {
     internal class WindowInterior
     {
+        //Reminder:
+        /*internal Rectangle position;
+        internal Rectangle boundingBox;*/
+
     }
 }

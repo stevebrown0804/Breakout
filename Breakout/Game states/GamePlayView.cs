@@ -6,40 +6,49 @@ using Microsoft.Xna.Framework.Input;
 
 namespace Breakout.Game_states
 {
-    //again, this code was stolen.  stolen, I say!
-    public class GamePlayView : GameStateView
+
+    /* "When starting the game, provide a 3, 2, 1 count down timer, showing the numbers 3, 2, 1 in the middle of the screen for the count down.  Following the completion of the countdown, the ball starts from the paddle in a nice direction (nice meaning not too steep of an angle and not straight up)." */
+
+    /* "Player starts with three paddles; no way to earn any more.
+        When the player doesn't hit the ball, subtract a paddle from the remaining paddles (or end the game if none left) and provide a 3, 2, 1 count down timer before starting with the new paddle.  Ball starts in the same way as the start of the game." */
+
+//again, this code was stolen.  stolen, I say!
+public class GamePlayView : GameStateView
+{
+    private SpriteFont m_font;
+    private const string MESSAGE = "Isn't this game fun!";  //TODO: Comment this out...eventually
+
+    public override void loadContent(ContentManager contentManager)  //TODO: Implement GamePlayView.loadContent()
     {
-        private SpriteFont m_font;
-        private const string MESSAGE = "Isn't this game fun!";  //TODO: Comment this out...eventually
-
-        public override void loadContent(ContentManager contentManager)  //TODO: Implement GamePlayView.loadContent()
-        {
-            m_font = contentManager.Load<SpriteFont>("Fonts/menu"); //TODO: Make other fonts for this view
-        }
-
-        public override GameStateEnum processInput(GameTime gameTime, BO_Keyboard keyboard)   //TODO: Implement GamePlayView.processInput()
-        {
-            if (Keyboard.GetState().IsKeyDown(Keys.Escape))
-            {
-                return GameStateEnum.MainMenu;
-            }
-
-            return GameStateEnum.GamePlay;
-        }
-
-        public override void render(GameTime gameTime)  //TODO: Add 'renderer' object to parameters
-        {                                               //TODO: Also, implement GamePlayView.render()
-            spriteBatch.Begin();
-
-            Vector2 stringSize = m_font.MeasureString(MESSAGE);
-            spriteBatch.DrawString(m_font, MESSAGE,
-                new Vector2(graphics.PreferredBackBufferWidth / 2 - stringSize.X / 2, graphics.PreferredBackBufferHeight / 2 - stringSize.Y), Color.Yellow);
-
-            spriteBatch.End();
-        }
-
-        public override void update(GameTime gameTime) //MAYBE: Use this?  I'm not sure we need to, atm
-        {
-        }
+        m_font = contentManager.Load<SpriteFont>("Fonts/menu"); //TODO: Make other fonts for this view
     }
+
+    public override GameStateEnum processInput(GameTime gameTime, BO_Keyboard keyboard)   //TODO: Implement GamePlayView.processInput()
+    {
+        if (Keyboard.GetState().IsKeyDown(Keys.Escape))
+        {
+            return GameStateEnum.MainMenu;
+        }
+
+        return GameStateEnum.GamePlay;
+    }
+
+    //TODO: implement GamePlayView.render()
+    public override void render(GameTime gameTime, Renderer renderer)
+    {                                               
+        spriteBatch.Begin();
+
+        Vector2 stringSize = m_font.MeasureString(MESSAGE);
+        spriteBatch.DrawString(m_font, MESSAGE,
+            new Vector2(graphics.PreferredBackBufferWidth / 2 - stringSize.X / 2, graphics.PreferredBackBufferHeight / 2 - stringSize.Y), Color.Yellow);
+
+        spriteBatch.End();
+    }
+
+    //TODO: decide what we need GamePlayview.update() to do
+    public override void update(GameTime gameTime, Renderer renderer)
+    {
+
+    }
+}
 }

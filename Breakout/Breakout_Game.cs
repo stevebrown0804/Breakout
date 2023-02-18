@@ -95,21 +95,17 @@ namespace Breakout
 
         protected override void Update(GameTime gameTime)
         {
-            //inputProcessor.ProcessInput(gameTime, keyboard);      //this'll happen within each View
-
             //if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
             //    Exit();
 
-            //The prof's code
-            gameStateEnum = currentState.processInput(gameTime);
-            // Special case for exiting the game
+            gameStateEnum = currentState.processInput(gameTime, keyboard);
+
             if (gameStateEnum == GameStateEnum.Exit)
             {
                 Exit();
             }
 
-            currentState.update(gameTime);
-            //END
+            currentState.update(gameTime, renderer);
 
             base.Update(gameTime);
         }
@@ -125,7 +121,7 @@ namespace Breakout
             GraphicsDevice.Clear(/*Color.SlateGray*/ new Color(32, 32, 32));
 
             //The prof's code
-            currentState.render(gameTime);
+            currentState.render(gameTime, renderer);
             currentState = states[gameStateEnum];
             //END
 

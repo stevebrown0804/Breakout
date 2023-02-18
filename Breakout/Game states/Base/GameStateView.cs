@@ -22,7 +22,7 @@ namespace Breakout.Game_states
         }
         public abstract void loadContent(ContentManager contentManager);
         public abstract GameStateEnum processInput(GameTime gameTime, BO_Keyboard keyboard);
-        public abstract void render(GameTime gameTime);
-        public abstract void update(GameTime gameTime);
+        public abstract void render(GameTime gameTime, Renderer renderer);
+        public abstract void update(GameTime gameTime, Renderer renderer);
     }
 }

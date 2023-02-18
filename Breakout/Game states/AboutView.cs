@@ -28,7 +28,7 @@ namespace Breakout.Game_states
             return GameStateEnum.About;
         }
 
-        public override void render(GameTime gameTime)
+        public override void render(GameTime gameTime, Renderer renderer)
         {
             spriteBatch.Begin();
 
@@ -39,7 +39,7 @@ namespace Breakout.Game_states
             spriteBatch.End();
         }
 
-        public override void update(GameTime gameTime)
+        public override void update(GameTime gameTime, Renderer renderer)
         {
         }
     }

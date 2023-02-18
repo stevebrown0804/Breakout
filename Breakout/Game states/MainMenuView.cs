@@ -30,6 +30,7 @@ namespace Breakout.Game_states
             m_fontMenu = contentManager.Load<SpriteFont>("Fonts/menu");
             m_fontMenuSelect = contentManager.Load<SpriteFont>("Fonts/menu-select");
         }
+
         public override GameStateEnum processInput(GameTime gameTime, BO_Keyboard keyboard)
         {
             // This is the technique I'm using to ensure one keypress makes one menu navigation move - the prof
@@ -90,11 +91,11 @@ namespace Breakout.Game_states
             return GameStateEnum.MainMenu;
         }
 
-        public override void update(GameTime gameTime)
+        public override void update(GameTime gameTime, Renderer renderer)
         {
         }
 
-        public override void render(GameTime gameTime)
+        public override void render(GameTime gameTime, Renderer renderer)
         {
             spriteBatch.Begin();
 

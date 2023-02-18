@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Breakout.Subsystems
 {
-    internal class Renderer
+    public class Renderer
     {
         List<GameElement> renderList;
 

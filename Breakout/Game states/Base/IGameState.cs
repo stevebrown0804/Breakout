@@ -19,7 +19,7 @@ namespace Breakout.Game_states
         void initialize(GraphicsDevice graphicsDevice, GraphicsDeviceManager graphics);
         void loadContent(ContentManager contentManager);
         GameStateEnum processInput(GameTime gameTime, BO_Keyboard keyboard);
-        void update(GameTime gameTime);
-        void render(GameTime gameTime);
+        void update(GameTime gameTime, Renderer renderer);
+        void render(GameTime gameTime, Renderer renderer);
     }
 }
