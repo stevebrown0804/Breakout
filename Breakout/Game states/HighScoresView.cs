@@ -26,7 +26,7 @@ namespace Breakout.Game_states
 
         public override GameStateEnum processInput(GameTime gameTime, BO_Keyboard keyboard)
         {
-            if (Keyboard.GetState().IsKeyDown(Keys.Escape)) //TODO: Replace with OnKeyPress (or w/e we call it)
+            if (/*Keyboard.GetState().IsKeyDown(Keys.Escape)*/ keyboard.IsKeyPressed(Keys.Escape)) //IN PROGRESS: Replace with OnKeyPress (or w/e we call it)
             {
                 return GameStateEnum.MainMenu;
             }

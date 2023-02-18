@@ -34,7 +34,7 @@ namespace Breakout.Game_states
         //TODO: Implement GamePlayView.processInput()
         public override GameStateEnum processInput(GameTime gameTime, BO_Keyboard keyboard)   
         {
-           if (Keyboard.GetState().IsKeyDown(Keys.Escape))
+           if (/*Keyboard.GetState().IsKeyDown(Keys.Escape)*/ keyboard.IsKeyPressed(Keys.Escape))
            {
                return GameStateEnum.MainMenu;
            }

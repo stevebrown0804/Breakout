@@ -11,9 +11,6 @@ namespace Breakout.Subsystems
 {
     public class BO_Keyboard
     {
-
-        //TODO: Declare a couple keyboard state variables...w/e data types those were
-        // One for the previous state, one for the current state
         KeyboardState prevKeyboardState;
         KeyboardState currentKeyboardState;
         //Reminder: KeyboardState currentState = Keyboard.GetState();
@@ -21,12 +18,35 @@ namespace Breakout.Subsystems
 
         internal BO_Keyboard()
         {
-            Console.WriteLine("Keyboard subsystem in progress");
+            //Console.WriteLine("Keyboard subsystem in progress");
 
-            prevKeyboardState = Keyboard.GetState();    //Dare we do this here? TBD
-
-            //TODO: BO_Keyboard subsystem
+            //IN PROGRESS: BO_Keyboard subsystem
             //Note: Let's differentiate between keypress events (prev==false, cur==true) and 'key hold' events (ie. a key being held down)
+        }
+
+        internal void InitializePreviousState()
+        {
+            prevKeyboardState = Keyboard.GetState();
+        }
+
+        internal void SetPreviousStateToCurrentState()
+        {
+            prevKeyboardState = currentKeyboardState;
+        }
+
+        internal void UpdateCurrentState()
+        {
+            currentKeyboardState = Keyboard.GetState();
+        }
+
+        internal bool IsKeyPressed(Keys key)
+        {
+            return (!prevKeyboardState.IsKeyDown(key) && currentKeyboardState.IsKeyDown(key));  //TODO: see if this is right
+        }
+
+        internal bool IsKeyHeld(Keys key)
+        {
+            return currentKeyboardState.IsKeyDown(key); //TODO: see if this is right
         }
     }
 }

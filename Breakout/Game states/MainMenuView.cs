@@ -39,6 +39,8 @@ namespace Breakout.Game_states
 
             if (!m_waitForKeyRelease)
             {
+                //TODO: Add logic to not scroll up past New Game or scroll down past Quit
+
                 // Arrow keys to navigate the menu
                 if (Keyboard.GetState().IsKeyDown(Keys.Down))
                 {
@@ -53,9 +55,11 @@ namespace Breakout.Game_states
                 
                 // If enter is pressed, return the appropriate new state -- the prof
 
-                //TODO: Rewrite this as an if(...keys.enter) with a switch inside of it
+                //EVENTUALLY: Remove this
 
-                if (Keyboard.GetState().IsKeyDown(Keys.Enter) && m_currentSelection == MenuState.NewGame)
+                //: Rewrite this as an if(...keys.enter) with a switch inside of it
+
+                /*if (Keyboard.GetState().IsKeyDown(Keys.Enter) && m_currentSelection == MenuState.NewGame)
                 {
                     return GameStateEnum.GamePlay;
                 }
@@ -63,10 +67,10 @@ namespace Breakout.Game_states
                 {
                     return GameStateEnum.HighScores;
                 }
-               /* if (Keyboard.GetState().IsKeyDown(Keys.Enter) && m_currentSelection == MenuState.Help)
+               *//* if (Keyboard.GetState().IsKeyDown(Keys.Enter) && m_currentSelection == MenuState.Help)
                 {
                     return GameStateEnum.Help;
-                }*/
+                }*//*
                 if (Keyboard.GetState().IsKeyDown(Keys.Enter) && m_currentSelection == MenuState.About)
                 {
                     return GameStateEnum.About;
@@ -74,17 +78,29 @@ namespace Breakout.Game_states
                 if (Keyboard.GetState().IsKeyDown(Keys.Enter) && m_currentSelection == MenuState.Quit)
                 {
                     return GameStateEnum.Exit;
+                }*/
+                //END
+
+                if (keyboard.IsKeyPressed(Keys.Enter))
+                {
+                    switch (m_currentSelection)
+                    {
+                        case (MenuState.NewGame): return GameStateEnum.GamePlay;
+                        case (MenuState.HighScores): return GameStateEnum.HighScores;
+                        case (MenuState.About): return GameStateEnum.About;
+                        case (MenuState.Quit): return GameStateEnum.Exit;
+                        default:
+                            throw new System.Exception("MainMenuview.processInput says: Unrecognized MenuState");
+                    }
                 }
 
-                //And if ESC is pressed, exit       //REMINDER: this will catch the Esc key presses from the game, about screen and high scores
-                                                    //  so we'll comment it out until we've got a DoKeyPress() method or something written
-               /* if (Keyboard.GetState().IsKeyDown(Keys.Escape))
-                    return GameStateEnum.Exit;*/
+                //And if ESC is pressed, exit
+                if (keyboard.IsKeyPressed(Keys.Escape))
+                    return GameStateEnum.Exit;
 
             }
             else if (Keyboard.GetState().IsKeyUp(Keys.Down) && Keyboard.GetState().IsKeyUp(Keys.Up))
             {
-                //TODO: Add logic to not scroll up past New Game or scroll down past Quit
                 m_waitForKeyRelease = false;
             }
 

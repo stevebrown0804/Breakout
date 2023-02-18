@@ -14,7 +14,8 @@ namespace Breakout.Subsystems
         {
             Console.WriteLine("Sprites subsystem in progress");
             
-            //TODO: Sprites subsystem
+            //MAYBE: Sprites subsystem  //depends on whether ContentMAnager does what this subsystem was going to do...which is 'load sprites, and hand them out'  (ContentMAnager has a Read[something or other] function that we should try)
+
             //Loads sprites into texture variables
             //Hand out those texture variables as needed
         }

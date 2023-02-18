@@ -47,6 +47,7 @@ namespace Breakout
             //Initialize subsystems!
             //inputProcessor = new();
             keyboard = new();
+            keyboard.InitializePreviousState(); //just to make it (the 'keyboard' variable) non-empty
             renderer = new();
 
             //the prof's code
@@ -79,34 +80,27 @@ namespace Breakout
 
         protected override void LoadContent()
         {
-            //spriteBatch = new SpriteBatch(GraphicsDevice);            //one of these will be made within each View
-
             //sprites = new(this, spriteBatch);                          //again, waiting to determine if we need both this and ContentManager
             //...then use sprites' dictionar(y/ies) to get Texture2Ds
 
-            //the prof's code
-            // Give all game states a chance to load their content
+            //do loadContent for all views
             foreach (var state in states)
             {
                 state.Value.loadContent(this.Content);
             }
-            //END
         }
 
         protected override void Update(GameTime gameTime)
         {
-            //if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-            //    Exit();
-
+            keyboard.UpdateCurrentState();            
             gameStateEnum = currentState.processInput(gameTime, keyboard);
-
             if (gameStateEnum == GameStateEnum.Exit)
             {
                 Exit();
             }
+            keyboard.SetPreviousStateToCurrentState();
 
             currentState.update(gameTime, renderer);
-
             base.Update(gameTime);
         }
 
