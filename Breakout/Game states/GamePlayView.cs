@@ -47,31 +47,28 @@ namespace Breakout.Game_states
         //TODO: Implement GamePlayView.processInput()
         public override GameStateEnum processInput(GameTime gameTime, BO_Keyboard keyboard)   
         {
+           //TODO: Change this to have Esc bring up a pause window (and pause the game) with 'quit' and 'resume' options
            if (keyboard.IsKeyPressed(Keys.Escape))
            {
                return GameStateEnum.MainMenu;
            }
 
+           //Controls: Spacebar (to release the ball), left, right...and that's it, right?  TBD
+           //Oh, and Enter, to select an option during the pause menu
+
            return GameStateEnum.GamePlay;
         }
 
-        //EVENTUALLY: Remove the commented-out stuff (which got moved to update(), or is included in the base class version of render())
         public override void render(GameTime gameTime, Renderer renderer)
         {
-            /*spriteBatch.Begin();
-
-            Vector2 stringSize = menuFont.MeasureString(MESSAGE);
-            spriteBatch.DrawString(menuFont, MESSAGE,
-                new Vector2(graphics.PreferredBackBufferWidth / 2 - stringSize.X / 2, graphics.PreferredBackBufferHeight / 2 - stringSize.Y), Color.Yellow);
-
-            spriteBatch.End();*/
-
-            base.render(gameTime, renderer);
+             base.render(gameTime, renderer);
         }
 
-        //IN PROGRESS: GamePlayview.update()
+        
         public override void update(GameTime gameTime, Renderer renderer)
         {
+            //IN PROGRESS: GamePlayview.update()
+
             Vector2 stringSize = menuFont.MeasureString(MESSAGE);
             GameElement el = new GameElement(RenderType.Text, menuFont, MESSAGE, 
                                             new Vector2(graphics.PreferredBackBufferWidth / 2 - stringSize.X / 2,                               graphics.PreferredBackBufferHeight / 2 - stringSize.Y),                    Color.Yellow);

@@ -11,12 +11,10 @@ namespace Breakout
 {
     public enum GameStateEnum
     {
-        //unset = 0  //enum's definition stolen from prof. mathias!
         MainMenu,
         GamePlay,
         HighScores,
         Options,
-        //Help,
         About,
         Exit
     }
@@ -46,44 +44,31 @@ namespace Breakout
             keyboard.InitializePreviousState(); //just to make it (the 'keyboard' variable) non-empty
             renderer = new();
 
-            //the prof's code
+            //Then do other stuff!
             graphics.PreferredBackBufferWidth = 1920;
             graphics.PreferredBackBufferHeight = 1080;
             graphics.ApplyChanges();
 
-            // Create all the game states here
             states = new Dictionary<GameStateEnum, IGameState>
             {
                 { GameStateEnum.MainMenu, new MainMenuView() },
                 { GameStateEnum.GamePlay, new GamePlayView() },
                 { GameStateEnum.HighScores, new HighScoresView() },
-                //{ GameStateEnum.Help, new HelpView() },
                 { GameStateEnum.About, new AboutView() }
             };
 
-            // Give all game states a chance to initialize, other than constructor
-            foreach (var item in states)
+            foreach (var key in states.Keys)
             {
-                item.Value.initialize(this.GraphicsDevice, graphics);
+                states[key].initialize(this.GraphicsDevice, graphics);
             }
 
-            // We are starting with the main menu - as defined by the value set in gameStateEnum
             currentState = states[gameStateEnum];
-            //END the prof's code
 
             base.Initialize();
         }
 
         protected override void LoadContent()
         {            
-            //Call each of the views' loadContent
-            /*foreach (var state in states)
-            {
-                state.Value.loadContent(this.Content);
-            }*/
-
-            //Any difference? ^ v
-
             foreach (var key in states.Keys)
             {
                 states[key].loadContent(this.Content);
@@ -110,14 +95,13 @@ namespace Breakout
         protected override void Draw(GameTime gameTime)
         {
             //GraphicsDevice.Clear(Color.CornflowerBlue);
-            GraphicsDevice.Clear(new Color(32, 32, 32));  //dark gray...which I couldn't find a name for
-                                                          //  Although I didn't look super-hard
+            GraphicsDevice.Clear(new Color(64, 64, 64));  //dark-ish gray...which I couldn't find a name for
+                                                          //  Although I didn't look super-hard *thumbs up*
 
             currentState.render(gameTime, renderer);
             currentState = states[gameStateEnum];
 
-            renderer.ClearRenderList(); //TODO: See if this is right...I'm still not super-sure
-                                        //FOLLOW-UP: Seems right.  Let's leave the TODO in place, for now.
+            renderer.ClearRenderList();
 
             base.Draw(gameTime);
         }

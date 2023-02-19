@@ -1,4 +1,5 @@
-﻿using Breakout.Subsystems;
+﻿using Breakout.Game_elements;
+using Breakout.Subsystems;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -6,7 +7,6 @@ using Microsoft.Xna.Framework.Input;
 
 namespace Breakout.Game_states
 {
-    //this code was also stolen!
     public class AboutView : GameStateView
     {
         private SpriteFont m_font;
@@ -23,35 +23,35 @@ namespace Breakout.Game_states
         public override GameStateEnum processInput(GameTime gameTime, BO_Keyboard keyboard)
         {
             //If the user presses Escape, exit to main menu
-            //if (Keyboard.GetState().IsKeyDown(Keys.Escape))
             if (keyboard.IsKeyPressed(Keys.Escape))
             {
                 return GameStateEnum.MainMenu;
             }
-            //otherwise, keeps showing the About screen
+
+            //otherwise, keep showing the About screen
             return GameStateEnum.About;
         }
 
         public override void render(GameTime gameTime, Renderer renderer)
         {
-            spriteBatch.Begin();
-
-            //Let's measure some text! \(^ ^ )/
-            Vector2 stringSize = m_font.MeasureString(MESSAGE);
-            spriteBatch.DrawString(m_font, MESSAGE,
-                                   new Vector2(graphics.PreferredBackBufferWidth / 2 - stringSize.X / 2,                             graphics.PreferredBackBufferHeight / 2 - stringSize.Y),                   Color.White);
-
-            Vector2 stringSize2 = m_font_smaller.MeasureString(MESSAGE2);
-            spriteBatch.DrawString(m_font_smaller, MESSAGE2, 
-                                   new Vector2(graphics.PreferredBackBufferWidth / 2 - stringSize2.X / 2,
-                                               graphics.PreferredBackBufferHeight / 2 + stringSize2.Y), 
-                                   Color.White);
-
-            spriteBatch.End();
+            base.render(gameTime, renderer);
         }
 
         public override void update(GameTime gameTime, Renderer renderer)
         {
+            GameElement el;
+            Vector2 stringSize = m_font.MeasureString(MESSAGE);
+            el = new(RenderType.Text, m_font, MESSAGE,
+                     new Vector2(graphics.PreferredBackBufferWidth / 2 - stringSize.X / 2,                                     graphics.PreferredBackBufferHeight / 2 - stringSize.Y), 
+                     Color.White);
+            renderer.AddToRenderList(el);
+
+            Vector2 stringSize2 = m_font_smaller.MeasureString(MESSAGE2); 
+            el = new(RenderType.Text, m_font_smaller, MESSAGE2,
+                     new Vector2(graphics.PreferredBackBufferWidth / 2 - stringSize2.X / 2,
+                                 graphics.PreferredBackBufferHeight / 2 + stringSize2.Y),
+                     Color.White);
+            renderer.AddToRenderList(el);
         }
     }
 }

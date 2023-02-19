@@ -20,7 +20,6 @@ namespace Breakout.Game_states
         {
             NewGame,
             HighScores,
-            //Help,
             About,
             Quit
         }
@@ -33,8 +32,6 @@ namespace Breakout.Game_states
             base.initialize(graphicsDevice, graphics);
 
             //TODO: Was I going to do something else in MainMenuView.initialize()?  TBD
-
-            Brick brick2 = new(new Rectangle(0, 0, 100, 100), new Rectangle(200, 200, 150, 150));
         }
 
         public override void loadContent(ContentManager contentManager)
@@ -94,10 +91,6 @@ namespace Breakout.Game_states
             return GameStateEnum.MainMenu;
         }
 
-        public override void update(GameTime gameTime, Renderer renderer)
-        {
-        }
-
         public override void render(GameTime gameTime, Renderer renderer)
         {
             spriteBatch.Begin();
@@ -109,7 +102,6 @@ namespace Breakout.Game_states
                 200, 
                 m_currentSelection == MenuState.NewGame ? Color.Yellow : Color.White);
             bottom = drawMenuItem(m_currentSelection == MenuState.HighScores ? m_fontMenuSelect : m_fontMenu, "High Scores", bottom, m_currentSelection == MenuState.HighScores ? Color.Yellow : Color.White);
-            //bottom = drawMenuItem(m_currentSelection == MenuState.Help ? m_fontMenuSelect : m_fontMenu, "Help", bottom, m_currentSelection == MenuState.Help ? Color.Yellow : Color.White);
             bottom = drawMenuItem(m_currentSelection == MenuState.About ? m_fontMenuSelect : m_fontMenu, "About", bottom, m_currentSelection == MenuState.About ? Color.Yellow : Color.White);
             drawMenuItem(m_currentSelection == MenuState.Quit ? m_fontMenuSelect : m_fontMenu, "Quit", bottom, m_currentSelection == MenuState.Quit ? Color.Yellow : Color.White);
 
@@ -126,6 +118,10 @@ namespace Breakout.Game_states
                 color);
 
             return y + stringSize.Y;
+        }
+
+        public override void update(GameTime gameTime, Renderer renderer)
+        {
         }
     }
 }

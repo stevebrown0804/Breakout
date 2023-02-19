@@ -40,9 +40,7 @@ namespace Breakout.Game_states
 
         public override void render(GameTime gameTime, Renderer renderer)
         {
-            base.render(gameTime, renderer);        //one base class to rule them all
-                                                    //sorry, that's "to rule the mall"
-                                                    //wah-wahhh
+            base.render(gameTime, renderer);
         }
 
         public override void update(GameTime gameTime, Renderer renderer)
