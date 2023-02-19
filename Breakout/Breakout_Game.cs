@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace Breakout
 {
@@ -28,9 +29,7 @@ namespace Breakout
         private Dictionary<GameStateEnum, IGameState> states;
 
         //Subsystems
-        //InputProcessor inputProcessor;
         BO_Keyboard keyboard;
-        //Sprites sprites;  //TODO: See if we need to use this AND ContentManager
         Renderer renderer;
 
         public Breakout_Game()
@@ -43,7 +42,6 @@ namespace Breakout
         protected override void Initialize()
         {
             //Initialize subsystems!
-            //inputProcessor = new();
             keyboard = new();
             keyboard.InitializePreviousState(); //just to make it (the 'keyboard' variable) non-empty
             renderer = new();
@@ -77,14 +75,18 @@ namespace Breakout
         }
 
         protected override void LoadContent()
-        {
-            //sprites = new(this, spriteBatch);                          //again, waiting to determine if we need both this and ContentManager
-            //...then use sprites' dictionar(y/ies) to get Texture2Ds
-
-            //do loadContent for all views
-            foreach (var state in states)
+        {            
+            //Call each of the views' loadContent
+            /*foreach (var state in states)
             {
                 state.Value.loadContent(this.Content);
+            }*/
+
+            //Any difference? ^ v
+
+            foreach (var key in states.Keys)
+            {
+                states[key].loadContent(this.Content);
             }
         }
 

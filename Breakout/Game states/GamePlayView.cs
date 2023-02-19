@@ -23,7 +23,7 @@ namespace Breakout.Game_states
     //again, this code was stolen.  stolen, I say!
     public class GamePlayView : GameStateView
     {
-        private SpriteFont m_font;
+        private SpriteFont menuFont;
         private Texture2D blue1x1;
         private Texture2D green1x1;
         private Texture2D orange1x1;
@@ -33,13 +33,15 @@ namespace Breakout.Game_states
 
         public override void loadContent(ContentManager contentManager)  //IN PROGRESS: Implement GamePlayView.loadContent()
         {
-           m_font = contentManager.Load<SpriteFont>("Fonts/menu"); //TODO: Make other fonts for this view
-                                                                   //  score, countdown, pause prompt, ...
+            menuFont = contentManager.Load<SpriteFont>("Fonts/menu"); //TODO: Make other fonts for this view
+                                                                      //  score, countdown, pause prompt, ...
             blue1x1 = contentManager.Load<Texture2D>("Sprites/blue1x1");    //Bricks
             green1x1 = contentManager.Load<Texture2D>("Sprites/green1x1");
             orange1x1 = contentManager.Load<Texture2D>("Sprites/orange1x1");
             yellow1x1 = contentManager.Load<Texture2D>("Sprites/yellow1x1");
             dark_gray1x1 = contentManager.Load<Texture2D>("Sprites/dark-gray1x1");  //Walls
+
+            //TODO: Sprite(s) for: paddle, ball, ..anything else? TBD
         }
 
         //TODO: Implement GamePlayView.processInput()
@@ -58,8 +60,8 @@ namespace Breakout.Game_states
         {
             /*spriteBatch.Begin();
 
-            Vector2 stringSize = m_font.MeasureString(MESSAGE);
-            spriteBatch.DrawString(m_font, MESSAGE,
+            Vector2 stringSize = menuFont.MeasureString(MESSAGE);
+            spriteBatch.DrawString(menuFont, MESSAGE,
                 new Vector2(graphics.PreferredBackBufferWidth / 2 - stringSize.X / 2, graphics.PreferredBackBufferHeight / 2 - stringSize.Y), Color.Yellow);
 
             spriteBatch.End();*/
@@ -70,8 +72,8 @@ namespace Breakout.Game_states
         //IN PROGRESS: GamePlayview.update()
         public override void update(GameTime gameTime, Renderer renderer)
         {
-            Vector2 stringSize = m_font.MeasureString(MESSAGE);
-            GameElement el = new GameElement(RenderType.Text, m_font, MESSAGE, 
+            Vector2 stringSize = menuFont.MeasureString(MESSAGE);
+            GameElement el = new GameElement(RenderType.Text, menuFont, MESSAGE, 
                                             new Vector2(graphics.PreferredBackBufferWidth / 2 - stringSize.X / 2,                               graphics.PreferredBackBufferHeight / 2 - stringSize.Y),                    Color.Yellow);
             renderer.AddToRenderList(el);
         }

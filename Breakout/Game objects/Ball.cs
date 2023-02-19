@@ -1,4 +1,5 @@
 ﻿using Breakout.Game_objects.Base;
+using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,8 +16,22 @@ namespace Breakout.Game_elements
 {
     internal class Ball : GameObject
     {
+        //TODO: Ball class
+
         //Reminder:
         /*internal Rectangle position;
         internal Rectangle boundingBox;*/
+
+        internal Ball(Rectangle position) : base(position)
+        {
+        }
+
+        internal Ball(Rectangle position, Rectangle boundingBox) : base(position, boundingBox)
+        {
+        }
+
+        internal Ball() : base()
+        {
+        }
     }
 }

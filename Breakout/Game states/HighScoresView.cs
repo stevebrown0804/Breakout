@@ -12,7 +12,6 @@ using Microsoft.Xna.Framework.Input;
 
 namespace Breakout.Game_states
 {
-    //also stolen
     public class HighScoresView : GameStateView
     {
         private SpriteFont m_font;
@@ -22,11 +21,15 @@ namespace Breakout.Game_states
 
         public override void loadContent(ContentManager contentManager)
         {
-            m_font = contentManager.Load<SpriteFont>("Fonts/high-scores");
+            m_font = contentManager.Load<SpriteFont>("Fonts/high-scores");  //MAYBE: More HighScores fonts?
+                                                                            // Or just the one?  TBD
         }
 
         public override GameStateEnum processInput(GameTime gameTime, BO_Keyboard keyboard)
         {
+
+            //TODO: HighScoresView.processInput()
+
             if (keyboard.IsKeyPressed(Keys.Escape))
             {
                 return GameStateEnum.MainMenu;
@@ -38,22 +41,19 @@ namespace Breakout.Game_states
         public override void render(GameTime gameTime, Renderer renderer)
         {
             base.render(gameTime, renderer);        //one base class to rule them all
+                                                    //sorry, that's "to rule the mall"
+                                                    //wah-wahhh
         }
 
         public override void update(GameTime gameTime, Renderer renderer)
         {
-            //QUESTION: Empty the renderer list? TBD
+            //IN PROGRESS: HighScoresView.update()
 
             Vector2 stringSize = m_font.MeasureString(MESSAGE);
             GameElement el = new(RenderType.Text, m_font, MESSAGE,
                 new Vector2(graphics.PreferredBackBufferWidth / 2 - stringSize.X / 2, graphics.PreferredBackBufferHeight / 2 - stringSize.Y),
                 Color.White);
             renderer.AddToRenderList(el);
-
-            //QUESTION: Now that we're done...empty the renderer list?  TBD
-            //ANSWER: No...not here.  We need stuff in the list for the upcoming 'render' call.
-            //      FOLLOW-UP QUESTION: How about clearing it at the end of the outermost render?
-            //          That sounds promising!  TODO
         }
     }
 }

@@ -4,6 +4,9 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Breakout;
 using Breakout.Subsystems;
+using System.Diagnostics;
+using Breakout.Game_elements;
+using System.ComponentModel;
 
 namespace Breakout.Game_states
 {
@@ -24,6 +27,15 @@ namespace Breakout.Game_states
 
         private MenuState m_currentSelection = MenuState.NewGame;
         private bool m_waitForKeyRelease = false;
+
+        public override void initialize(GraphicsDevice graphicsDevice, GraphicsDeviceManager graphics)
+        {
+            base.initialize(graphicsDevice, graphics);
+
+            //TODO: Was I going to do something else in MainMenuView.initialize()?  TBD
+
+            Brick brick2 = new(new Rectangle(0, 0, 100, 100), new Rectangle(200, 200, 150, 150));
+        }
 
         public override void loadContent(ContentManager contentManager)
         {

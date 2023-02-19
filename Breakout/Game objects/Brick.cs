@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,18 +14,25 @@ using System.Threading.Tasks;
 
 namespace Breakout.Game_elements
 {
+    //IN PROGRESS, SORT OF: Brick class
     internal class Brick : GameObject
     {
-        internal Color color;   //TODO: Make some 1x1 sprites of the colors required for the bricks
-                                //"Starting from the bottom, two rows of yellow, two rows of orange, two rows of blue, and two rows of green."
+        //"Starting from the bottom, two rows of yellow, two rows of orange, two rows of blue, and two rows of green."
 
-        Brick(int x, int y, int width, int height, Color color)
+        //Reminder:
+        /*internal Rectangle position;
+        internal Rectangle boundingBox;*/
+
+        internal Brick(Rectangle position) : base(position)
         {
-            position.X = x;
-            position.Y = y;
-            position.Width = width;
-            position.Height = height;
-            this.color = color;
+        }
+
+        internal Brick(Rectangle position, Rectangle boundingBox) : base(position, boundingBox)
+        {
+        }
+
+        internal Brick() : base()
+        {
         }
     }
 }

@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Breakout.Game_objects.Base;
+using Microsoft.Xna.Framework;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,11 +12,25 @@ using System.Threading.Tasks;
 
 namespace Breakout.Game_elements
 {
-    internal class Paddle
+    internal class Paddle : GameObject
     {
         //Reminder:
         /*internal Rectangle position;
         internal Rectangle boundingBox;*/
+
+        //TODO: Paddle class
+
+        internal Paddle(Rectangle position) : base(position)
+        {
+        }
+
+        internal Paddle(Rectangle position, Rectangle boundingBox) : base(position, boundingBox)
+        {
+        }
+
+        internal Paddle() : base()
+        {
+        }
 
     }
 }

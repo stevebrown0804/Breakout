@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Input;
 using Breakout.Subsystems;
 using Breakout.Game_elements;
+using System.Diagnostics;
 
 namespace Breakout.Game_states
 {
@@ -14,7 +15,7 @@ namespace Breakout.Game_states
         protected GraphicsDeviceManager graphics;
         protected SpriteBatch spriteBatch;
 
-        public void initialize(GraphicsDevice graphicsDevice, GraphicsDeviceManager graphics)
+        public virtual void initialize(GraphicsDevice graphicsDevice, GraphicsDeviceManager graphics)
         {
             this.graphics = graphics;
             spriteBatch = new SpriteBatch(graphicsDevice);
