@@ -6,13 +6,10 @@ namespace Breakout.Subsystems
 {
     public class Renderer
     {
-        readonly List<GameElement> renderList;  //Let's see what 'readonly' does, exactly.  (or roughly.) TBD
-                                                //FOLLOW-UP: As far as I can tell, it does nothing.  *shrug*
+        readonly List<GameElement> renderList;
 
         internal Renderer()
         {
-            //Console.WriteLine("Renderer subsystem in progress");  //EVENTUALLY: Remove this comment
-
             renderList = new();            
         }
 
@@ -32,15 +29,5 @@ namespace Breakout.Subsystems
             renderList.Clear();
         }
 
-        /*internal void DoRendering()
-        {
-            Console.WriteLine("Rendering in progress");
-
-            //TODO: DoRendering()
-            // Translate a list of GameElements into Draw() or DrawString() calls
-
-            //HEY, UH...: GameElement.render() is doing exactly that.  I THINK we can remove this function.
-            // We'll see.
-        }*/
-    }
+     }//END class Renderer
 }

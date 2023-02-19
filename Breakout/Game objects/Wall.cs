@@ -16,7 +16,7 @@ namespace Breakout.Game_elements
 
         //TODO: Wall class
         //Wooboy, that's gonna be a biggun'.  
-        //(kidding)
+        //(kidding, I think)
 
         internal Wall(Rectangle position) : base(position)
         {

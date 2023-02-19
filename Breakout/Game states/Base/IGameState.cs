@@ -13,13 +13,14 @@ namespace Breakout.Game_states
 {
     public interface IGameState
     {
-        //TODO: look for the prof's presentation and implement this accordingly
-
-        //note: code stolen from prof. mathias! \(^^ )/
         void initialize(GraphicsDevice graphicsDevice, GraphicsDeviceManager graphics);
+
         void loadContent(ContentManager contentManager);
+        
         GameStateEnum processInput(GameTime gameTime, BO_Keyboard keyboard);
+        
         void update(GameTime gameTime, Renderer renderer);
+        
         void render(GameTime gameTime, Renderer renderer);
     }
 }

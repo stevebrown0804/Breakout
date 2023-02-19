@@ -10,7 +10,6 @@ using System.ComponentModel;
 
 namespace Breakout.Game_states
 {
-    //and, again, stolen.
     public class MainMenuView : GameStateView
     {
         private SpriteFont m_fontMenu;
@@ -44,19 +43,17 @@ namespace Breakout.Game_states
         {
             // This is the technique I'm using to ensure one keypress makes one menu navigation move - the prof
 
-            //TODO: Write the BO_Keyboard class then replace these calls with IsKeyPress() or w/e we call it
-
             if (!m_waitForKeyRelease)
             {
                 //TODO: Add logic to not scroll up past New Game or scroll down past Quit
 
                 // Arrow keys to navigate the menu
-                if (Keyboard.GetState().IsKeyDown(Keys.Down))
+                if (keyboard.IsKeyHeld(Keys.Down))  //Any reason we can't do IsKeyPRessed?  TBD
                 {
                     m_currentSelection = m_currentSelection + 1;
                     m_waitForKeyRelease = true;
                 }
-                if (Keyboard.GetState().IsKeyDown(Keys.Up))
+                  if (keyboard.IsKeyHeld(Keys.Up))
                 {
                     m_currentSelection = m_currentSelection - 1;
                     m_waitForKeyRelease = true;
@@ -93,35 +90,40 @@ namespace Breakout.Game_states
 
         public override void render(GameTime gameTime, Renderer renderer)
         {
-            spriteBatch.Begin();
+            /*spriteBatch.Begin();
+            spriteBatch.End();*/
 
-            // I split the first one's parameters on separate lines to help you see them better
-            float bottom = drawMenuItem(
-                m_currentSelection == MenuState.NewGame ? m_fontMenuSelect : m_fontMenu, 
-                "New Game",
-                200, 
-                m_currentSelection == MenuState.NewGame ? Color.Yellow : Color.White);
-            bottom = drawMenuItem(m_currentSelection == MenuState.HighScores ? m_fontMenuSelect : m_fontMenu, "High Scores", bottom, m_currentSelection == MenuState.HighScores ? Color.Yellow : Color.White);
-            bottom = drawMenuItem(m_currentSelection == MenuState.About ? m_fontMenuSelect : m_fontMenu, "About", bottom, m_currentSelection == MenuState.About ? Color.Yellow : Color.White);
-            drawMenuItem(m_currentSelection == MenuState.Quit ? m_fontMenuSelect : m_fontMenu, "Quit", bottom, m_currentSelection == MenuState.Quit ? Color.Yellow : Color.White);
-
-            spriteBatch.End();
+            base.render(gameTime, renderer);
         }
 
-        private float drawMenuItem(SpriteFont font, string text, float y, Color color)
+        private (float, GameElement) drawMenuItem(SpriteFont font, string text, float y, Color color)
         {
             Vector2 stringSize = font.MeasureString(text);
-            spriteBatch.DrawString(
-                font,
-                text,
-                new Vector2(graphics.PreferredBackBufferWidth / 2 - stringSize.X / 2, y),
-                color);
 
-            return y + stringSize.Y;
+            GameElement el = new(RenderType.Text, font, text,
+                                 new Vector2(graphics.PreferredBackBufferWidth / 2 - stringSize.X / 2, y),
+                                 color);
+
+            return (y + stringSize.Y, el);
         }
 
         public override void update(GameTime gameTime, Renderer renderer)
         {
+            (float bottom, GameElement el) = drawMenuItem(
+                m_currentSelection == MenuState.NewGame ? m_fontMenuSelect : m_fontMenu,
+                "New Game",
+                200,
+                m_currentSelection == MenuState.NewGame ? Color.Yellow : Color.White);
+            renderer.AddToRenderList(el);
+
+            (bottom, el) = drawMenuItem(m_currentSelection == MenuState.HighScores ? m_fontMenuSelect : m_fontMenu, "High Scores", bottom, m_currentSelection == MenuState.HighScores ? Color.Yellow : Color.White);
+            renderer.AddToRenderList(el);
+
+            (bottom, el) = drawMenuItem(m_currentSelection == MenuState.About ? m_fontMenuSelect : m_fontMenu, "About", bottom, m_currentSelection == MenuState.About ? Color.Yellow : Color.White);
+            renderer.AddToRenderList(el);
+
+            (bottom, el) = drawMenuItem(m_currentSelection == MenuState.Quit ? m_fontMenuSelect : m_fontMenu, "Quit", bottom, m_currentSelection == MenuState.Quit ? Color.Yellow : Color.White);
+            renderer.AddToRenderList(el);
         }
     }
 }

@@ -20,6 +20,18 @@ using Microsoft.Xna.Framework.Input;
 
 namespace Breakout.Game_states
 {
+    enum GamePlayState  //public/internal? TBD
+    {
+        unset = 0,
+        Initializing,
+        Countdown,
+        InGame,
+        Paused,
+        GameOver  //what else?  TBD
+    }
+    //How about a stack to track this? (maybe) TBD
+
+
     //again, this code was stolen.  stolen, I say!
     public class GamePlayView : GameStateView
     {
@@ -31,7 +43,7 @@ namespace Breakout.Game_states
         private Texture2D dark_gray1x1;
         private const string MESSAGE = "TODO: Game";  //TODO: Comment this out...eventually
 
-        public override void loadContent(ContentManager contentManager)  //IN PROGRESS: Implement GamePlayView.loadContent()
+        public override void loadContent(ContentManager contentManager)  //IN PROGRESS-ish: Implement GamePlayView.loadContent()
         {
             menuFont = contentManager.Load<SpriteFont>("Fonts/menu"); //TODO: Make other fonts for this view
                                                                       //  score, countdown, pause prompt, ...
@@ -47,7 +59,7 @@ namespace Breakout.Game_states
         //TODO: Implement GamePlayView.processInput()
         public override GameStateEnum processInput(GameTime gameTime, BO_Keyboard keyboard)   
         {
-           //TODO: Change this to have Esc bring up a pause window (and pause the game) with 'quit' and 'resume' options
+           //TODO: Change this to have Esc bring up a pause window (and pause the game) with 'quit' and 'resume' options -- or change a state variable to 'paused' then call a method that renders the pause menu
            if (keyboard.IsKeyPressed(Keys.Escape))
            {
                return GameStateEnum.MainMenu;
@@ -67,7 +79,7 @@ namespace Breakout.Game_states
         
         public override void update(GameTime gameTime, Renderer renderer)
         {
-            //IN PROGRESS: GamePlayview.update()
+            //IN PROGRESS-ish: GamePlayview.update()
 
             Vector2 stringSize = menuFont.MeasureString(MESSAGE);
             GameElement el = new GameElement(RenderType.Text, menuFont, MESSAGE, 

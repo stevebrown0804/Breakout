@@ -87,8 +87,8 @@ namespace Breakout
             }
 
             keyboard.SetPreviousStateToCurrentState();
-
             currentState.update(gameTime, renderer);
+
             base.Update(gameTime);
         }
 
@@ -98,9 +98,11 @@ namespace Breakout
             GraphicsDevice.Clear(new Color(64, 64, 64));  //dark-ish gray...which I couldn't find a name for
                                                           //  Although I didn't look super-hard *thumbs up*
 
+            //Do some drawing
             currentState.render(gameTime, renderer);
             currentState = states[gameStateEnum];
 
+            //And, with the drawing done, clear out the render list in preparation for next time
             renderer.ClearRenderList();
 
             base.Draw(gameTime);
