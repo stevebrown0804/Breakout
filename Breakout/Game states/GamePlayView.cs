@@ -35,21 +35,24 @@ namespace Breakout.Game_states
     //again, this code was stolen.  stolen, I say!
     public class GamePlayView : GameStateView
     {
-        private SpriteFont inGameMenuFont;
+        private SpriteFont inGameMenuFont;  //Fonts
         private SpriteFont inGameScoreFont;
         private SpriteFont countdownFont;
-        //private SpriteFont inGameMenuFont;
-        private Texture2D blue1x1;
+        private Texture2D blue1x1;          //Bricks
         private Texture2D green1x1;
         private Texture2D orange1x1;
         private Texture2D yellow1x1;
-        private Texture2D dark_gray1x1;
+        private Texture2D dark_gray1x1;     //Wall
+        private Texture2D ball50x50;        //Ball
+        private Texture2D bluegray1x1;      //Paddle
+
         private const string MESSAGE = "TODO: Game";  //TODO: Comment this out...eventually
 
         bool isPaused = false;
         int remainingLives = 3;  // 2?  TBD
 
-        public override void loadContent(ContentManager contentManager)  //IN PROGRESS-ish: Implement GamePlayView.loadContent()
+        //DONE, I THINK: Implement GamePlayView.loadContent()
+        public override void loadContent(ContentManager contentManager)  
         {
             inGameMenuFont = contentManager.Load<SpriteFont>("Fonts/ingame-menu");      //Fonts
             inGameScoreFont = contentManager.Load<SpriteFont>("Fonts/ingame-score");
@@ -59,11 +62,12 @@ namespace Breakout.Game_states
             orange1x1 = contentManager.Load<Texture2D>("Sprites/orange1x1");
             yellow1x1 = contentManager.Load<Texture2D>("Sprites/yellow1x1");
             dark_gray1x1 = contentManager.Load<Texture2D>("Sprites/dark-gray1x1");      //Walls
-
-            //TODO: Sprite(s) for: paddle, ball, ..anything else? TBD
+            ball50x50 = contentManager.Load<Texture2D>("Sprites/ball50x50");            //Ball
+            bluegray1x1 = contentManager.Load<Texture2D>("Sprites/bluegray1x1");        //Paddle
         }
 
         //TODO: Implement GamePlayView.processInput()
+        //REMINDER: This is called at the beginning of BreakoutGame.Input()
         public override GameStateEnum processInput(GameTime gameTime, BO_Keyboard keyboard)   
         {
            //TODO: Change this to have Esc bring up a pause window (and pause the game) with 'quit' and 'resume' options -- or change a state variable to 'paused' then call a method that renders the pause menu
