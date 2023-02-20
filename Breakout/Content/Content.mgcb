@@ -34,6 +34,27 @@
 /processorParam:TextureFormat=Compressed
 /build:Fonts/high-scores.spritefont
 
+#begin Fonts/ingame-countdown.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:Fonts/ingame-countdown.spritefont
+
+#begin Fonts/ingame-menu.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:Fonts/ingame-menu.spritefont
+
+#begin Fonts/ingame-score.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:Fonts/ingame-score.spritefont
+
 #begin Fonts/menu-select.spritefont
 /importer:FontDescriptionImporter
 /processor:FontDescriptionProcessor

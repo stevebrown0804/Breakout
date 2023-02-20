@@ -35,7 +35,10 @@ namespace Breakout.Game_states
     //again, this code was stolen.  stolen, I say!
     public class GamePlayView : GameStateView
     {
-        private SpriteFont menuFont;
+        private SpriteFont inGameMenuFont;
+        private SpriteFont inGameScoreFont;
+        private SpriteFont countdownFont;
+        //private SpriteFont inGameMenuFont;
         private Texture2D blue1x1;
         private Texture2D green1x1;
         private Texture2D orange1x1;
@@ -43,15 +46,19 @@ namespace Breakout.Game_states
         private Texture2D dark_gray1x1;
         private const string MESSAGE = "TODO: Game";  //TODO: Comment this out...eventually
 
+        bool isPaused = false;
+        int remainingLives = 3;  // 2?  TBD
+
         public override void loadContent(ContentManager contentManager)  //IN PROGRESS-ish: Implement GamePlayView.loadContent()
         {
-            menuFont = contentManager.Load<SpriteFont>("Fonts/menu"); //TODO: Make other fonts for this view
-                                                                      //  score, countdown, pause prompt, ...
-            blue1x1 = contentManager.Load<Texture2D>("Sprites/blue1x1");    //Bricks
+            inGameMenuFont = contentManager.Load<SpriteFont>("Fonts/ingame-menu");      //Fonts
+            inGameScoreFont = contentManager.Load<SpriteFont>("Fonts/ingame-score");
+            countdownFont = contentManager.Load<SpriteFont> ("Fonts/ingame-countdown");            
+            blue1x1 = contentManager.Load<Texture2D>("Sprites/blue1x1");                //Bricks
             green1x1 = contentManager.Load<Texture2D>("Sprites/green1x1");
             orange1x1 = contentManager.Load<Texture2D>("Sprites/orange1x1");
             yellow1x1 = contentManager.Load<Texture2D>("Sprites/yellow1x1");
-            dark_gray1x1 = contentManager.Load<Texture2D>("Sprites/dark-gray1x1");  //Walls
+            dark_gray1x1 = contentManager.Load<Texture2D>("Sprites/dark-gray1x1");      //Walls
 
             //TODO: Sprite(s) for: paddle, ball, ..anything else? TBD
         }
@@ -81,9 +88,10 @@ namespace Breakout.Game_states
         {
             //IN PROGRESS-ish: GamePlayview.update()
 
-            Vector2 stringSize = menuFont.MeasureString(MESSAGE);
-            GameElement el = new GameElement(RenderType.Text, menuFont, MESSAGE, 
-                                            new Vector2(graphics.PreferredBackBufferWidth / 2 - stringSize.X / 2,                               graphics.PreferredBackBufferHeight / 2 - stringSize.Y),                    Color.Yellow);
+            Vector2 stringSize = inGameMenuFont.MeasureString(MESSAGE);
+            GameElement el;
+            el = new GameElement(RenderType.Text, inGameMenuFont, MESSAGE, 
+                                 new Vector2(graphics.PreferredBackBufferWidth / 2 - stringSize.X / 2,                                 graphics.PreferredBackBufferHeight / 2 - stringSize.Y),                      Color.Yellow);
             renderer.AddToRenderList(el);
         }
 
