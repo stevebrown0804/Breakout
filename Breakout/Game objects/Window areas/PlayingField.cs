@@ -10,6 +10,8 @@ namespace Breakout.Game_elements
 {
     // "Some kind of nice background image for the gameplay area."
 
+    //TODO: Render the galaxy sprite (from project 2) to the playingfield (I think)
+
     internal class PlayingField : GameObject
     {
         //Reminder:

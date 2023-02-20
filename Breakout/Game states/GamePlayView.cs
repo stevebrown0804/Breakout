@@ -49,6 +49,7 @@ namespace Breakout.Game_states
         private Texture2D dark_gray1x1;     //Wall
         private Texture2D ball50x50;        //Ball
         private Texture2D bluegray1x1;      //Paddle
+        private Texture2D purple1x1;        //misc.  //MAYBE: Remove, once we're done with it.
 
         private const string MESSAGE = "TODO: Game";  //TODO: Comment this out...eventually
 
@@ -56,11 +57,14 @@ namespace Breakout.Game_states
         List<Ball> balls = new();
         List<Brick> bricks = new();
         BrickGrid brickGrid = new();
+        MiddleArea middleArea;
         Paddle paddle = new();
+        PaddleArea paddleArea;
         PlayingField playingField; // = new();
         PauseMenu pauseMenu = new();                        // <---necessary at this point? TBD
         RemainingLivesIcons remainingLivesIcons = new();
         Score score = new();
+        TopArea topArea;
         List<Wall> walls = new();
         WindowInterior windowInterior; // = new();
         Spacing spacing = new();
@@ -88,15 +92,19 @@ namespace Breakout.Game_states
             dark_gray1x1 = contentManager.Load<Texture2D>("Sprites/dark-gray1x1");      //Walls
             ball50x50 = contentManager.Load<Texture2D>("Sprites/ball50x50");            //Ball
             bluegray1x1 = contentManager.Load<Texture2D>("Sprites/bluegray1x1");        //Paddle
+            purple1x1 = contentManager.Load<Texture2D>("Sprites/purple1x1");            //misc.
 
             //And now, set up the game objects - IN PROGRESS
             windowInterior = new(new Rectangle(0, 0, 
                                  graphics.PreferredBackBufferWidth, 
                                  graphics.PreferredBackBufferHeight));
             playingField = new(windowInterior.position);        //for now, copy windowInterior.position
-            TopArea topArea = new(new Rectangle(playingField.position.X, playingField.position.Y,
+            topArea = new(new Rectangle(playingField.position.X, playingField.position.Y,
                 playingField.position.Width, spacing.topAreaHeight));
-
+            middleArea = new(new Rectangle(playingField.position.X, topArea.position.Y + topArea.position.Height,
+                playingField.position.Width, spacing.middleAreaHeight));
+            paddleArea = new(new Rectangle(playingField.position.X, middleArea.position.Y + middleArea.position.Height,
+                playingField.position.Width, spacing.paddleAreaHeight));
         }
 
         
@@ -135,10 +143,19 @@ namespace Breakout.Game_states
 
             //TODO, FOR NOW: Draw each region of the screen as a solid color
             // We'll make sure we get the render-order right, plus it'll be fun to see.  *thumbs up*
-            el = new GameElement(RenderType.UI, CallType.Rectangle, yellow1x1, windowInterior.position, Color.White);
-            renderer.AddToRenderList(el);
+            /*el = new GameElement(RenderType.UI, CallType.Rectangle, yellow1x1, windowInterior.position, Color.White);
+            renderer.AddToRenderList(el);*/
 
             el = new GameElement(RenderType.UI, CallType.Rectangle, limeGreen1x1, playingField.position, Color.White);
+            renderer.AddToRenderList(el);
+
+            el = new GameElement(RenderType.UI, CallType.Rectangle, blue1x1, topArea.position, Color.White);
+            renderer.AddToRenderList(el);
+
+            el = new GameElement(RenderType.UI, CallType.Rectangle, purple1x1, middleArea.position, Color.White);
+            renderer.AddToRenderList(el);
+
+            el = new GameElement(RenderType.UI, CallType.Rectangle, orange1x1, paddleArea.position, Color.White);
             renderer.AddToRenderList(el);
 
 
