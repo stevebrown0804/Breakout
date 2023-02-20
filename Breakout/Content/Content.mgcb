@@ -127,7 +127,7 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Sprites/green1x1.png
+/build:Sprites/green1x1.png;Sprites/limeGreen1x1.png
 
 #begin Sprites/orange1x1.png
 /importer:TextureImporter

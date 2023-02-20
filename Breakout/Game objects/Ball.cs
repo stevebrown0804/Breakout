@@ -16,22 +16,39 @@ namespace Breakout.Game_elements
 {
     internal class Ball : GameObject
     {
-        //TODO: Ball class
+        //IN PROGRESS: Ball class
 
         //Reminder:
         /*internal Rectangle position;
         internal Rectangle boundingBox;*/
 
-        internal Ball(Rectangle position) : base(position)
+        public Vector2 velocity; // = new();
+         Dictionary<int, float> speedupFactor;
+
+        /*internal Ball(Rectangle position) : base(position)
         {
-        }
+        }*/
 
         internal Ball(Rectangle position, Rectangle boundingBox) : base(position, boundingBox)
         {
+            speedupFactor = new Dictionary<int, float> {
+                {4, 2f },  //just to pick some numbers atm;  TODO: Actual speedup factors
+                {12, 2f },
+                {36, 2f },
+                {62, 2f }
+            };
+
+            velocity = new Vector2(1, 1);  //for a total of: sqrt(2) (units?) as the initial speed.  TODO: maybe change this; we'll see
         }
 
-        internal Ball() : base()
+        /*internal Ball() : base()
         {
+        }*/
+
+        internal void SpeedUp(int bricksDestroyed)
+        {
+            velocity.X *= speedupFactor[bricksDestroyed];
+            velocity.Y *= speedupFactor[bricksDestroyed];
         }
     }
 }

@@ -21,12 +21,13 @@ namespace Breakout.Game_elements
         {
         }
 
-        internal WindowInterior(Rectangle position, Rectangle boundingBox) : base(position, boundingBox)
+        /*internal WindowInterior(Rectangle position, Rectangle boundingBox) : base(position, boundingBox)
         {
-        }
+            //Window interior probably won't have a bounding box
+        }*/
 
-        internal WindowInterior() : base()
+        /*internal WindowInterior() : base()
         {
-        }
+        }*/
     }
 }

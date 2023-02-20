@@ -11,5 +11,6 @@ namespace Breakout.Game_objects.non_derived
         //TODO: Figure out the spacing of the various regions of the game screen
         // ...and give stuff (public) variable names.  *thumbs up*
 
+        public int topAreaHeight = 300; //just picking a number for the moment.  TODO: Actual topAreaHeight
     }
 }

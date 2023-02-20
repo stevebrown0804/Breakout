@@ -20,12 +20,12 @@ namespace Breakout.Game_elements
         {
         }
 
-        internal PlayingField(Rectangle position, Rectangle boundingBox) : base(position, boundingBox)
+        /*internal PlayingField(Rectangle position, Rectangle boundingBox) : base(position, boundingBox)
         {
-        }
+        }*/
 
-        internal PlayingField() : base()
+        /*internal PlayingField() : base()
         {
-        }
+        }*/
     }
 }
