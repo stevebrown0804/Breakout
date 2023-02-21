@@ -161,13 +161,15 @@ namespace Breakout.Game_states
                 interiorToWalls.position.Width,
                 interiorToWalls.position.Height - topAreaOfInteriorToWalls.position.Height - bottomAreaOfInteriorToWalls.position.Height - paddleArea.position.Height));
 
-            /*brickGrid = new(new Rectangle(middleAreaOfPlayingField.position.X, middleAreaOfPlayingField.position.Y, //Do this after adding walls
-                            playingField.position.Width, spacing.paddleAreaHeight));*/
             padding = spacing.brickGridSpacingOnAllFourSides;
             brickGrid = new(new Rectangle(middleAreaOfInteriorToWalls.position.X + padding,
                 middleAreaOfInteriorToWalls.position.Y + padding,
                 middleAreaOfInteriorToWalls.position.Width - 2 * padding,
-                middleAreaOfInteriorToWalls.position.Height - 2 * padding));
+                middleAreaOfInteriorToWalls.position.Height - 2 * padding - spacing.brickGridBottomSpacing));
+
+            //TODO: Add the bricks to brickGrid
+            //TODO: Add the 'lives remaining' section
+            //TODO: Add the score section
         }
 
         public override GameStateEnum processInput(GameTime gameTime, BO_Keyboard keyboard)   
@@ -202,7 +204,7 @@ namespace Breakout.Game_states
                                  new Vector2(graphics.PreferredBackBufferWidth / 2 - stringSize.X / 2,                                 graphics.PreferredBackBufferHeight / 2 - stringSize.Y),                      Color.Yellow);
             renderer.AddToRenderList(el);*/
 
-            //TODO, FOR NOW: Draw each region of the screen as a solid color
+            //FOR NOW: Draw each region of the screen as a solid color
             // We'll make sure we get the render-order right, plus it'll be fun to see.  *thumbs up*
             el = new GameElement(RenderType.UI, CallType.Rectangle, white1x1, windowInterior.position, Color.White);
             renderer.AddToRenderList(el);

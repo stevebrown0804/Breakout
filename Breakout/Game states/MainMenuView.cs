@@ -30,7 +30,7 @@ namespace Breakout.Game_states
         {
             base.initialize(graphicsDevice, graphics);
 
-            //TODO: Was I going to do something else in MainMenuView.initialize()?  TBD
+            //Was I going to do something else in MainMenuView.initialize()?  TBD
         }
 
         public override void loadContent(ContentManager contentManager)

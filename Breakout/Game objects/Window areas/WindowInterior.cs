@@ -14,9 +14,6 @@ namespace Breakout.Game_elements
         /*internal Rectangle position;
         internal Rectangle boundingBox;*/
 
-        //TODO: Is this class necessary?  I'm thinking that it'll just be Rect(0, 0, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight), but we'll see I guess
-        //And hey...ya never know when we'll decide to put the whole game within another region or something *shrug*
-
         internal WindowInterior(Rectangle position) : base(position)
         {
         }

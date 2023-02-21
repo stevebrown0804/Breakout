@@ -22,19 +22,16 @@ namespace Breakout.Game_objects
         /*internal Rectangle position;
         internal Rectangle boundingBox;*/
 
-        //A THOUGHT: The base class (GameObject) is new'ing the two Rectangles; should we have the subclasses do that?  TBD
-        //FOLLOW-UP: I don't think it matters much...~I think~.  TBD
-
         internal Score(Rectangle position) : base(position)
         {
         }
 
-        internal Score(Rectangle position, Rectangle boundingBox) : base(position, boundingBox)
+/*        internal Score(Rectangle position, Rectangle boundingBox) : base(position, boundingBox)
         {
         }
 
         internal Score() : base()
         {
-        }
+        }*/
     }
 }

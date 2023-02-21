@@ -14,20 +14,16 @@ namespace Breakout.Game_elements
         /*internal Rectangle position;
         internal Rectangle boundingBox;*/
 
-        //TODO: Wall class
-        //Wooboy, that's gonna be a biggun'.  
-        //(kidding, I think)
-
         internal Wall(Rectangle position) : base(position)
         {
         }
 
-        internal Wall(Rectangle position, Rectangle boundingBox) : base(position, boundingBox)
+/*        internal Wall(Rectangle position, Rectangle boundingBox) : base(position, boundingBox)
         {
         }
 
         internal Wall() : base()
         {
-        }
+        }*/
     }
 }

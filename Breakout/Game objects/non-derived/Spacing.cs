@@ -10,7 +10,7 @@ namespace Breakout.Game_objects.non_derived
 {
     internal class Spacing
     {
-        //TODO: Figure out the spacing of the various regions of the game screen
+        //IN PROGRESS: Figure out the spacing of the various regions of the game screen
         // ...and give stuff (public) variable names.  *thumbs up*
 
         public int topAreaHeight;
@@ -20,28 +20,28 @@ namespace Breakout.Game_objects.non_derived
         public int wallThickness;
         public int playingFieldPaddingOnAllFourSides;
         public int brickGridSpacingOnAllFourSides;
+        public int brickGridBottomSpacing;
+        public int intraBrickHorizontalSpacing;
+        public int intraBrickVerticalSpacing;
 
         internal Spacing(GraphicsDeviceManager graphics)
         {
-            //First up, stuff that's hard-coded
-            playingFieldPaddingOnAllFourSides = 100; //50;
+            //Set various hard-coded values
+            playingFieldPaddingOnAllFourSides = 30; //100; //50;
             wallThickness = 30;
-            brickGridSpacingOnAllFourSides = 20;
+            brickGridSpacingOnAllFourSides = 50;
+            brickGridBottomSpacing = 210;
+            intraBrickHorizontalSpacing = 10;
+            intraBrickVerticalSpacing = 10;
 
-            //Next up...other stuff  (although here's still hard-coded.  what's up with that?  TBD)            
-            topAreaHeight = 170;    //just picking a number for the moment.  TODO: Actual topAreaHeight
-            paddleAreaHeight = 50;  //TODO: Fix this formula so that it has no constants, if possible
-            bottomAreaHeight = 150;  //TODO: Fix this forumula so that it has no constants, if possible
-
-            //RecomputeValues(graphics, gamePlayView);            
+            topAreaHeight = 90;     //Can we do away with any of these literals?  TBD
+            paddleAreaHeight = 20;
+            bottomAreaHeight = 110;         
         }
 
         internal void RecomputeValues(GraphicsDeviceManager graphics, GamePlayView gamePlayView)
         {
             //Here we'll put stuff that's dependant on other stuff
-            //REMINDER: Order matters, here.
-
-            //middleAreaHeight = graphics.PreferredBackBufferHeight -
             middleAreaHeight = gamePlayView.playingField.position.Height -
                                 topAreaHeight - bottomAreaHeight - paddleAreaHeight;
         }
