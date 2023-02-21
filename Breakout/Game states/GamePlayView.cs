@@ -108,7 +108,7 @@ namespace Breakout.Game_states
 
             //and then...
 
-            //...set up the game objects - DONE-ISH
+            //...set up the game objects - IN PROGRESS
             spacing = new(graphics);
             windowInterior = new(new Rectangle(0, 0,
                                  graphics.PreferredBackBufferWidth,
@@ -159,12 +159,15 @@ namespace Breakout.Game_states
             middleAreaOfInteriorToWalls = new(new Rectangle(interiorToWalls.position.X,
                 interiorToWalls.position.Y + topAreaOfInteriorToWalls.position.Height,
                 interiorToWalls.position.Width,
-                 interiorToWalls.position.Height - topAreaOfInteriorToWalls.position.Height - bottomAreaOfInteriorToWalls.position.Height - paddleArea.position.Height));
-
-            //interiorToWalls.position.Height - bottomAreaOfInteriorToWalls.position.Height - spacing.paddleAreaHeight
+                interiorToWalls.position.Height - topAreaOfInteriorToWalls.position.Height - bottomAreaOfInteriorToWalls.position.Height - paddleArea.position.Height));
 
             /*brickGrid = new(new Rectangle(middleAreaOfPlayingField.position.X, middleAreaOfPlayingField.position.Y, //Do this after adding walls
                             playingField.position.Width, spacing.paddleAreaHeight));*/
+            padding = spacing.brickGridSpacingOnAllFourSides;
+            brickGrid = new(new Rectangle(middleAreaOfInteriorToWalls.position.X + padding,
+                middleAreaOfInteriorToWalls.position.Y + padding,
+                middleAreaOfInteriorToWalls.position.Width - 2 * padding,
+                middleAreaOfInteriorToWalls.position.Height - 2 * padding));
         }
 
         public override GameStateEnum processInput(GameTime gameTime, BO_Keyboard keyboard)   
@@ -226,6 +229,9 @@ namespace Breakout.Game_states
             renderer.AddToRenderList(el);
 
             el = new GameElement(RenderType.UI, CallType.Rectangle, yellow1x1, middleAreaOfInteriorToWalls.position, Color.White);
+            renderer.AddToRenderList(el);
+
+            el = new GameElement(RenderType.UI, CallType.Rectangle, limeGreen1x1, brickGrid.position, Color.White);
             renderer.AddToRenderList(el);
 
 
