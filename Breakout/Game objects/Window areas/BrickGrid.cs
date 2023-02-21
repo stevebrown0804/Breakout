@@ -11,10 +11,6 @@ using Breakout.Game_objects.Base;
 namespace Breakout.Game_elements
 {
 
-    /* "Game starts with 8 rows of bricks.
-        Each row is made up of at least 14 bricks.
-        Have a small space between each of the rows and bricks." */
-
     //IN PROGRESS: Get the pencil & paper out and diagram the screen, figuring out where stuff will go
 
     internal class BrickGrid : GameObject
@@ -22,14 +18,15 @@ namespace Breakout.Game_elements
         //Reminder:
         /*internal Rectangle position;
         internal Rectangle boundingBox;*/
-
-        //TODO: Pick a data structure to represent the BrickGrid.
-        //      Dictionary<int(=row number, starting at the (top/bottom)), List<Brick>>, perhaps?
+                
         internal Dictionary<int, List<Brick>> brickGrid;
 
         internal BrickGrid(Rectangle position) : base(position)
         {
+            //Initalize the dictionary
             brickGrid = new();
+            
+            //Initialize the 8 lists of bricks within the dictionary
             for(int i = 0; i < 8; i++)
             {
                 brickGrid[i] = new();

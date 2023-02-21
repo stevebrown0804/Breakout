@@ -59,20 +59,22 @@ namespace Breakout.Game_states
         List<Ball> balls = new();
         BottomAreaOfInteriorToWalls bottomAreaOfInteriorToWalls;
         //BottomAreaOfPlayingField bottomAreaOfPlayingField;
-        List<Brick> bricks = new();
+        //List<Brick> bricks = new();       //<--FOR NOW: interact with the bricks through brickGrid.brickGrid
         BrickGrid brickGrid; // = new();
         InteriorToWalls interiorToWalls;
+        LeftHalfOfBottomArea leftHalfOfBottomArea;
         MiddleAreaOfInteriorToWalls middleAreaOfInteriorToWalls;
         //MiddleAreaOfPlayingField middleAreaOfPlayingField;
         Paddle paddle = new();
         PaddleArea paddleArea;
         internal PlayingField playingField; // = new();
-        PauseMenu pauseMenu = new();                        // <---necessary at this point? TBD
-        RemainingLivesIcons remainingLivesIcons = new();
+        PauseMenu pauseMenu = new();
+        RemainingLivesIcons remainingLivesIcons; // = new();
+        RightHalfOfBottomArea rightHalfOfBottomArea;
         Score score; // = new();
         TopAreaOfInteriorToWalls topAreaOfInteriorToWalls;
         //TopAreaOfPlayingField topAreaOfPlayingField;
-        List<Wall> walls = new();
+        List<Wall> walls = new();  //<--NOTE: new()'ing here to initialize the list
         WindowInterior windowInterior; // = new();
         Spacing spacing;
 
@@ -81,6 +83,10 @@ namespace Breakout.Game_states
         bool isPaused = false;
         int remainingLives = 3;  // 2?  TBD
         GamePlayState gamePlayState;
+
+        //And some constants
+        const int NUMROWSOFBRICKS = 8;  //I know 'all caps -> constant,' but this is kinda unreadable  TBD
+        const int NUMBRICKSPERROW = 14;
 
         public GamePlayView()
         {
@@ -171,25 +177,25 @@ namespace Breakout.Game_states
                 middleAreaOfInteriorToWalls.position.Width - 2 * padding,
                 middleAreaOfInteriorToWalls.position.Height - 2 * padding - spacing.brickGridBottomSpacing));
 
-            //IN PROGRESS: Add the bricks to brickGrid
+            //Add the bricks to brickGrid
             //Figure out each brick's size (and spacing within the brickgrid)
             int h = brickGrid.position.Height;
             int w = brickGrid.position.Width;
-            h -= 9 * spacing.intraBrickHorizontalSpacing;       //literals, man!  let's make a couple consts TODO
-            w -= 15 * spacing.intraBrickVerticalSpacing;
-            h /= 8;
-            w /= 14;
+            h -= (NUMROWSOFBRICKS + 1) * spacing.intraBrickHorizontalSpacing;
+            w -= (NUMBRICKSPERROW + 1) * spacing.intraBrickVerticalSpacing;
+            h /= NUMROWSOFBRICKS;
+            w /= NUMBRICKSPERROW;
 
-            int x; // = brickGrid.position.X;
+            int x; // this'll get set inside the for loop
             int y = brickGrid.position.Y + spacing.intraBrickVerticalSpacing;
-            var bg = brickGrid.brickGrid;
+            var bg = brickGrid.brickGrid;  //shorthand
             Brick brick;
-            for (int i = 0; i < 8; i++)
+            for (int i = 0; i < NUMROWSOFBRICKS; i++)
             {
                 //Reset x
                 x = brickGrid.position.X + spacing.intraBrickHorizontalSpacing;
 
-                for (int j = 0; j < 14; j++)
+                for (int j = 0; j < NUMBRICKSPERROW; j++)
                 {
                     //Create a brick
                     brick = new(new Rectangle(x, y, w, h));
@@ -202,7 +208,14 @@ namespace Breakout.Game_states
                 y += h + spacing.intraBrickHorizontalSpacing;
             }
 
-            //TODO: Add the 'lives remaining' section
+            //We'll split up the bottom area into left/right halves
+            leftHalfOfBottomArea = new(new Rectangle(bottomAreaOfInteriorToWalls.position.X, bottomAreaOfInteriorToWalls.position.Y, bottomAreaOfInteriorToWalls.position.Width / 2, bottomAreaOfInteriorToWalls.position.Height));
+
+            rightHalfOfBottomArea = new(new Rectangle(interiorToWalls.position.X + leftHalfOfBottomArea.position.Width, bottomAreaOfInteriorToWalls.position.Y, bottomAreaOfInteriorToWalls.position.Width / 2, bottomAreaOfInteriorToWalls.position.Height));
+
+            //IN PROGRESS: Add the 'lives remaining' section
+            remainingLives = new(new Rectangle());
+
             //TODO: Add the score section
         }
 
@@ -318,6 +331,15 @@ namespace Breakout.Game_states
                 }                
             }
 
+            if (showRegions)
+            {
+                el = new GameElement(RenderType.UI, CallType.Rectangle, blue1x1, leftHalfOfBottomArea.position, Color.White);
+                renderer.AddToRenderList(el);
+
+                //TODO the right half of the bottom area
+                el = new GameElement(RenderType.UI, CallType.Rectangle, limeGreen1x1, rightHalfOfBottomArea.position, Color.White);
+                renderer.AddToRenderList(el);
+            }
 
         }
 
