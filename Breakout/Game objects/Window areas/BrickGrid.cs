@@ -25,9 +25,15 @@ namespace Breakout.Game_elements
 
         //TODO: Pick a data structure to represent the BrickGrid.
         //      Dictionary<int(=row number, starting at the (top/bottom)), List<Brick>>, perhaps?
+        internal Dictionary<int, List<Brick>> brickGrid;
 
         internal BrickGrid(Rectangle position) : base(position)
         {
+            brickGrid = new();
+            for(int i = 0; i < 8; i++)
+            {
+                brickGrid[i] = new();
+            }
         }
 
         /*internal BrickGrid(Rectangle position, Rectangle boundingBox) : base(position, boundingBox)

@@ -51,6 +51,7 @@ namespace Breakout.Game_states
         private Texture2D bluegray1x1;      //Paddle
         private Texture2D purple1x1;        //misc.  //MAYBE: Remove, once we're done with it.
         private Texture2D white1x1;
+        private Texture2D black1x1;
 
         //private const string MESSAGE = "TODO: Game";
 
@@ -68,7 +69,7 @@ namespace Breakout.Game_states
         internal PlayingField playingField; // = new();
         PauseMenu pauseMenu = new();                        // <---necessary at this point? TBD
         RemainingLivesIcons remainingLivesIcons = new();
-        Score score = new();
+        Score score; // = new();
         TopAreaOfInteriorToWalls topAreaOfInteriorToWalls;
         //TopAreaOfPlayingField topAreaOfPlayingField;
         List<Wall> walls = new();
@@ -76,6 +77,7 @@ namespace Breakout.Game_states
         Spacing spacing;
 
         //Misc. variables
+        bool showRegions = false;
         bool isPaused = false;
         int remainingLives = 3;  // 2?  TBD
         GamePlayState gamePlayState;
@@ -83,6 +85,7 @@ namespace Breakout.Game_states
         public GamePlayView()
         {
             gamePlayState = GamePlayState.Initializing;
+            //score = new();    //TODO: new() a score, once we know the rectangle
         }
 
         //IN PROGRESS: Implement GamePlayView.loadContent()
@@ -100,6 +103,7 @@ namespace Breakout.Game_states
             bluegray1x1 = contentManager.Load<Texture2D>("Sprites/bluegray1x1");        //Paddle
             purple1x1 = contentManager.Load<Texture2D>("Sprites/purple1x1");            //misc.
             white1x1 = contentManager.Load<Texture2D>("Sprites/white1x1");
+            black1x1 = contentManager.Load<Texture2D>("Sprites/black1x1");
         }
 
         public override void initialize(GraphicsDevice graphicsDevice, GraphicsDeviceManager graphics)
@@ -128,7 +132,7 @@ namespace Breakout.Game_states
 
             /*bottomAreaOfPlayingField = new(new Rectangle(playingField.position.X, paddleArea.position.Y + paddleArea.position.Height,
                              playingField.position.Width, spacing.bottomAreaHeight));*/
-            //END Do we need these?
+            //END
 
             //Next up, walls
             Wall topWall = new(new Rectangle(playingField.position.X, playingField.position.Y,
@@ -167,7 +171,37 @@ namespace Breakout.Game_states
                 middleAreaOfInteriorToWalls.position.Width - 2 * padding,
                 middleAreaOfInteriorToWalls.position.Height - 2 * padding - spacing.brickGridBottomSpacing));
 
-            //TODO: Add the bricks to brickGrid
+            //IN PROGRESS: Add the bricks to brickGrid
+            //Figure out each brick's size (and spacing within the brickgrid)
+            int h = brickGrid.position.Height;
+            int w = brickGrid.position.Width;
+            h -= 9 * spacing.intraBrickHorizontalSpacing;       //literals, man!  let's make a couple consts TODO
+            w -= 15 * spacing.intraBrickVerticalSpacing;
+            h /= 8;
+            w /= 14;
+
+            int x; // = brickGrid.position.X;
+            int y = brickGrid.position.Y + spacing.intraBrickVerticalSpacing;
+            var bg = brickGrid.brickGrid;
+            Brick brick;
+            for (int i = 0; i < 8; i++)
+            {
+                //Reset x
+                x = brickGrid.position.X + spacing.intraBrickHorizontalSpacing;
+
+                for (int j = 0; j < 14; j++)
+                {
+                    //Create a brick
+                    brick = new(new Rectangle(x, y, w, h));
+                    //Then add it
+                    bg[i].Add(brick);
+                    //Then compute the new x (within brickGrid)
+                    x += w + spacing.intraBrickVerticalSpacing;
+                }
+                //After each internal for loop, compute the new y (for the next row)
+                y += h + spacing.intraBrickHorizontalSpacing;
+            }
+
             //TODO: Add the 'lives remaining' section
             //TODO: Add the score section
         }
@@ -177,11 +211,19 @@ namespace Breakout.Game_states
             //TODO: Implement GamePlayView.processInput()
             //REMINDER: This is called at the beginning of BreakoutGame.Input()
 
+            if (keyboard.IsKeyPressed(Keys.S))
+            {   //toggle showRegions
+                if (showRegions)
+                    showRegions = false;
+                else
+                    showRegions = true;
+            }
+
             //TODO: Change this to have Esc bring up a pause window (and pause the game) with 'quit' and 'resume' options -- or change a state variable to 'paused' then call a method that renders the pause menu
             if (keyboard.IsKeyPressed(Keys.Escape))
-           {
+            {
                return GameStateEnum.MainMenu;
-           }
+            }
 
            //Controls: Spacebar (to release the ball), left, right...and that's it, right?  TBD
            //Oh, and Enter, to select an option during the pause menu
@@ -206,35 +248,75 @@ namespace Breakout.Game_states
 
             //FOR NOW: Draw each region of the screen as a solid color
             // We'll make sure we get the render-order right, plus it'll be fun to see.  *thumbs up*
-            el = new GameElement(RenderType.UI, CallType.Rectangle, white1x1, windowInterior.position, Color.White);
-            renderer.AddToRenderList(el);
+            if (showRegions)
+            {
+                el = new GameElement(RenderType.UI, CallType.Rectangle, white1x1, windowInterior.position, Color.White);
+                renderer.AddToRenderList(el);
 
-            el = new GameElement(RenderType.UI, CallType.Rectangle, limeGreen1x1, playingField.position, Color.White);
-            renderer.AddToRenderList(el);
-
+                el = new GameElement(RenderType.UI, CallType.Rectangle, limeGreen1x1, playingField.position, Color.White);
+                renderer.AddToRenderList(el);
+            }
+            
             foreach(Wall wall in walls)
             {
                 el = new GameElement(RenderType.UI, CallType.Rectangle, darkgray1x1, wall.position, Color.White);
                 renderer.AddToRenderList(el);
             }
 
-            el = new GameElement(RenderType.UI, CallType.Rectangle, purple1x1, interiorToWalls.position, Color.White);
-            renderer.AddToRenderList(el);
+            if (showRegions)
+            {
+                el = new GameElement(RenderType.UI, CallType.Rectangle, purple1x1, interiorToWalls.position, Color.White);
+                renderer.AddToRenderList(el);
 
-            el = new GameElement(RenderType.UI, CallType.Rectangle, blue1x1, topAreaOfInteriorToWalls.position, Color.White);
-            renderer.AddToRenderList(el);
+                el = new GameElement(RenderType.UI, CallType.Rectangle, blue1x1, topAreaOfInteriorToWalls.position, Color.White);
+                renderer.AddToRenderList(el);
 
-            el = new GameElement(RenderType.UI, CallType.Rectangle, orange1x1, bottomAreaOfInteriorToWalls.position, Color.White);
-            renderer.AddToRenderList(el);
+                el = new GameElement(RenderType.UI, CallType.Rectangle, orange1x1, bottomAreaOfInteriorToWalls.position, Color.White);
+                renderer.AddToRenderList(el);
 
-            el = new GameElement(RenderType.UI, CallType.Rectangle, bluegray1x1, paddleArea.position, Color.White);
-            renderer.AddToRenderList(el);
+                el = new GameElement(RenderType.UI, CallType.Rectangle, bluegray1x1, paddleArea.position, Color.White);
+                renderer.AddToRenderList(el);
 
-            el = new GameElement(RenderType.UI, CallType.Rectangle, yellow1x1, middleAreaOfInteriorToWalls.position, Color.White);
-            renderer.AddToRenderList(el);
+                el = new GameElement(RenderType.UI, CallType.Rectangle, purple1x1, middleAreaOfInteriorToWalls.position, Color.White);
+                renderer.AddToRenderList(el);
 
-            el = new GameElement(RenderType.UI, CallType.Rectangle, limeGreen1x1, brickGrid.position, Color.White);
-            renderer.AddToRenderList(el);
+                el = new GameElement(RenderType.UI, CallType.Rectangle, black1x1, brickGrid.position, Color.White);
+                renderer.AddToRenderList(el);
+            }//END if(showRegions) (#2)
+
+            //Add the bricks from brickGrid
+            var bg = brickGrid.brickGrid;
+            for (int i = 0; i < 8; i++)
+            {
+                Texture2D tx;
+                switch (i)
+                {
+                    case 0:
+                    case 1:
+                        tx = limeGreen1x1;
+                        break;
+                    case 2:
+                    case 3:
+                        tx = blue1x1;
+                        break;
+                    case 4:
+                    case 5:
+                        tx = orange1x1;
+                        break;
+                    case 6:
+                    case 7:
+                        tx = yellow1x1;
+                        break;
+                    default:
+                        throw new System.Exception("How did we get here?  (By 'here' we mean that i = 9 (or greater, or less than zero) in the switch statement to add the bricks from brickGrid)");
+
+                }
+                for (int j = 0; j < 14; j++)
+                {
+                    el = new GameElement(RenderType.UI, CallType.Rectangle, tx, bg[i][j].position, Color.White);
+                    renderer.AddToRenderList(el);
+                }                
+            }
 
 
         }

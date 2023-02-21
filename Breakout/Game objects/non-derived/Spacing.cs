@@ -27,14 +27,14 @@ namespace Breakout.Game_objects.non_derived
         internal Spacing(GraphicsDeviceManager graphics)
         {
             //Set various hard-coded values
-            playingFieldPaddingOnAllFourSides = 30; //100; //50;
+            playingFieldPaddingOnAllFourSides = 200; // 30; //50;
             wallThickness = 30;
-            brickGridSpacingOnAllFourSides = 50;
+            brickGridSpacingOnAllFourSides = 20;
             brickGridBottomSpacing = 210;
             intraBrickHorizontalSpacing = 10;
             intraBrickVerticalSpacing = 10;
 
-            topAreaHeight = 90;     //Can we do away with any of these literals?  TBD
+            topAreaHeight = 70;     //Can we do away with any of these literals?  TBD
             paddleAreaHeight = 20;
             bottomAreaHeight = 110;         
         }
