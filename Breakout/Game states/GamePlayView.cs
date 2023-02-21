@@ -50,23 +50,27 @@ namespace Breakout.Game_states
         private Texture2D ball50x50;        //Ball
         private Texture2D bluegray1x1;      //Paddle
         private Texture2D purple1x1;        //misc.  //MAYBE: Remove, once we're done with it.
+        private Texture2D white1x1;
 
         //private const string MESSAGE = "TODO: Game";
 
         //Game Objects
         List<Ball> balls = new();
-        BottomArea bottomArea;
+        BottomAreaOfInteriorToWalls bottomAreaOfInteriorToWalls;
+        //BottomAreaOfPlayingField bottomAreaOfPlayingField;
         List<Brick> bricks = new();
         BrickGrid brickGrid; // = new();
         InteriorToWalls interiorToWalls;
-        MiddleArea middleArea;
+        MiddleAreaOfInteriorToWalls middleAreaOfInteriorToWalls;
+        //MiddleAreaOfPlayingField middleAreaOfPlayingField;
         Paddle paddle = new();
         PaddleArea paddleArea;
         internal PlayingField playingField; // = new();
         PauseMenu pauseMenu = new();                        // <---necessary at this point? TBD
         RemainingLivesIcons remainingLivesIcons = new();
         Score score = new();
-        TopArea topArea;
+        TopAreaOfInteriorToWalls topAreaOfInteriorToWalls;
+        //TopAreaOfPlayingField topAreaOfPlayingField;
         List<Wall> walls = new();
         WindowInterior windowInterior; // = new();
         Spacing spacing;
@@ -95,7 +99,7 @@ namespace Breakout.Game_states
             ball50x50 = contentManager.Load<Texture2D>("Sprites/ball50x50");            //Ball
             bluegray1x1 = contentManager.Load<Texture2D>("Sprites/bluegray1x1");        //Paddle
             purple1x1 = contentManager.Load<Texture2D>("Sprites/purple1x1");            //misc.
-
+            white1x1 = contentManager.Load<Texture2D>("Sprites/white1x1");
         }
 
         public override void initialize(GraphicsDevice graphicsDevice, GraphicsDeviceManager graphics)
@@ -116,14 +120,14 @@ namespace Breakout.Game_states
             spacing.RecomputeValues(graphics, this);  //re-compute the values, after setting playingField
 
             //Do we need these?  We're re-computing them as the space interior to the walls, I think.  TBD
-            topArea = new(new Rectangle(playingField.position.X, playingField.position.Y,
+            /*topAreaOfPlayingField = new(new Rectangle(playingField.position.X, playingField.position.Y,
                           playingField.position.Width, spacing.topAreaHeight));
-            middleArea = new(new Rectangle(playingField.position.X, topArea.position.Y + topArea.position.Height,
-                             playingField.position.Width, spacing.middleAreaHeight));
-            paddleArea = new(new Rectangle(playingField.position.X, middleArea.position.Y + middleArea.position.Height,
-                             playingField.position.Width, spacing.paddleAreaHeight));
-            bottomArea = new(new Rectangle(playingField.position.X, paddleArea.position.Y + paddleArea.position.Height,
-                             playingField.position.Width, spacing.bottomAreaHeight));
+            
+            middleAreaOfPlayingField = new(new Rectangle(playingField.position.X, topAreaOfPlayingField.position.Y + topAreaOfPlayingField.position.Height,
+                             playingField.position.Width, spacing.middleAreaHeight));*/
+
+            /*bottomAreaOfPlayingField = new(new Rectangle(playingField.position.X, paddleArea.position.Y + paddleArea.position.Height,
+                             playingField.position.Width, spacing.bottomAreaHeight));*/
             //END Do we need these?
 
             //Next up, walls
@@ -141,8 +145,25 @@ namespace Breakout.Game_states
                 playingField.position.Width - 2*spacing.wallThickness, 
                 playingField.position.Height - spacing.wallThickness));
 
+            //Then we'll split up the area within the walls
+            //Top
+            topAreaOfInteriorToWalls = new(new Rectangle(interiorToWalls.position.X, interiorToWalls.position.Y,
+                          interiorToWalls.position.Width, spacing.topAreaHeight));
+            //Bottom
+            bottomAreaOfInteriorToWalls = new(new Rectangle(interiorToWalls.position.X, interiorToWalls.position.Y + interiorToWalls.position.Height - spacing.bottomAreaHeight, interiorToWalls.position.Width, spacing.bottomAreaHeight));
+            //Paddle area
+            paddleArea = new(new Rectangle(interiorToWalls.position.X, 
+                interiorToWalls.position.Y + interiorToWalls.position.Height - bottomAreaOfInteriorToWalls.position.Height - spacing.paddleAreaHeight, interiorToWalls.position.Width, 
+                spacing.paddleAreaHeight));
+            //Middle
+            middleAreaOfInteriorToWalls = new(new Rectangle(interiorToWalls.position.X,
+                interiorToWalls.position.Y + topAreaOfInteriorToWalls.position.Height,
+                interiorToWalls.position.Width,
+                 interiorToWalls.position.Height - topAreaOfInteriorToWalls.position.Height - bottomAreaOfInteriorToWalls.position.Height - paddleArea.position.Height));
 
-            /*brickGrid = new(new Rectangle(middleArea.position.X, middleArea.position.Y, //Do this after adding walls
+            //interiorToWalls.position.Height - bottomAreaOfInteriorToWalls.position.Height - spacing.paddleAreaHeight
+
+            /*brickGrid = new(new Rectangle(middleAreaOfPlayingField.position.X, middleAreaOfPlayingField.position.Y, //Do this after adding walls
                             playingField.position.Width, spacing.paddleAreaHeight));*/
         }
 
@@ -180,22 +201,10 @@ namespace Breakout.Game_states
 
             //TODO, FOR NOW: Draw each region of the screen as a solid color
             // We'll make sure we get the render-order right, plus it'll be fun to see.  *thumbs up*
-            el = new GameElement(RenderType.UI, CallType.Rectangle, yellow1x1, windowInterior.position, Color.White);
+            el = new GameElement(RenderType.UI, CallType.Rectangle, white1x1, windowInterior.position, Color.White);
             renderer.AddToRenderList(el);
 
             el = new GameElement(RenderType.UI, CallType.Rectangle, limeGreen1x1, playingField.position, Color.White);
-            renderer.AddToRenderList(el);
-
-            el = new GameElement(RenderType.UI, CallType.Rectangle, blue1x1, topArea.position, Color.White);
-            renderer.AddToRenderList(el);
-
-            el = new GameElement(RenderType.UI, CallType.Rectangle, purple1x1, middleArea.position, Color.White);
-            renderer.AddToRenderList(el);
-
-            el = new GameElement(RenderType.UI, CallType.Rectangle, orange1x1, paddleArea.position, Color.White);
-            renderer.AddToRenderList(el);
-
-            el = new GameElement(RenderType.UI, CallType.Rectangle, bluegray1x1, bottomArea.position, Color.White);
             renderer.AddToRenderList(el);
 
             foreach(Wall wall in walls)
@@ -207,6 +216,17 @@ namespace Breakout.Game_states
             el = new GameElement(RenderType.UI, CallType.Rectangle, purple1x1, interiorToWalls.position, Color.White);
             renderer.AddToRenderList(el);
 
+            el = new GameElement(RenderType.UI, CallType.Rectangle, blue1x1, topAreaOfInteriorToWalls.position, Color.White);
+            renderer.AddToRenderList(el);
+
+            el = new GameElement(RenderType.UI, CallType.Rectangle, orange1x1, bottomAreaOfInteriorToWalls.position, Color.White);
+            renderer.AddToRenderList(el);
+
+            el = new GameElement(RenderType.UI, CallType.Rectangle, bluegray1x1, paddleArea.position, Color.White);
+            renderer.AddToRenderList(el);
+
+            el = new GameElement(RenderType.UI, CallType.Rectangle, yellow1x1, middleAreaOfInteriorToWalls.position, Color.White);
+            renderer.AddToRenderList(el);
 
 
         }

@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace Breakout.Game_objects.Window_areas
 {
-    internal class MiddleArea : GameObject
+    internal class MiddleAreaOfInteriorToWalls : GameObject
     {
-        internal MiddleArea(Rectangle position) : base(position)
+        internal MiddleAreaOfInteriorToWalls(Rectangle position) : base(position)
         {
         }
     }

@@ -153,6 +153,18 @@
 /processorParam:TextureFormat=Color
 /build:Sprites/purple1x1.png
 
+#begin Sprites/white1x1.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Sprites/white1x1.png
+
 #begin Sprites/yellow1x1.png
 /importer:TextureImporter
 /processor:TextureProcessor

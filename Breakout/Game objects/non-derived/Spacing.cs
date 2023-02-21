@@ -19,17 +19,19 @@ namespace Breakout.Game_objects.non_derived
         public int bottomAreaHeight;
         public int wallThickness;
         public int playingFieldPaddingOnAllFourSides;
+        public int brickGridSpacingOnAllFourSides;
 
         internal Spacing(GraphicsDeviceManager graphics)
         {
             //First up, stuff that's hard-coded
-            playingFieldPaddingOnAllFourSides = 50; //100;
+            playingFieldPaddingOnAllFourSides = 100; //50;
             wallThickness = 30;
+            brickGridSpacingOnAllFourSides = 20;
 
             //Next up...other stuff  (although here's still hard-coded.  what's up with that?  TBD)            
             topAreaHeight = 170;    //just picking a number for the moment.  TODO: Actual topAreaHeight
             paddleAreaHeight = 50;  //TODO: Fix this formula so that it has no constants, if possible
-            bottomAreaHeight = 180;  //TODO: Fix this forumula so that it has no constants, if possible
+            bottomAreaHeight = 150;  //TODO: Fix this forumula so that it has no constants, if possible
 
             //RecomputeValues(graphics, gamePlayView);            
         }
