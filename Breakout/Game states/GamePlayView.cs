@@ -46,28 +46,30 @@ namespace Breakout.Game_states
         private Texture2D limeGreen1x1;
         private Texture2D orange1x1;
         private Texture2D yellow1x1;
-        private Texture2D dark_gray1x1;     //Wall
+        private Texture2D darkgray1x1;     //Wall
         private Texture2D ball50x50;        //Ball
         private Texture2D bluegray1x1;      //Paddle
         private Texture2D purple1x1;        //misc.  //MAYBE: Remove, once we're done with it.
 
-        private const string MESSAGE = "TODO: Game";  //TODO: Comment this out...eventually
+        //private const string MESSAGE = "TODO: Game";
 
         //Game Objects
         List<Ball> balls = new();
+        BottomArea bottomArea;
         List<Brick> bricks = new();
-        BrickGrid brickGrid = new();
+        BrickGrid brickGrid; // = new();
+        InteriorToWalls interiorToWalls;
         MiddleArea middleArea;
         Paddle paddle = new();
         PaddleArea paddleArea;
-        PlayingField playingField; // = new();
+        internal PlayingField playingField; // = new();
         PauseMenu pauseMenu = new();                        // <---necessary at this point? TBD
         RemainingLivesIcons remainingLivesIcons = new();
         Score score = new();
         TopArea topArea;
         List<Wall> walls = new();
         WindowInterior windowInterior; // = new();
-        Spacing spacing = new();
+        Spacing spacing;
 
         //Misc. variables
         bool isPaused = false;
@@ -89,25 +91,61 @@ namespace Breakout.Game_states
             limeGreen1x1 = contentManager.Load<Texture2D>("Sprites/limeGreen1x1");
             orange1x1 = contentManager.Load<Texture2D>("Sprites/orange1x1");
             yellow1x1 = contentManager.Load<Texture2D>("Sprites/yellow1x1");
-            dark_gray1x1 = contentManager.Load<Texture2D>("Sprites/dark-gray1x1");      //Walls
+            darkgray1x1 = contentManager.Load<Texture2D>("Sprites/dark-gray1x1");      //Walls
             ball50x50 = contentManager.Load<Texture2D>("Sprites/ball50x50");            //Ball
             bluegray1x1 = contentManager.Load<Texture2D>("Sprites/bluegray1x1");        //Paddle
             purple1x1 = contentManager.Load<Texture2D>("Sprites/purple1x1");            //misc.
 
-            //And now, set up the game objects - IN PROGRESS
-            windowInterior = new(new Rectangle(0, 0, 
-                                 graphics.PreferredBackBufferWidth, 
-                                 graphics.PreferredBackBufferHeight));
-            playingField = new(windowInterior.position);        //for now, copy windowInterior.position
-            topArea = new(new Rectangle(playingField.position.X, playingField.position.Y,
-                playingField.position.Width, spacing.topAreaHeight));
-            middleArea = new(new Rectangle(playingField.position.X, topArea.position.Y + topArea.position.Height,
-                playingField.position.Width, spacing.middleAreaHeight));
-            paddleArea = new(new Rectangle(playingField.position.X, middleArea.position.Y + middleArea.position.Height,
-                playingField.position.Width, spacing.paddleAreaHeight));
         }
 
-        
+        public override void initialize(GraphicsDevice graphicsDevice, GraphicsDeviceManager graphics)
+        {
+            base.initialize(graphicsDevice, graphics);
+
+            //and then...
+
+            //...set up the game objects - DONE-ISH
+            spacing = new(graphics);
+            windowInterior = new(new Rectangle(0, 0,
+                                 graphics.PreferredBackBufferWidth,
+                                 graphics.PreferredBackBufferHeight));
+
+            int padding = spacing.playingFieldPaddingOnAllFourSides;
+            playingField = new(new Rectangle(padding, padding, graphics.PreferredBackBufferWidth - 2 * padding, graphics.PreferredBackBufferHeight - 2 * padding));
+
+            spacing.RecomputeValues(graphics, this);  //re-compute the values, after setting playingField
+
+            //Do we need these?  We're re-computing them as the space interior to the walls, I think.  TBD
+            topArea = new(new Rectangle(playingField.position.X, playingField.position.Y,
+                          playingField.position.Width, spacing.topAreaHeight));
+            middleArea = new(new Rectangle(playingField.position.X, topArea.position.Y + topArea.position.Height,
+                             playingField.position.Width, spacing.middleAreaHeight));
+            paddleArea = new(new Rectangle(playingField.position.X, middleArea.position.Y + middleArea.position.Height,
+                             playingField.position.Width, spacing.paddleAreaHeight));
+            bottomArea = new(new Rectangle(playingField.position.X, paddleArea.position.Y + paddleArea.position.Height,
+                             playingField.position.Width, spacing.bottomAreaHeight));
+            //END Do we need these?
+
+            //Next up, walls
+            Wall topWall = new(new Rectangle(playingField.position.X, playingField.position.Y,
+                playingField.position.Width, spacing.wallThickness));
+            walls.Add(topWall);
+            Wall leftWall = new(new Rectangle(playingField.position.X, playingField.position.Y + spacing.wallThickness, spacing.wallThickness, playingField.position.Height - spacing.wallThickness));
+            walls.Add(leftWall);
+            Wall rightWall = new(new Rectangle(playingField.position.X + playingField.position.Width - spacing.wallThickness, playingField.position.Y + spacing.wallThickness, spacing.wallThickness, playingField.position.Height - spacing.wallThickness));
+            walls.Add(rightWall);
+
+            //And then, stuff within the walls
+            interiorToWalls = new(new Rectangle(playingField.position.X + spacing.wallThickness,
+                playingField.position.Y + spacing.wallThickness,
+                playingField.position.Width - 2*spacing.wallThickness, 
+                playingField.position.Height - spacing.wallThickness));
+
+
+            /*brickGrid = new(new Rectangle(middleArea.position.X, middleArea.position.Y, //Do this after adding walls
+                            playingField.position.Width, spacing.paddleAreaHeight));*/
+        }
+
         public override GameStateEnum processInput(GameTime gameTime, BO_Keyboard keyboard)   
         {
             //TODO: Implement GamePlayView.processInput()
@@ -129,8 +167,7 @@ namespace Breakout.Game_states
         {
              base.render(gameTime, renderer);
         }
-
-        
+                
         public override void update(GameTime gameTime, Renderer renderer)
         {
             //IN PROGRESS: GamePlayview.update()
@@ -143,8 +180,8 @@ namespace Breakout.Game_states
 
             //TODO, FOR NOW: Draw each region of the screen as a solid color
             // We'll make sure we get the render-order right, plus it'll be fun to see.  *thumbs up*
-            /*el = new GameElement(RenderType.UI, CallType.Rectangle, yellow1x1, windowInterior.position, Color.White);
-            renderer.AddToRenderList(el);*/
+            el = new GameElement(RenderType.UI, CallType.Rectangle, yellow1x1, windowInterior.position, Color.White);
+            renderer.AddToRenderList(el);
 
             el = new GameElement(RenderType.UI, CallType.Rectangle, limeGreen1x1, playingField.position, Color.White);
             renderer.AddToRenderList(el);
@@ -158,6 +195,17 @@ namespace Breakout.Game_states
             el = new GameElement(RenderType.UI, CallType.Rectangle, orange1x1, paddleArea.position, Color.White);
             renderer.AddToRenderList(el);
 
+            el = new GameElement(RenderType.UI, CallType.Rectangle, bluegray1x1, bottomArea.position, Color.White);
+            renderer.AddToRenderList(el);
+
+            foreach(Wall wall in walls)
+            {
+                el = new GameElement(RenderType.UI, CallType.Rectangle, darkgray1x1, wall.position, Color.White);
+                renderer.AddToRenderList(el);
+            }
+
+            el = new GameElement(RenderType.UI, CallType.Rectangle, purple1x1, interiorToWalls.position, Color.White);
+            renderer.AddToRenderList(el);
 
 
 

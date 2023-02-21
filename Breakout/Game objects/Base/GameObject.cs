@@ -16,16 +16,16 @@ namespace Breakout.Game_objects.Base
         internal GameObject(Rectangle position)
         {
             this.position = position;
-            boundingBox = new();
+            boundingBox = this.position;        //if bounding box isn't specified, have it copy position
          }
 
-        internal GameObject(Rectangle position, Rectangle boundingBox)
+        internal GameObject(Rectangle position, Rectangle boundingBox)  //for when boundingBox is different from position
         {
             this.position = position;
             this.boundingBox = boundingBox;
         }
 
-        internal GameObject()
+        internal GameObject()   //pretty sure this serves no real purpose; TODO: Delete it, eventually
         {
             position = new();
             boundingBox = new();

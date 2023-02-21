@@ -97,6 +97,7 @@ namespace Breakout
             //GraphicsDevice.Clear(Color.CornflowerBlue);
             GraphicsDevice.Clear(new Color(64, 64, 64));  //dark-ish gray...which I couldn't find a name for
                                                           //  Although I didn't look super-hard *thumbs up*
+            //GraphicsDevice.Clear(Color.Black);
 
             //Do some drawing
             currentState.render(gameTime, renderer);
