@@ -19,6 +19,8 @@ namespace Breakout.Game_elements
         internal Rectangle boundingBox;*/
 
         //TODO: Paddle class
+        //TODO: Animate the paddle
+        //TODO: Shrink the paddle (as an animation)
 
         internal Paddle(Rectangle position) : base(position)
         {
@@ -30,6 +32,11 @@ namespace Breakout.Game_elements
 
         internal Paddle() : base()
         {
+        }
+
+        public void Shrink(GameTime gameTime)
+        {
+            //Shrink!
         }
 
     }

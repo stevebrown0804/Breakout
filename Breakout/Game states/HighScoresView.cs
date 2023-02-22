@@ -43,10 +43,9 @@ namespace Breakout.Game_states
             base.render(gameTime, renderer);
         }
 
+        //IN PROGRESS-ish: HighScoresView.update()
         public override void update(GameTime gameTime, Renderer renderer)
         {
-            //IN PROGRESS-ish: HighScoresView.update()
-
             Vector2 stringSize = m_font.MeasureString(MESSAGE);
             GameElement el = new(RenderType.Text, m_font, MESSAGE,
                 new Vector2(graphics.PreferredBackBufferWidth / 2 - stringSize.X / 2, graphics.PreferredBackBufferHeight / 2 - stringSize.Y),

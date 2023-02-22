@@ -56,25 +56,28 @@ namespace Breakout.Game_states
         //private const string MESSAGE = "TODO: Game";
 
         //Game Objects
+        // Lists (so we'll new() them here)
         List<Ball> balls = new();
+        List<Wall> walls = new(); 
+
+        // Non-list
         BottomAreaOfInteriorToWalls bottomAreaOfInteriorToWalls;
-        //BottomAreaOfPlayingField bottomAreaOfPlayingField;
-        //List<Brick> bricks = new();       //<--FOR NOW: interact with the bricks through brickGrid.brickGrid
-        BrickGrid brickGrid; // = new();
+        //BottomAreaOfPlayingField bottomAreaOfPlayingField;        
+        BrickGrid brickGrid;
         InteriorToWalls interiorToWalls;
         LeftHalfOfBottomArea leftHalfOfBottomArea;
         MiddleAreaOfInteriorToWalls middleAreaOfInteriorToWalls;
         //MiddleAreaOfPlayingField middleAreaOfPlayingField;
         Paddle paddle = new();
         PaddleArea paddleArea;
-        internal PlayingField playingField; // = new();
+        internal PlayingField playingField;
         PauseMenu pauseMenu = new();
-        RemainingLivesIcons remainingLivesIcons; // = new();
+        RemainingLivesIcons remainingLivesIcons;
         RightHalfOfBottomArea rightHalfOfBottomArea;
-        Score score; // = new();
+        Score score;
         TopAreaOfInteriorToWalls topAreaOfInteriorToWalls;
         //TopAreaOfPlayingField topAreaOfPlayingField;
-        List<Wall> walls = new();  //<--NOTE: new()'ing here to initialize the list
+        
         WindowInterior windowInterior; // = new();
         Spacing spacing;
 
@@ -84,16 +87,15 @@ namespace Breakout.Game_states
         GamePlayState gamePlayState;
 
         //And some constants
-        const int NUMROWSOFBRICKS = 8;  //I know 'all caps -> constant,' but this is kinda unreadable  TBD
-        const int NUMBRICKSPERROW = 14;
+        const int numRowsOfBricks = 8;
+        const int numBricksPerRow = 14;
 
         public GamePlayView()
         {
             gamePlayState = GamePlayState.Initializing;
-            //score = new();    //TODO: new() a score, once we know the rectangle
         }
 
-        //IN PROGRESS: Implement GamePlayView.loadContent()
+        //DONE, MAYBE?: Implement GamePlayView.loadContent()
         public override void loadContent(ContentManager contentManager)  
         {
             inGameMenuFont = contentManager.Load<SpriteFont>("Fonts/ingame-menu");      //Fonts
@@ -111,13 +113,13 @@ namespace Breakout.Game_states
             black1x1 = contentManager.Load<Texture2D>("Sprites/black1x1");
         }
 
+        //IN PROGRESS - GamePlayView.initialize()
         public override void initialize(GraphicsDevice graphicsDevice, GraphicsDeviceManager graphics)
         {
             base.initialize(graphicsDevice, graphics);
-
             //and then...
 
-            //...set up the game objects - IN PROGRESS
+            //...set up the game objects
             spacing = new(graphics);
             windowInterior = new(new Rectangle(0, 0,
                                  graphics.PreferredBackBufferWidth,
@@ -180,21 +182,21 @@ namespace Breakout.Game_states
             //Figure out each brick's size (and spacing within the brickgrid)
             int h = brickGrid.position.Height;
             int w = brickGrid.position.Width;
-            h -= (NUMROWSOFBRICKS + 1) * spacing.intraBrickHorizontalSpacing;
-            w -= (NUMBRICKSPERROW + 1) * spacing.intraBrickVerticalSpacing;
-            h /= NUMROWSOFBRICKS;
-            w /= NUMBRICKSPERROW;
+            h -= (numRowsOfBricks + 1) * spacing.intraBrickHorizontalSpacing;
+            w -= (numBricksPerRow + 1) * spacing.intraBrickVerticalSpacing;
+            h /= numRowsOfBricks;
+            w /= numBricksPerRow;
 
             int x; // this'll get set inside the for loop
             int y = brickGrid.position.Y + spacing.intraBrickVerticalSpacing;
             var bg = brickGrid.brickGrid;  //shorthand
             Brick brick;
-            for (int i = 0; i < NUMROWSOFBRICKS; i++)
+            for (int i = 0; i < numRowsOfBricks; i++)
             {
                 //Reset x
                 x = brickGrid.position.X + spacing.intraBrickHorizontalSpacing;
 
-                for (int j = 0; j < NUMBRICKSPERROW; j++)
+                for (int j = 0; j < numBricksPerRow; j++)
                 {
                     //Create a brick
                     brick = new(new Rectangle(x, y, w, h));
@@ -215,8 +217,10 @@ namespace Breakout.Game_states
             //Next up, the 'lives remaining' section
             remainingLivesIcons = new(new Rectangle(leftHalfOfBottomArea.position.X + spacing.remainingLivesLeftSpacing, leftHalfOfBottomArea.position.Y + spacing.remainingLivesTopSpacing, leftHalfOfBottomArea.position.Width - spacing.remainingLivesLeftSpacing - spacing.remainingLivesRightSpacing, leftHalfOfBottomArea.position.Height - spacing.remainingLivesTopSpacing - spacing.remainingLivesBottomSpacing));
 
-            //IN PROGRESS: Add the score section
+            //And the score section
             score = new(new Rectangle(rightHalfOfBottomArea.position.X + spacing.scoreSectionLeftSpacing, rightHalfOfBottomArea.position.Y + spacing.scoreSectionTopSpacing, rightHalfOfBottomArea.position.Width - spacing.scoreSectionLeftSpacing - spacing.scoreSectionRightSpacing, rightHalfOfBottomArea.position.Height - spacing.scoreSectionTopSpacing - spacing.scoreSectionBottomSpacing));
+
+            //TODO: the paddle, ball, countdown and pause menu
 
         }
 
@@ -249,11 +253,10 @@ namespace Breakout.Game_states
         {
              base.render(gameTime, renderer);
         }
-                
+
+        //IN PROGRESS: GamePlayview.update()
         public override void update(GameTime gameTime, Renderer renderer)
         {
-            //IN PROGRESS: GamePlayview.update()
-
             //Vector2 stringSize = inGameMenuFont.MeasureString(MESSAGE);
             GameElement el;
             /*el = new GameElement(RenderType.Text, inGameMenuFont, MESSAGE, 
@@ -354,6 +357,14 @@ namespace Breakout.Game_states
             //TODO: paddle
 
             //TODO: ball
+
+            if (showRegions)
+            {
+                //TODO: countdown
+
+                //TODO: pause menu
+
+            }
 
 
         }//END update()

@@ -18,6 +18,10 @@ namespace Breakout.Game_elements
     {
         //IN PROGRESS: Ball class
 
+        //TODO: Animate the ball
+        //TODO: Have the ball track its velocity
+        //TODO: Have the ball update its velocity in response to a collisions
+
         //Base class:
         /*internal Rectangle position;
         internal Rectangle boundingBox;*/
@@ -45,6 +49,7 @@ namespace Breakout.Game_elements
         {
         }*/
 
+        //TODO: Have the ball speed up when a certain # of bricks are destroyed
         internal void SpeedUp(int bricksDestroyed)
         {
             velocity.X *= speedupFactor[bricksDestroyed];

@@ -32,6 +32,8 @@ namespace Breakout.Game_objects.non_derived
         public int scoreSectionTopSpacing;
         public int scoreSectionBottomSpacing;
 
+        //TODO: paddle, ball, countdown and pause menu
+
         internal Spacing(GraphicsDeviceManager graphics)
         {
             //Set various hard-coded values
@@ -59,6 +61,9 @@ namespace Breakout.Game_objects.non_derived
             scoreSectionRightSpacing = 60;
             scoreSectionTopSpacing = 20;
             scoreSectionBottomSpacing = 20;
+
+            //TODO: paddle, ball, countdown and pause menu
+
         }
 
         internal void RecomputeValues(GraphicsDeviceManager graphics, GamePlayView gamePlayView)
