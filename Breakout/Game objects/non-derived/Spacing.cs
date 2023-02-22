@@ -23,6 +23,14 @@ namespace Breakout.Game_objects.non_derived
         public int brickGridBottomSpacing;
         public int intraBrickHorizontalSpacing;
         public int intraBrickVerticalSpacing;
+        public int remainingLivesLeftSpacing;
+        public int remainingLivesRightSpacing;
+        public int remainingLivesTopSpacing;
+        public int remainingLivesBottomSpacing;
+        public int scoreSectionLeftSpacing;
+        public int scoreSectionRightSpacing;
+        public int scoreSectionTopSpacing;
+        public int scoreSectionBottomSpacing;
 
         internal Spacing(GraphicsDeviceManager graphics)
         {
@@ -40,7 +48,17 @@ namespace Breakout.Game_objects.non_derived
             topAreaHeight = 70;
             
             paddleAreaHeight = 30;
-            bottomAreaHeight = 110;         
+            bottomAreaHeight = 110;
+
+            remainingLivesLeftSpacing = 60;
+            remainingLivesRightSpacing = 60;
+            remainingLivesTopSpacing = 20;
+            remainingLivesBottomSpacing = 20;
+
+            scoreSectionLeftSpacing = 60;
+            scoreSectionRightSpacing = 60;
+            scoreSectionTopSpacing = 20;
+            scoreSectionBottomSpacing = 20;
         }
 
         internal void RecomputeValues(GraphicsDeviceManager graphics, GamePlayView gamePlayView)

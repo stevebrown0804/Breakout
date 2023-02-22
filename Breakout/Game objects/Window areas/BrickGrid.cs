@@ -10,12 +10,9 @@ using Breakout.Game_objects.Base;
 
 namespace Breakout.Game_elements
 {
-
-    //IN PROGRESS: Get the pencil & paper out and diagram the screen, figuring out where stuff will go
-
     internal class BrickGrid : GameObject
     {
-        //Reminder:
+        //Base class:
         /*internal Rectangle position;
         internal Rectangle boundingBox;*/
                 

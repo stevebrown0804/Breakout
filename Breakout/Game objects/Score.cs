@@ -18,7 +18,7 @@ namespace Breakout.Game_objects
 {
     internal class Score : GameObject
     {
-        //Reminder:
+        //Base class:
         /*internal Rectangle position;
         internal Rectangle boundingBox;*/
 

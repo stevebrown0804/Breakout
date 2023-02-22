@@ -10,7 +10,7 @@ namespace Breakout.Game_elements
 {
     internal class Wall : GameObject
     {
-        //Reminder:
+        //Base class:
         /*internal Rectangle position;
         internal Rectangle boundingBox;*/
 

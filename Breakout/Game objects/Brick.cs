@@ -19,7 +19,7 @@ namespace Breakout.Game_elements
     {
         //"Starting from the bottom, two rows of yellow, two rows of orange, two rows of blue, and two rows of green."
 
-        //Reminder:
+        //Base class:
         /*internal Rectangle position;
         internal Rectangle boundingBox;*/
 

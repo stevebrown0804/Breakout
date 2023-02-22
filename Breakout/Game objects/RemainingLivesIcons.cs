@@ -10,20 +10,18 @@ namespace Breakout.Game_objects
 {
     internal class RemainingLivesIcons : GameObject
     {
-        //TODO: RemainingLivesObject class
-        //This will be the area that the paddle icons are rendered into
+         public int remainingLives = 3;  // 2?  TBD
 
         internal RemainingLivesIcons(Rectangle position) : base(position)
         {
         }
 
-        //the pause menu probably doesn't need a bounding box
-        internal RemainingLivesIcons(Rectangle position, Rectangle boundingBox) : base(position, boundingBox)
+        /*internal RemainingLivesIcons(Rectangle position, Rectangle boundingBox) : base(position, boundingBox)
         {
         }
 
         internal RemainingLivesIcons() : base()
         {
-        }
+        }*/
     }
 }

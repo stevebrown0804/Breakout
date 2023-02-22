@@ -80,8 +80,7 @@ namespace Breakout.Game_states
 
         //Misc. variables
         bool showRegions = false;
-        bool isPaused = false;
-        int remainingLives = 3;  // 2?  TBD
+        bool isPaused = false;        
         GamePlayState gamePlayState;
 
         //And some constants
@@ -213,10 +212,12 @@ namespace Breakout.Game_states
 
             rightHalfOfBottomArea = new(new Rectangle(interiorToWalls.position.X + leftHalfOfBottomArea.position.Width, bottomAreaOfInteriorToWalls.position.Y, bottomAreaOfInteriorToWalls.position.Width / 2, bottomAreaOfInteriorToWalls.position.Height));
 
-            //IN PROGRESS: Add the 'lives remaining' section
-            remainingLives = new(new Rectangle());
+            //Next up, the 'lives remaining' section
+            remainingLivesIcons = new(new Rectangle(leftHalfOfBottomArea.position.X + spacing.remainingLivesLeftSpacing, leftHalfOfBottomArea.position.Y + spacing.remainingLivesTopSpacing, leftHalfOfBottomArea.position.Width - spacing.remainingLivesLeftSpacing - spacing.remainingLivesRightSpacing, leftHalfOfBottomArea.position.Height - spacing.remainingLivesTopSpacing - spacing.remainingLivesBottomSpacing));
 
-            //TODO: Add the score section
+            //IN PROGRESS: Add the score section
+            score = new(new Rectangle(rightHalfOfBottomArea.position.X + spacing.scoreSectionLeftSpacing, rightHalfOfBottomArea.position.Y + spacing.scoreSectionTopSpacing, rightHalfOfBottomArea.position.Width - spacing.scoreSectionLeftSpacing - spacing.scoreSectionRightSpacing, rightHalfOfBottomArea.position.Height - spacing.scoreSectionTopSpacing - spacing.scoreSectionBottomSpacing));
+
         }
 
         public override GameStateEnum processInput(GameTime gameTime, BO_Keyboard keyboard)   
@@ -333,15 +334,29 @@ namespace Breakout.Game_states
 
             if (showRegions)
             {
+                //Bottom area, left and right
                 el = new GameElement(RenderType.UI, CallType.Rectangle, blue1x1, leftHalfOfBottomArea.position, Color.White);
                 renderer.AddToRenderList(el);
 
-                //TODO the right half of the bottom area
                 el = new GameElement(RenderType.UI, CallType.Rectangle, limeGreen1x1, rightHalfOfBottomArea.position, Color.White);
                 renderer.AddToRenderList(el);
+
+                //remainingLivesIcons
+                el = new GameElement(RenderType.UI, CallType.Rectangle, orange1x1, remainingLivesIcons.position, Color.White);
+                renderer.AddToRenderList(el);
+
+                //score section
+                el = new GameElement(RenderType.UI, CallType.Rectangle, yellow1x1, score.position, Color.White);
+                renderer.AddToRenderList(el);
+
             }
 
-        }
+            //TODO: paddle
+
+            //TODO: ball
+
+
+        }//END update()
 
     }//END class GamePlayView
 }

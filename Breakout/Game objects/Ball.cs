@@ -18,7 +18,7 @@ namespace Breakout.Game_elements
     {
         //IN PROGRESS: Ball class
 
-        //Reminder:
+        //Base class:
         /*internal Rectangle position;
         internal Rectangle boundingBox;*/
 
@@ -32,7 +32,7 @@ namespace Breakout.Game_elements
         internal Ball(Rectangle position, Rectangle boundingBox) : base(position, boundingBox)
         {
             speedupFactor = new Dictionary<int, float> {
-                {4, 2f },  //just to pick some numbers atm;  TODO: Actual speedup factors
+                {4, 2f },  //just to pick some numbers atm;  TODO: Update these later, as needed
                 {12, 2f },
                 {36, 2f },
                 {62, 2f }

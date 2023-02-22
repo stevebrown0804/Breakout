@@ -14,7 +14,7 @@ namespace Breakout.Game_elements
 
     internal class PlayingField : GameObject
     {
-        //Reminder:
+        //Base class:
         /*internal Rectangle position;
         internal Rectangle boundingBox;*/
 
