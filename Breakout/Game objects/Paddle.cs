@@ -30,9 +30,9 @@ namespace Breakout.Game_elements
         {
         }
 
-        internal Paddle() : base()
+        /*internal Paddle() : base()
         {
-        }
+        }*/
 
         public void Shrink(GameTime gameTime)
         {

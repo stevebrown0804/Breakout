@@ -18,12 +18,12 @@ namespace Breakout.Game_objects
         }
 
         //the pause menu probably doesn't need a bounding box
-        internal PauseMenu(Rectangle position, Rectangle boundingBox) : base(position, boundingBox)
+        /*internal PauseMenu(Rectangle position, Rectangle boundingBox) : base(position, boundingBox)
         {
-        }
+        }*/
 
-        internal PauseMenu() : base()
+        /*internal PauseMenu() : base()
         {
-        }
+        }*/
     }
 }

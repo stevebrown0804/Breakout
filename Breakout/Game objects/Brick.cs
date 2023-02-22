@@ -21,19 +21,19 @@ namespace Breakout.Game_elements
         /*internal Rectangle position;
         internal Rectangle boundingBox;*/
 
-        public bool beenHit = false;    //TODO: change this based on a collision
+        public bool hasBeenHit = false;    //TODO: change this based on a collision
 
         internal Brick(Rectangle position) : base(position)
         {
         }
 
-        internal Brick(Rectangle position, Rectangle boundingBox) : base(position, boundingBox)
+        /*internal Brick(Rectangle position, Rectangle boundingBox) : base(position, boundingBox)
         {
-        }
+        }*/
 
-        internal Brick() : base()
+        /*internal Brick() : base()
         {
-        }
+        }*/
 
         public void Explode()
         {
