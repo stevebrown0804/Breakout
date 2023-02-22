@@ -29,11 +29,26 @@ namespace Breakout.Game_elements
         public Vector2 velocity; // = new();
          Dictionary<int, float> speedupFactor;
 
-        /*internal Ball(Rectangle position) : base(position)
+        internal Ball(Rectangle position) : base(position)
+        {
+            Initialize();
+        }
+
+        internal Ball(Rectangle position, Rectangle boundingBox) : base(position, boundingBox)
+        {
+            Initialize();
+        }
+
+        /*internal Ball(Vector2 position) : base(position)      //let's just use a Rectangle
+        {
+            Initialize();
+        }*/
+
+        /*internal Ball() : base()
         {
         }*/
 
-        internal Ball(Rectangle position, Rectangle boundingBox) : base(position, boundingBox)
+        private void Initialize()
         {
             speedupFactor = new Dictionary<int, float> {
                 {4, 2f },  //just to pick some numbers atm;  TODO: Update these later, as needed
@@ -44,10 +59,6 @@ namespace Breakout.Game_elements
 
             velocity = new Vector2(1, 1);  //for a total of: sqrt(2) (units?) as the initial speed.  TODO: maybe change this; we'll see
         }
-
-        /*internal Ball() : base()
-        {
-        }*/
 
         //TODO: Have the ball speed up when a certain # of bricks are destroyed
         internal void SpeedUp(int bricksDestroyed)

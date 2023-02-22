@@ -26,7 +26,7 @@ namespace Breakout.Game_states
 {
     enum GamePlayState  //public/internal? TBD      //Also, I think this can go inside the class.  TBD
     {
-        //nset = 0,
+        //unset = 0,
         Initializing,
         Countdown,
         InGame,
@@ -64,14 +64,15 @@ namespace Breakout.Game_states
         BottomAreaOfInteriorToWalls bottomAreaOfInteriorToWalls;
         //BottomAreaOfPlayingField bottomAreaOfPlayingField;        
         BrickGrid brickGrid;
+        Countdown countdown;
         InteriorToWalls interiorToWalls;
         LeftHalfOfBottomArea leftHalfOfBottomArea;
         MiddleAreaOfInteriorToWalls middleAreaOfInteriorToWalls;
         //MiddleAreaOfPlayingField middleAreaOfPlayingField;
-        Paddle paddle = new();
+        Paddle paddle; // = new();
         PaddleArea paddleArea;
         internal PlayingField playingField;
-        PauseMenu pauseMenu = new();
+        PauseMenu pauseMenu; // = new();
         RemainingLivesIcons remainingLivesIcons;
         RightHalfOfBottomArea rightHalfOfBottomArea;
         Score score;
@@ -83,6 +84,8 @@ namespace Breakout.Game_states
 
         //Misc. variables
         bool showRegions = false;
+        bool showCountdownRegion = false;
+        bool showPauseMenuRegion = false;
         bool isPaused = false;        
         GamePlayState gamePlayState;
 
@@ -95,7 +98,7 @@ namespace Breakout.Game_states
             gamePlayState = GamePlayState.Initializing;
         }
 
-        //DONE, MAYBE?: Implement GamePlayView.loadContent()
+        //IN PROGRESS: Implement GamePlayView.loadContent()
         public override void loadContent(ContentManager contentManager)  
         {
             inGameMenuFont = contentManager.Load<SpriteFont>("Fonts/ingame-menu");      //Fonts
@@ -219,8 +222,22 @@ namespace Breakout.Game_states
 
             //And the score section
             score = new(new Rectangle(rightHalfOfBottomArea.position.X + spacing.scoreSectionLeftSpacing, rightHalfOfBottomArea.position.Y + spacing.scoreSectionTopSpacing, rightHalfOfBottomArea.position.Width - spacing.scoreSectionLeftSpacing - spacing.scoreSectionRightSpacing, rightHalfOfBottomArea.position.Height - spacing.scoreSectionTopSpacing - spacing.scoreSectionBottomSpacing));
+            
+            //And the paddle
+            paddle = new(new Rectangle(paddleArea.position.Width/2 - spacing.paddleWidth / 2, paddleArea.position.Y, spacing.paddleWidth, spacing.paddleHeight));
 
-            //TODO: the paddle, ball, countdown and pause menu
+            //And ball #1
+            Ball ball = new(new Rectangle(paddle.position.X + paddle.position.Width/2 - spacing.ballWidth/2, paddle.position.Y - spacing.ballHeight, spacing.ballWidth, spacing.ballHeight));
+            balls.Add(ball);
+
+            //and the countdown
+            int countdownXCoord = interiorToWalls.position.X + spacing.countdownSideSpacing;
+            int countdownYCoord = interiorToWalls.position.Y + spacing.countdownTopSpacing;
+            countdown = new(new Rectangle(countdownXCoord, countdownYCoord,
+                interiorToWalls.position.X + interiorToWalls.position.Width - countdownXCoord - spacing.countdownSideSpacing,
+                interiorToWalls.position.Y + interiorToWalls.position.Height - countdownYCoord - spacing.countdownSideSpacing));
+
+            //IN PROGRESS:  and the pause menu
 
         }
 
@@ -229,12 +246,48 @@ namespace Breakout.Game_states
             //TODO: Implement GamePlayView.processInput()
             //REMINDER: This is called at the beginning of BreakoutGame.Input()
 
-            if (keyboard.IsKeyPressed(Keys.S))
-            {   //toggle showRegions
+            if (keyboard.IsKeyPressed(Keys.S))  //toggle showRegions
+            {   
                 if (showRegions)
+                {
                     showRegions = false;
+                    showCountdownRegion = false;
+                    showPauseMenuRegion = false;
+                }                    
                 else
                     showRegions = true;
+            }
+
+            if (keyboard.IsKeyPressed(Keys.A))  //toggle showCountdownRegion
+            {
+                if (showRegions)
+                {
+                    if (showCountdownRegion)
+                    {
+                        showCountdownRegion = false;
+                    }
+                    else
+                    {
+                        showPauseMenuRegion = false;
+                        showCountdownRegion = true;
+                    }
+                }
+            }
+
+            if (keyboard.IsKeyPressed(Keys.D))  //toggle showPauseMenuRegion
+            {
+                if (showRegions)
+                {
+                    if (showPauseMenuRegion)
+                    {
+                        showPauseMenuRegion = false;
+                    }
+                    else
+                    {
+                        showCountdownRegion = false;
+                        showPauseMenuRegion = true;
+                    }
+                }
             }
 
             //TODO: Change this to have Esc bring up a pause window (and pause the game) with 'quit' and 'resume' options -- or change a state variable to 'paused' then call a method that renders the pause menu
@@ -291,7 +344,7 @@ namespace Breakout.Game_states
                 el = new GameElement(RenderType.UI, CallType.Rectangle, orange1x1, bottomAreaOfInteriorToWalls.position, Color.White);
                 renderer.AddToRenderList(el);
 
-                el = new GameElement(RenderType.UI, CallType.Rectangle, bluegray1x1, paddleArea.position, Color.White);
+                el = new GameElement(RenderType.UI, CallType.Rectangle, white1x1, paddleArea.position, Color.White);
                 renderer.AddToRenderList(el);
 
                 el = new GameElement(RenderType.UI, CallType.Rectangle, purple1x1, middleAreaOfInteriorToWalls.position, Color.White);
@@ -354,13 +407,22 @@ namespace Breakout.Game_states
 
             }
 
-            //TODO: paddle
+            //paddle
+            el = new GameElement(RenderType.UI, CallType.Rectangle, bluegray1x1, paddle.position, Color.White);
+            renderer.AddToRenderList(el);
 
-            //TODO: ball
-
-            if (showRegions)
+            //ball
+            for(int i = 0; i < balls.Count; i++)
             {
-                //TODO: countdown
+                el = new GameElement(RenderType.UI, CallType.Rectangle, ball50x50, balls[i].position, Color.White);
+                renderer.AddToRenderList(el);
+            }
+
+            if (showRegions && showCountdownRegion)
+            {
+                //IN PROGRESS: countdown
+                el = new GameElement(RenderType.UI, CallType.Rectangle, yellow1x1, countdown.position, Color.White);
+                renderer.AddToRenderList(el);
 
                 //TODO: pause menu
 

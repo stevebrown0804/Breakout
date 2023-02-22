@@ -17,7 +17,12 @@ namespace Breakout.Game_objects.Base
         {
             this.position = position;
             boundingBox = this.position;        //if bounding box isn't specified, have it copy position
-         }
+        }
+
+        /*internal GameObject(Vector2 position)
+        {
+
+        }*/
 
         internal GameObject(Rectangle position, Rectangle boundingBox)  //for when boundingBox is different from position
         {

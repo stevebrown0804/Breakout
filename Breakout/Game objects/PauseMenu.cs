@@ -13,6 +13,8 @@ namespace Breakout.Game_objects
         //TODO: PauseMenu class
         //ALSO TODO: Think of any other classes we may need, in-game
 
+        public bool showPauseMenu = false;
+
         internal PauseMenu(Rectangle position) : base(position)
         {
         }

@@ -31,8 +31,15 @@ namespace Breakout.Game_objects.non_derived
         public int scoreSectionRightSpacing;
         public int scoreSectionTopSpacing;
         public int scoreSectionBottomSpacing;
+        public int paddleWidth;
+        public int paddleHeight;
+        public int ballHeight;
+        public int ballWidth;
+        public int countdownSideSpacing;
+        public int countdownTopSpacing;
+        public int countdownBottomSpacing;
 
-        //TODO: paddle, ball, countdown and pause menu
+        //TODO: countdown and pause menu
 
         internal Spacing(GraphicsDeviceManager graphics)
         {
@@ -48,8 +55,6 @@ namespace Breakout.Game_objects.non_derived
             intraBrickVerticalSpacing = 10;
 
             topAreaHeight = 70;
-            
-            paddleAreaHeight = 30;
             bottomAreaHeight = 110;
 
             remainingLivesLeftSpacing = 60;
@@ -61,8 +66,21 @@ namespace Breakout.Game_objects.non_derived
             scoreSectionRightSpacing = 60;
             scoreSectionTopSpacing = 20;
             scoreSectionBottomSpacing = 20;
+                        
+            paddleAreaHeight = 40;
+            paddleWidth = 300;
+            paddleHeight = paddleAreaHeight;
 
-            //TODO: paddle, ball, countdown and pause menu
+            ballWidth = 50;
+            ballHeight = 50;
+
+            countdownSideSpacing = 100;
+            countdownTopSpacing = 100;
+            countdownBottomSpacing = 100;
+
+            //TODO: countdown and pause menu
+
+
 
         }
 
