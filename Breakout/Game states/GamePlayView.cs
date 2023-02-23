@@ -70,7 +70,7 @@ namespace Breakout.Game_states
         MiddleAreaOfInteriorToWalls middleAreaOfInteriorToWalls;
         //MiddleAreaOfPlayingField middleAreaOfPlayingField;
         Paddle paddle; // = new();
-        PaddleArea paddleArea;
+        internal PaddleArea paddleArea;
         internal PlayingField playingField;
         PauseMenu pauseMenu; // = new();
         RemainingLivesIcons remainingLivesIcons;

@@ -44,23 +44,38 @@ namespace Breakout.Game_elements
             //TODO: Shrink the paddle (as an animation)
         }
 
-        //IN PROGRESS: Animate the paddle
-        //TODO: Have the L/R motion be based on the velocity vector
+        //Animate the paddle
         public void Move(Direction direction, GameTime gameTime, GamePlayView gpv)
         {
-            int deltaX;
-            if(direction == Direction.Left)
+            Vector2 velocity = new();
+            TimeSpan time = gameTime.ElapsedGameTime;
+            float deltaX;
+            if (direction == Direction.Left)
             {
-                deltaX = -10;  //TMP
+                velocity.X = -1f;   //Turn out, this is perfect.  who knew!                
+                deltaX = velocity.X * (float)time.TotalMilliseconds;
             }
             else //direction == Direction.Right
             {
-                deltaX = 10;  //TMP
+                velocity.X = 1f;                
+                deltaX = velocity.X * (float)time.TotalMilliseconds;
             }
 
-            position.X += deltaX;
-            MoveAttachedBalls(deltaX, gpv);
-        }
+            //Check that deltaX won't put the position out of bounds
+            if (position.X + deltaX < gpv.interiorToWalls.position.X)
+            {
+                position.X = gpv.interiorToWalls.position.X;
+            }
+            else if (position.X + deltaX > gpv.interiorToWalls.position.X + gpv.interiorToWalls.position.Width - position.Width)
+            {
+                position.X = gpv.interiorToWalls.position.X + gpv.interiorToWalls.position.Width - position.Width;
+            }
+            else  //if all is well, add deltaX to position.X (and move any attached balls)
+            {
+                position.X += (int)deltaX;
+                MoveAttachedBalls((int)deltaX, gpv);
+            }
+        }//END Move()
 
         private void MoveAttachedBalls(int deltaX, GamePlayView gpv)
         {
