@@ -38,6 +38,13 @@ namespace Breakout.Game_objects.non_derived
         public int countdownSideSpacing;
         public int countdownTopSpacing;
         public int countdownBottomSpacing;
+        //public int pauseMenuSideSpacing;  //Let's have this depend in a font measurement
+        public int pauseMenuTopSpacing;
+        //public int pauseMenuBottomSpacing; //and this
+        public int pauseMenuInternalTopSpacing;
+        public int pauseMenuInternalBottomSpacing;
+        public int pauseMenuInternalSideSpacing;
+        public int pauseMenuIntraLineSpacing;
 
         //TODO: countdown and pause menu
 
@@ -78,11 +85,13 @@ namespace Breakout.Game_objects.non_derived
             countdownTopSpacing = 100;
             countdownBottomSpacing = 100;
 
-            //TODO: countdown and pause menu
-
-
-
-        }
+            //IN PROGRES: pause menu
+            pauseMenuTopSpacing = 100;            
+            pauseMenuInternalTopSpacing = 10;
+            pauseMenuInternalBottomSpacing = 10;
+            pauseMenuInternalSideSpacing = 10;
+            pauseMenuIntraLineSpacing = 5;
+    }
 
         internal void RecomputeValues(GraphicsDeviceManager graphics, GamePlayView gamePlayView)
         {

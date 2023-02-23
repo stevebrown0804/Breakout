@@ -9,12 +9,12 @@ namespace Breakout.Game_states
 
    /* public class HelpView : GameStateView
     {
-        private SpriteFont inGameMenuFont;
+        private SpriteFont pauseMenuFont;
         private const string MESSAGE = "This is how to play the game\nAnd this is line 2!";
 
         public override void loadContent(ContentManager contentManager)
         {
-            inGameMenuFont = contentManager.Load<SpriteFont>("Fonts/menu");
+            pauseMenuFont = contentManager.Load<SpriteFont>("Fonts/menu");
         }
 
         public override GameStateEnum processInput(GameTime gameTime)
@@ -31,8 +31,8 @@ namespace Breakout.Game_states
         {
             spriteBatch.Begin();
 
-            Vector2 stringSize = inGameMenuFont.MeasureString(MESSAGE);
-            spriteBatch.DrawString(inGameMenuFont, MESSAGE,
+            Vector2 stringSize = pauseMenuFont.MeasureString(MESSAGE);
+            spriteBatch.DrawString(pauseMenuFont, MESSAGE,
                                    new Vector2(graphics.PreferredBackBufferWidth / 2 - stringSize.X / 2, 
                                                graphics.PreferredBackBufferHeight / 2 - stringSize.Y), Color.Yellow);
 

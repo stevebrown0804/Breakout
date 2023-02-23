@@ -39,7 +39,7 @@ namespace Breakout.Game_states
     public class GamePlayView : GameStateView
     {
         //Sprites & fonts
-        private SpriteFont inGameMenuFont;  //Fonts
+        internal SpriteFont pauseMenuFont;  //Fonts
         private SpriteFont inGameScoreFont;
         private SpriteFont countdownFont;
         private Texture2D blue1x1;          //Bricks
@@ -65,7 +65,7 @@ namespace Breakout.Game_states
         //BottomAreaOfPlayingField bottomAreaOfPlayingField;        
         BrickGrid brickGrid;
         Countdown countdown;
-        InteriorToWalls interiorToWalls;
+        internal InteriorToWalls interiorToWalls;
         LeftHalfOfBottomArea leftHalfOfBottomArea;
         MiddleAreaOfInteriorToWalls middleAreaOfInteriorToWalls;
         //MiddleAreaOfPlayingField middleAreaOfPlayingField;
@@ -80,7 +80,7 @@ namespace Breakout.Game_states
         //TopAreaOfPlayingField topAreaOfPlayingField;
         
         WindowInterior windowInterior; // = new();
-        Spacing spacing;
+        internal Spacing spacing;
 
         //Misc. variables
         bool showRegions = false;
@@ -101,7 +101,7 @@ namespace Breakout.Game_states
         //IN PROGRESS: Implement GamePlayView.loadContent()
         public override void loadContent(ContentManager contentManager)  
         {
-            inGameMenuFont = contentManager.Load<SpriteFont>("Fonts/ingame-menu");      //Fonts
+            pauseMenuFont = contentManager.Load<SpriteFont>("Fonts/ingame-menu");      //Fonts
             inGameScoreFont = contentManager.Load<SpriteFont>("Fonts/ingame-score");
             countdownFont = contentManager.Load<SpriteFont> ("Fonts/ingame-countdown");            
             blue1x1 = contentManager.Load<Texture2D>("Sprites/blue1x1");                //Bricks
@@ -114,6 +114,8 @@ namespace Breakout.Game_states
             purple1x1 = contentManager.Load<Texture2D>("Sprites/purple1x1");            //misc.
             white1x1 = contentManager.Load<Texture2D>("Sprites/white1x1");
             black1x1 = contentManager.Load<Texture2D>("Sprites/black1x1");
+
+            pauseMenu.SecondInitialize(this);
         }
 
         //IN PROGRESS - GamePlayView.initialize()
@@ -237,7 +239,8 @@ namespace Breakout.Game_states
                 interiorToWalls.position.X + interiorToWalls.position.Width - countdownXCoord - spacing.countdownSideSpacing,
                 interiorToWalls.position.Y + interiorToWalls.position.Height - countdownYCoord - spacing.countdownSideSpacing));
 
-            //IN PROGRESS:  and the pause menu
+            //IN PROGRESS:  and the pause menu            
+            pauseMenu = new(new Rectangle(0, 0, 100, 100));  //so we can access pauseMEnu's helper functions
 
         }
 
@@ -310,9 +313,9 @@ namespace Breakout.Game_states
         //IN PROGRESS: GamePlayview.update()
         public override void update(GameTime gameTime, Renderer renderer)
         {
-            //Vector2 stringSize = inGameMenuFont.MeasureString(MESSAGE);
+            //Vector2 stringSize = pauseMenuFont.MeasureString(MESSAGE);
             GameElement el;
-            /*el = new GameElement(RenderType.Text, inGameMenuFont, MESSAGE, 
+            /*el = new GameElement(RenderType.Text, pauseMenuFont, MESSAGE, 
                                  new Vector2(graphics.PreferredBackBufferWidth / 2 - stringSize.X / 2,                                 graphics.PreferredBackBufferHeight / 2 - stringSize.Y),                      Color.Yellow);
             renderer.AddToRenderList(el);*/
 
@@ -418,14 +421,18 @@ namespace Breakout.Game_states
                 renderer.AddToRenderList(el);
             }
 
+            //countdown
             if (showRegions && showCountdownRegion)
             {
-                //IN PROGRESS: countdown
                 el = new GameElement(RenderType.UI, CallType.Rectangle, yellow1x1, countdown.position, Color.White);
                 renderer.AddToRenderList(el);
+            }
 
-                //TODO: pause menu
-
+            //IN PROGRESS: pause menu
+            if(showRegions && showPauseMenuRegion)
+            {
+                el = new GameElement(RenderType.UI, CallType.Rectangle, orange1x1, pauseMenu.position, Color.White);
+                renderer.AddToRenderList(el);
             }
 
 

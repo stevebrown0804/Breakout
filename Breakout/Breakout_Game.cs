@@ -1,4 +1,5 @@
-﻿using Breakout.Game_states;
+﻿using Breakout.Game_objects;
+using Breakout.Game_states;
 using Breakout.Subsystems;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
