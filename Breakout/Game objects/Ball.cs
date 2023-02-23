@@ -57,7 +57,12 @@ namespace Breakout.Game_elements
                 {62, 2f }
             };
 
-            velocity = new Vector2(1, 1);  //for a total of: sqrt(2) (units?) as the initial speed.  TODO: maybe change this; we'll see
+            velocity = new Vector2(0, 0);  //Initially at rest -> moving with the paddle
+         }
+
+        internal bool AtRest()
+        {
+            return velocity.X == 0 && velocity.Y == 0;  
         }
 
         //TODO: Have the ball speed up when a certain # of bricks are destroyed

@@ -1,4 +1,5 @@
 ﻿using Breakout.Game_objects.Base;
+using Breakout.Game_states;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
@@ -12,6 +13,13 @@ using System.Threading.Tasks;
 
 namespace Breakout.Game_elements
 {
+
+    public enum Direction
+    {
+        Left,
+        Right
+    }
+
     internal class Paddle : GameObject
     {
         //Base class:
@@ -36,15 +44,33 @@ namespace Breakout.Game_elements
             //TODO: Shrink the paddle (as an animation)
         }
 
-        //TODO: Animate the paddle
-        public void MoveLeft(GameTime gameTime)
+        //IN PROGRESS: Animate the paddle
+        //TODO: Have the L/R motion be based on the velocity vector
+        public void Move(Direction direction, GameTime gameTime, GamePlayView gpv)
         {
-            //Move left!
+            int deltaX;
+            if(direction == Direction.Left)
+            {
+                deltaX = -10;  //TMP
+            }
+            else //direction == Direction.Right
+            {
+                deltaX = 10;  //TMP
+            }
+
+            position.X += deltaX;
+            MoveAttachedBalls(deltaX, gpv);
         }
 
-        public void MoveRight(GameTime gameTime)
+        private void MoveAttachedBalls(int deltaX, GamePlayView gpv)
         {
-            //Move right!
+            for(int i = 0; i < gpv.balls.Count; i++)
+            {
+                if (gpv.balls[i].AtRest())
+                {
+                    gpv.balls[i].position.X += deltaX;
+                }
+            }
         }
 
     }

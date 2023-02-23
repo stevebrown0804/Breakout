@@ -38,15 +38,12 @@ namespace Breakout.Game_objects.non_derived
         public int countdownSideSpacing;
         public int countdownTopSpacing;
         public int countdownBottomSpacing;
-        //public int pauseMenuSideSpacing;  //Let's have this depend in a font measurement
         public int pauseMenuTopSpacing;
-        //public int pauseMenuBottomSpacing; //and this
         public int pauseMenuInternalTopSpacing;
         public int pauseMenuInternalBottomSpacing;
         public int pauseMenuInternalSideSpacing;
         public int pauseMenuIntraLineSpacing;
 
-        //TODO: countdown and pause menu
 
         internal Spacing(GraphicsDeviceManager graphics)
         {
@@ -81,9 +78,9 @@ namespace Breakout.Game_objects.non_derived
             ballWidth = 50;
             ballHeight = 50;
 
-            countdownSideSpacing = 100;
+            countdownSideSpacing = 600;
             countdownTopSpacing = 100;
-            countdownBottomSpacing = 100;
+            countdownBottomSpacing = 300;
 
             //IN PROGRES: pause menu
             pauseMenuTopSpacing = 100;            

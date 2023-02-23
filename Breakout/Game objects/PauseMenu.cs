@@ -15,28 +15,17 @@ namespace Breakout.Game_objects
 {
     internal class PauseMenu : GameObject
     {
-        //TODO: PauseMenu class
-        //ALSO TODO: Think of any other classes we may need, in-game
+        //TODO: Render the ACTUAL pauseMenu object
+        //TODO: Make the pause menu usable (and so that it works)
 
-        public bool showPauseMenu = false;
+        public bool isPaused = false;
+        //public bool showPauseMenu = false;
         public Dictionary<string, string> pauseMenuPrompts = new();
-        /*public string pauseMenuHeader = "Game Paused";
-        public string pauseMenuResumePrompt = "Resume";
-        public string pauseMenuExitPrompt = "Quit";*/
 
         internal PauseMenu(Rectangle position) : base(position)
         {
             Intialize();
         }
-
-        //the pause menu probably doesn't need a bounding box
-        /*internal PauseMenu(Rectangle position, Rectangle boundingBox) : base(position, boundingBox)
-        {
-        }*/
-
-        /*internal PauseMenu() : base()
-        {
-        }*/
 
         private void Intialize()
         {
@@ -45,6 +34,7 @@ namespace Breakout.Game_objects
             pauseMenuPrompts["exit"] = "Quit";
         }
 
+        //DONE, I THINK: figuring out the pause menu rectangle
         public void SecondInitialize(GamePlayView gamePlay)
         {
             //spacing.
@@ -55,19 +45,34 @@ namespace Breakout.Game_objects
             pauseMenuIntraLineSpacing = 5;*/
 
             int pauseMenuWidth;
-            int pauseMenuHeight;
-            int pauseMenuX = 100; //TMP
-            int pauseMenuY = 100;  //TMP
+            int pauseMenuHeight;            
+            int pauseMenuX;
+            int pauseMenuY;
+            InteriorToWalls intr = gamePlay.interiorToWalls;
+            Spacing sp = gamePlay.spacing;
+
             float pauseMenuMaxFontWidth = GetStringSizeMaxX(gamePlay.pauseMenuFont);
             pauseMenuWidth = (int)pauseMenuMaxFontWidth + gamePlay.spacing.pauseMenuInternalSideSpacing;
-            pauseMenuHeight = 400;  //TMP
-
-
-            int pauseMenuXCoord = gamePlay.interiorToWalls.position.X + gamePlay.spacing.pauseMenuTopSpacing;
-            int pauseMenuYCoord;
+            pauseMenuX = intr.position.X + intr.position.Width / 2 - pauseMenuWidth / 2;
+            pauseMenuY = intr.position.Y + sp.pauseMenuTopSpacing;
+            pauseMenuHeight = computeTotalHeight(sp.pauseMenuInternalTopSpacing, sp.pauseMenuInternalBottomSpacing, sp.pauseMenuIntraLineSpacing, gamePlay.pauseMenuFont);
 
             UpdatePosition(new Rectangle(pauseMenuX, pauseMenuY, pauseMenuWidth,
                 pauseMenuHeight));
+        }
+
+        private int computeTotalHeight(int topSpacing, int bottomSpacing, int intraLineSpacing, SpriteFont font)
+        {
+            int height = topSpacing;
+            Vector2 stringSize;
+            foreach (string k in pauseMenuPrompts.Keys)
+            {
+                stringSize = font.MeasureString(pauseMenuPrompts[k]);
+                height += (int)stringSize.Y + intraLineSpacing;
+            }
+            height += bottomSpacing;
+
+            return height; // 100; //TMP
         }
 
         private void UpdatePosition(Rectangle rect)
@@ -76,7 +81,7 @@ namespace Breakout.Game_objects
             boundingBox = rect; //let's do this too...just in case? *shrug*
         }
 
-        internal float GetStringSizeMaxX(SpriteFont font)
+        private float GetStringSizeMaxX(SpriteFont font)
         {
             float maxSizeX = 0f;
             Vector2 stringSize;

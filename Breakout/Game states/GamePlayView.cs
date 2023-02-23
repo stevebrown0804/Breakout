@@ -57,7 +57,7 @@ namespace Breakout.Game_states
 
         //Game Objects
         // Lists (so we'll new() them here)
-        List<Ball> balls = new();
+        internal List<Ball> balls = new();
         List<Wall> walls = new(); 
 
         // Non-list
@@ -86,7 +86,7 @@ namespace Breakout.Game_states
         bool showRegions = false;
         bool showCountdownRegion = false;
         bool showPauseMenuRegion = false;
-        bool isPaused = false;        
+        //bool isPaused = false;        /moving this to the pauseMenu object
         GamePlayState gamePlayState;
 
         //And some constants
@@ -98,27 +98,7 @@ namespace Breakout.Game_states
             gamePlayState = GamePlayState.Initializing;
         }
 
-        //IN PROGRESS: Implement GamePlayView.loadContent()
-        public override void loadContent(ContentManager contentManager)  
-        {
-            pauseMenuFont = contentManager.Load<SpriteFont>("Fonts/ingame-menu");      //Fonts
-            inGameScoreFont = contentManager.Load<SpriteFont>("Fonts/ingame-score");
-            countdownFont = contentManager.Load<SpriteFont> ("Fonts/ingame-countdown");            
-            blue1x1 = contentManager.Load<Texture2D>("Sprites/blue1x1");                //Bricks
-            limeGreen1x1 = contentManager.Load<Texture2D>("Sprites/limeGreen1x1");
-            orange1x1 = contentManager.Load<Texture2D>("Sprites/orange1x1");
-            yellow1x1 = contentManager.Load<Texture2D>("Sprites/yellow1x1");
-            darkgray1x1 = contentManager.Load<Texture2D>("Sprites/dark-gray1x1");      //Walls
-            ball50x50 = contentManager.Load<Texture2D>("Sprites/ball50x50");            //Ball
-            bluegray1x1 = contentManager.Load<Texture2D>("Sprites/bluegray1x1");        //Paddle
-            purple1x1 = contentManager.Load<Texture2D>("Sprites/purple1x1");            //misc.
-            white1x1 = contentManager.Load<Texture2D>("Sprites/white1x1");
-            black1x1 = contentManager.Load<Texture2D>("Sprites/black1x1");
-
-            pauseMenu.SecondInitialize(this);
-        }
-
-        //IN PROGRESS - GamePlayView.initialize()
+        //DONE, I THINK - GamePlayView.initialize()
         public override void initialize(GraphicsDevice graphicsDevice, GraphicsDeviceManager graphics)
         {
             base.initialize(graphicsDevice, graphics);
@@ -158,7 +138,7 @@ namespace Breakout.Game_states
             //And then, stuff within the walls
             interiorToWalls = new(new Rectangle(playingField.position.X + spacing.wallThickness,
                 playingField.position.Y + spacing.wallThickness,
-                playingField.position.Width - 2*spacing.wallThickness, 
+                playingField.position.Width - 2 * spacing.wallThickness,
                 playingField.position.Height - spacing.wallThickness));
 
             //Then we'll split up the area within the walls
@@ -168,8 +148,8 @@ namespace Breakout.Game_states
             //Bottom
             bottomAreaOfInteriorToWalls = new(new Rectangle(interiorToWalls.position.X, interiorToWalls.position.Y + interiorToWalls.position.Height - spacing.bottomAreaHeight, interiorToWalls.position.Width, spacing.bottomAreaHeight));
             //Paddle area
-            paddleArea = new(new Rectangle(interiorToWalls.position.X, 
-                interiorToWalls.position.Y + interiorToWalls.position.Height - bottomAreaOfInteriorToWalls.position.Height - spacing.paddleAreaHeight, interiorToWalls.position.Width, 
+            paddleArea = new(new Rectangle(interiorToWalls.position.X,
+                interiorToWalls.position.Y + interiorToWalls.position.Height - bottomAreaOfInteriorToWalls.position.Height - spacing.paddleAreaHeight, interiorToWalls.position.Width,
                 spacing.paddleAreaHeight));
             //Middle
             middleAreaOfInteriorToWalls = new(new Rectangle(interiorToWalls.position.X,
@@ -224,12 +204,12 @@ namespace Breakout.Game_states
 
             //And the score section
             score = new(new Rectangle(rightHalfOfBottomArea.position.X + spacing.scoreSectionLeftSpacing, rightHalfOfBottomArea.position.Y + spacing.scoreSectionTopSpacing, rightHalfOfBottomArea.position.Width - spacing.scoreSectionLeftSpacing - spacing.scoreSectionRightSpacing, rightHalfOfBottomArea.position.Height - spacing.scoreSectionTopSpacing - spacing.scoreSectionBottomSpacing));
-            
+
             //And the paddle
-            paddle = new(new Rectangle(paddleArea.position.Width/2 - spacing.paddleWidth / 2, paddleArea.position.Y, spacing.paddleWidth, spacing.paddleHeight));
+            paddle = new(new Rectangle(paddleArea.position.X + paddleArea.position.Width / 2 - spacing.paddleWidth / 2, paddleArea.position.Y, spacing.paddleWidth, spacing.paddleHeight));
 
             //And ball #1
-            Ball ball = new(new Rectangle(paddle.position.X + paddle.position.Width/2 - spacing.ballWidth/2, paddle.position.Y - spacing.ballHeight, spacing.ballWidth, spacing.ballHeight));
+            Ball ball = new(new Rectangle(paddle.position.X + paddle.position.Width / 2 - spacing.ballWidth / 2, paddle.position.Y - spacing.ballHeight, spacing.ballWidth, spacing.ballHeight));
             balls.Add(ball);
 
             //and the countdown
@@ -237,11 +217,34 @@ namespace Breakout.Game_states
             int countdownYCoord = interiorToWalls.position.Y + spacing.countdownTopSpacing;
             countdown = new(new Rectangle(countdownXCoord, countdownYCoord,
                 interiorToWalls.position.X + interiorToWalls.position.Width - countdownXCoord - spacing.countdownSideSpacing,
-                interiorToWalls.position.Y + interiorToWalls.position.Height - countdownYCoord - spacing.countdownSideSpacing));
+                interiorToWalls.position.Y + interiorToWalls.position.Height - countdownYCoord - spacing.countdownBottomSpacing));
 
-            //IN PROGRESS:  and the pause menu            
-            pauseMenu = new(new Rectangle(0, 0, 100, 100));  //so we can access pauseMEnu's helper functions
+            //and the pause menu            
+            pauseMenu = new(new Rectangle(0, 0, 0, 0));  //so we can access pauseMenu's helper functions
 
+        }
+
+        //DONE, FOR THE MOST PART: Implement GamePlayView.loadContent()
+        //IMPORTANT!:  Contains the line where we skip countdown
+        public override void loadContent(ContentManager contentManager)  
+        {
+            pauseMenuFont = contentManager.Load<SpriteFont>("Fonts/ingame-menu");      //Fonts
+            inGameScoreFont = contentManager.Load<SpriteFont>("Fonts/ingame-score");
+            countdownFont = contentManager.Load<SpriteFont> ("Fonts/ingame-countdown");            
+            blue1x1 = contentManager.Load<Texture2D>("Sprites/blue1x1");                //Bricks
+            limeGreen1x1 = contentManager.Load<Texture2D>("Sprites/limeGreen1x1");
+            orange1x1 = contentManager.Load<Texture2D>("Sprites/orange1x1");
+            yellow1x1 = contentManager.Load<Texture2D>("Sprites/yellow1x1");
+            darkgray1x1 = contentManager.Load<Texture2D>("Sprites/dark-gray1x1");      //Walls
+            ball50x50 = contentManager.Load<Texture2D>("Sprites/ball50x50");            //Ball
+            bluegray1x1 = contentManager.Load<Texture2D>("Sprites/bluegray1x1");        //Paddle
+            purple1x1 = contentManager.Load<Texture2D>("Sprites/purple1x1");            //misc.
+            white1x1 = contentManager.Load<Texture2D>("Sprites/white1x1");
+            black1x1 = contentManager.Load<Texture2D>("Sprites/black1x1");
+
+            pauseMenu.SecondInitialize(this); //this needs pauseMenuFont to be non-null
+                                              //so we'll do it here
+            gamePlayState = GamePlayState.InGame; //GamePlayState.Countdown;    
         }
 
         public override GameStateEnum processInput(GameTime gameTime, BO_Keyboard keyboard)   
@@ -299,10 +302,20 @@ namespace Breakout.Game_states
                return GameStateEnum.MainMenu;
             }
 
-           //Controls: Spacebar (to release the ball), left, right...and that's it, right?  TBD
-           //Oh, and Enter, to select an option during the pause menu
+            //Controls: Spacebar (to release the ball), left, right...and that's it, right?  TBD
+            //Oh, and Enter, to select an option during the pause menu
 
-           return GameStateEnum.GamePlay;
+            //IN PROGRESS
+            if (keyboard.IsKeyHeld(Keys.Left))
+            {
+                paddle.Move(Direction.Left, gameTime, this);
+            }
+            if (keyboard.IsKeyHeld(Keys.Right))
+            {
+                paddle.Move(Direction.Right, gameTime, this);
+            }
+
+            return GameStateEnum.GamePlay;
         }
 
         public override void render(GameTime gameTime, Renderer renderer)
@@ -355,7 +368,7 @@ namespace Breakout.Game_states
 
                 el = new GameElement(RenderType.UI, CallType.Rectangle, black1x1, brickGrid.position, Color.White);
                 renderer.AddToRenderList(el);
-            }//END if(showRegions) (#2)
+            }//END if(showRegions)
 
             //Add the bricks from brickGrid
             var bg = brickGrid.brickGrid;
@@ -408,7 +421,7 @@ namespace Breakout.Game_states
                 el = new GameElement(RenderType.UI, CallType.Rectangle, yellow1x1, score.position, Color.White);
                 renderer.AddToRenderList(el);
 
-            }
+            }//END if(showRegions)
 
             //paddle
             el = new GameElement(RenderType.UI, CallType.Rectangle, bluegray1x1, paddle.position, Color.White);
@@ -428,7 +441,7 @@ namespace Breakout.Game_states
                 renderer.AddToRenderList(el);
             }
 
-            //IN PROGRESS: pause menu
+            //pause menu
             if(showRegions && showPauseMenuRegion)
             {
                 el = new GameElement(RenderType.UI, CallType.Rectangle, orange1x1, pauseMenu.position, Color.White);
