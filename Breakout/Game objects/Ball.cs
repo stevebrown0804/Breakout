@@ -1,5 +1,6 @@
 ﻿using Breakout.Game_objects.Base;
 using Breakout.Game_states;
+using Breakout.Subsystems;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
@@ -62,8 +63,8 @@ namespace Breakout.Game_elements
         public void GiveVelocity()
         {
             //EVENTUALLY: screw around with these values until they feel right
-            velocity.X = 0.3f; //45 degrees to the right, I think.
-            velocity.Y = -0.3f; 
+            velocity.X = 1f; //0.3f; //45 degrees to the right, I think. <--left, atm
+            velocity.Y = -1f; //-0.3f; 
         }
 
         internal bool IsAtRest()
@@ -75,13 +76,62 @@ namespace Breakout.Game_elements
         internal void Move(GameTime gameTime, GamePlayView gpv)
         {
             TimeSpan time = gameTime.ElapsedGameTime;
-            float deltaX;
-            float deltaY;
-            //TODO check for collisions and bounce accordingly
+            float deltaX = velocity.X * (float)time.TotalMilliseconds;
+            float deltaY = velocity.Y * (float)time.TotalMilliseconds;
+            
+            //IN PROGRESS check for collisions and bounce accordingly
+            //CD with the walls
+            foreach(Wall w in gpv.walls)
+            {
+                //https://gamedev.stackexchange.com/questions/13774/how-do-i-detect-the-direction-of-2d-rectangular-object-collisions?noredirect=1&lq=1
+
+                Rectangle test_position = position;
+                test_position.X += (int)deltaX;
+                test_position.Y += (int)deltaY;
+                if (CollisionDetection.DoTheyIntersect(w.position, test_position)) //position))
+                {
+                    //Left/right wall
+                    if(CollisionDetection.FromTheRight(position, deltaX, w.position) || 
+                       CollisionDetection.FromTheLeft(position, deltaX, w.position))
+                        velocity.X = -(velocity.X);
+
+                    //Top wall
+                    //else if (position.Y >= w.position.Y + w.position.Height && test_position.Y < w.position.Y + w.position.Height)
+                    else if(CollisionDetection.FromTheBottom(position, deltaY, w.position))
+                    {
+                        velocity.Y = -(velocity.Y);
+                    }
+                    else if(true) //TMP -- bottom wall?  *shrug*
+                    {
+                        //No bottom wall, yo
+                    }
+                }
+                /*CollisionType type = CollisionDetection.GetIntersectType(w.position, position);
+                if(type == CollisionType.horizontal)
+                {
+                    velocity.X = -(velocity.X);
+                }
+                else if(type == CollisionType.vertical)
+                {
+                    velocity.Y = -(velocity.Y);
+                }
+                else if(type == CollisionType.none)
+                {
+                    //No collision
+                }
+                else
+                {
+                    throw new Exception("Uh...is somebody using softICE?  c'mon.");
+                }*/
+            }
+            
+            //and the bricks
+
+            //and the paddls
+
+
 
             //For the moment...  TMP
-            deltaX = velocity.X * (float)time.TotalMilliseconds;
-            deltaY = velocity.Y * (float)time.TotalMilliseconds;
             position.X += (int)deltaX;
             position.Y += (int)deltaY;
         }
