@@ -183,9 +183,8 @@ namespace Breakout.Game_states
 
                 for (int j = 0; j < numBricksPerRow; j++)
                 {
-                    //Create a brick
+                    //Create a brick and add it
                     brick = new(new Rectangle(x, y, w, h));
-                    //Then add it
                     bg[i].Add(brick);
                     //Then compute the new x (within brickGrid)
                     x += w + spacing.intraBrickVerticalSpacing;
@@ -249,7 +248,7 @@ namespace Breakout.Game_states
 
         public override GameStateEnum processInput(GameTime gameTime, BO_Keyboard keyboard)   
         {
-            //TODO: Implement GamePlayView.processInput()
+            //IN PROGRESS: Implement GamePlayView.processInput()
             //REMINDER: This is called at the beginning of BreakoutGame.Input()
 
             if (keyboard.IsKeyPressed(Keys.S))  //toggle showRegions
@@ -321,7 +320,7 @@ namespace Breakout.Game_states
                 }
                 if (keyboard.IsKeyPressed(Keys.Space))
                 {
-                    //Find a ball that's at rest and give in an initial velocity
+                    //Find balls that're at rest and give them an initial velocity
                     for(int i = 0; i < balls.Count; i++)
                     {
                         if (balls[i].IsAtRest())

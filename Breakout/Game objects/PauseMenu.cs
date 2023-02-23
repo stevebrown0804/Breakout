@@ -16,10 +16,9 @@ namespace Breakout.Game_objects
     internal class PauseMenu : GameObject
     {
         //TODO: Render the ACTUAL pauseMenu object
-        //TODO: Make the pause menu usable (and so that it works)
+        //TODO: Make the pause menu functional
 
         public bool isPaused = false;
-        //public bool showPauseMenu = false;
         public Dictionary<string, string> pauseMenuPrompts = new();
 
         internal PauseMenu(Rectangle position) : base(position)
@@ -55,13 +54,13 @@ namespace Breakout.Game_objects
             pauseMenuWidth = (int)pauseMenuMaxFontWidth + gamePlay.spacing.pauseMenuInternalSideSpacing;
             pauseMenuX = intr.position.X + intr.position.Width / 2 - pauseMenuWidth / 2;
             pauseMenuY = intr.position.Y + sp.pauseMenuTopSpacing;
-            pauseMenuHeight = computeTotalHeight(sp.pauseMenuInternalTopSpacing, sp.pauseMenuInternalBottomSpacing, sp.pauseMenuIntraLineSpacing, gamePlay.pauseMenuFont);
+            pauseMenuHeight = ComputeTotalHeight(sp.pauseMenuInternalTopSpacing, sp.pauseMenuInternalBottomSpacing, sp.pauseMenuIntraLineSpacing, gamePlay.pauseMenuFont);
 
             UpdatePosition(new Rectangle(pauseMenuX, pauseMenuY, pauseMenuWidth,
                 pauseMenuHeight));
         }
 
-        private int computeTotalHeight(int topSpacing, int bottomSpacing, int intraLineSpacing, SpriteFont font)
+        private int ComputeTotalHeight(int topSpacing, int bottomSpacing, int intraLineSpacing, SpriteFont font)
         {
             int height = topSpacing;
             Vector2 stringSize;
