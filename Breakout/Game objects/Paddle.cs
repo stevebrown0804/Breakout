@@ -81,7 +81,7 @@ namespace Breakout.Game_elements
         {
             for(int i = 0; i < gpv.balls.Count; i++)
             {
-                if (gpv.balls[i].AtRest())
+                if (gpv.balls[i].IsAtRest())
                 {
                     gpv.balls[i].position.X += deltaX;
                 }

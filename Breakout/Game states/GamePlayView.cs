@@ -244,7 +244,7 @@ namespace Breakout.Game_states
 
             pauseMenu.SecondInitialize(this); //this needs pauseMenuFont to be non-null
                                               //so we'll do it here
-            gamePlayState = GamePlayState.InGame; //GamePlayState.Countdown;    
+            gamePlayState = GamePlayState.InGame; //GamePlayState.Countdown;    //<--note: skipping countdown
         }
 
         public override GameStateEnum processInput(GameTime gameTime, BO_Keyboard keyboard)   
@@ -297,23 +297,41 @@ namespace Breakout.Game_states
             }
 
             //TODO: Change this to have Esc bring up a pause window (and pause the game) with 'quit' and 'resume' options -- or change a state variable to 'paused' then call a method that renders the pause menu
-            if (keyboard.IsKeyPressed(Keys.Escape))
+            if(gamePlayState == GamePlayState.InGame || gamePlayState == GamePlayState.Countdown)
             {
-               return GameStateEnum.MainMenu;
+                if (keyboard.IsKeyPressed(Keys.Escape))
+                {
+                    return GameStateEnum.MainMenu;
+                }
             }
 
             //Controls: Spacebar (to release the ball), left, right...and that's it, right?  TBD
             //Oh, and Enter, to select an option during the pause menu
 
             //IN PROGRESS
-            if (keyboard.IsKeyHeld(Keys.Left))
+            if(gamePlayState == GamePlayState.InGame)
             {
-                paddle.Move(Direction.Left, gameTime, this);
+                if (keyboard.IsKeyHeld(Keys.Left))
+                {
+                    paddle.Move(Direction.Left, gameTime, this);
+                }
+                if (keyboard.IsKeyHeld(Keys.Right))
+                {
+                    paddle.Move(Direction.Right, gameTime, this);
+                }
+                if (keyboard.IsKeyPressed(Keys.Space))
+                {
+                    //Find a ball that's at rest and give in an initial velocity
+                    for(int i = 0; i < balls.Count; i++)
+                    {
+                        if (balls[i].IsAtRest())
+                        {
+                            balls[i].GiveVelocity();
+                        }
+                    }
+                }
             }
-            if (keyboard.IsKeyHeld(Keys.Right))
-            {
-                paddle.Move(Direction.Right, gameTime, this);
-            }
+            
 
             return GameStateEnum.GamePlay;
         }
@@ -430,6 +448,7 @@ namespace Breakout.Game_states
             //ball
             for(int i = 0; i < balls.Count; i++)
             {
+                balls[i].Move(gameTime, this);
                 el = new GameElement(RenderType.UI, CallType.Rectangle, ball50x50, balls[i].position, Color.White);
                 renderer.AddToRenderList(el);
             }

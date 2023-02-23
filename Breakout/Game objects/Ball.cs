@@ -1,4 +1,5 @@
 ﻿using Breakout.Game_objects.Base;
+using Breakout.Game_states;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
@@ -18,8 +19,6 @@ namespace Breakout.Game_elements
     {
         //IN PROGRESS: Ball class
 
-        //TODO: Animate the ball
-        //TODO: Have the ball track its velocity
         //TODO: Have the ball update its velocity in response to a collisions
 
         //Base class:
@@ -39,7 +38,7 @@ namespace Breakout.Game_elements
             Initialize();
         }
 
-        /*internal Ball(Vector2 position) : base(position)      //let's just use a Rectangle
+        /*internal Ball(Vector2 position) : base(position)      //let's just use a Rectangle  //<---actually...TBD
         {
             Initialize();
         }*/
@@ -60,12 +59,34 @@ namespace Breakout.Game_elements
             velocity = new Vector2(0, 0);  //Initially at rest -> moving with the paddle
          }
 
-        internal bool AtRest()
+        public void GiveVelocity()
+        {
+            //EVENTUALLY: screw around with these values until they feel right
+            velocity.X = 0.3f; //45 degrees to the right, I think.
+            velocity.Y = -0.3f; 
+        }
+
+        internal bool IsAtRest()
         {
             return velocity.X == 0 && velocity.Y == 0;  
         }
 
-        //TODO: Have the ball speed up when a certain # of bricks are destroyed
+        //IN PROGRESS: Ball.Move()
+        internal void Move(GameTime gameTime, GamePlayView gpv)
+        {
+            TimeSpan time = gameTime.ElapsedGameTime;
+            float deltaX;
+            float deltaY;
+            //TODO check for collisions and bounce accordingly
+
+            //For the moment...  TMP
+            deltaX = velocity.X * (float)time.TotalMilliseconds;
+            deltaY = velocity.Y * (float)time.TotalMilliseconds;
+            position.X += (int)deltaX;
+            position.Y += (int)deltaY;
+        }
+
+        //DONE, MAYBE?: Have the ball speed up when a certain # of bricks are destroyed
         internal void SpeedUp(int bricksDestroyed)
         {
             velocity.X *= speedupFactor[bricksDestroyed];
