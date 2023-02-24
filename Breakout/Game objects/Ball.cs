@@ -63,7 +63,7 @@ namespace Breakout.Game_elements
         public void GiveVelocity()
         {
             //EVENTUALLY: screw around with these values until they feel right
-            velocity.X = 1f; //0.3f; //45 degrees to the right, I think. <--left, atm
+            velocity.X = 1f; //0.3f; //45 degrees to the right, I think. <--positive is right, negative is left
             velocity.Y = -1f; //-0.3f; 
         }
 
@@ -78,17 +78,17 @@ namespace Breakout.Game_elements
             TimeSpan time = gameTime.ElapsedGameTime;
             float deltaX = velocity.X * (float)time.TotalMilliseconds;
             float deltaY = velocity.Y * (float)time.TotalMilliseconds;
-            
-            //IN PROGRESS check for collisions and bounce accordingly
-            //CD with the walls
-            foreach(Wall w in gpv.walls)
-            {
-                //https://gamedev.stackexchange.com/questions/13774/how-do-i-detect-the-direction-of-2d-rectangular-object-collisions?noredirect=1&lq=1
 
-                Rectangle test_position = position;
-                test_position.X += (int)deltaX;
-                test_position.Y += (int)deltaY;
-                if (CollisionDetection.DoTheyIntersect(w.position, test_position)) //position))
+            //IN PROGRESS check for collisions and bounce accordingly
+            
+            Rectangle test_position = position;
+            test_position.X += (int)deltaX;
+            test_position.Y += (int)deltaY;
+
+            //CD with the walls
+            foreach (Wall w in gpv.walls)
+            {                
+                if (CollisionDetection.DoTheyIntersect(w.position, test_position))
                 {
                     //Left/right wall
                     if(CollisionDetection.FromTheRight(position, deltaX, w.position) || 
@@ -96,44 +96,32 @@ namespace Breakout.Game_elements
                         velocity.X = -(velocity.X);
 
                     //Top wall
-                    //else if (position.Y >= w.position.Y + w.position.Height && test_position.Y < w.position.Y + w.position.Height)
-                    else if(CollisionDetection.FromTheBottom(position, deltaY, w.position))
-                    {
+                    if(CollisionDetection.FromTheBottom(position, deltaY, w.position))
                         velocity.Y = -(velocity.Y);
-                    }
-                    else if(true) //TMP -- bottom wall?  *shrug*
-                    {
+                    //else //bottom wall
                         //No bottom wall, yo
-                    }
                 }
-                /*CollisionType type = CollisionDetection.GetIntersectType(w.position, position);
-                if(type == CollisionType.horizontal)
-                {
-                    velocity.X = -(velocity.X);
-                }
-                else if(type == CollisionType.vertical)
-                {
-                    velocity.Y = -(velocity.Y);
-                }
-                else if(type == CollisionType.none)
-                {
-                    //No collision
-                }
-                else
-                {
-                    throw new Exception("Uh...is somebody using softICE?  c'mon.");
-                }*/
             }
+
+            //...and the paddle
+            if (CollisionDetection.DoTheyIntersect(gpv.paddle.position, test_position))
+            {
+                //Left/right side of paddle
+                if (CollisionDetection.FromTheRight(position, deltaX, gpv.paddle.position) ||
+                   CollisionDetection.FromTheLeft(position, deltaX, gpv.paddle.position))
+                    velocity.X = -(velocity.X);
+
+                //Top of paddle
+                if(CollisionDetection.FromTheTop(position, deltaY, gpv.paddle.position))
+                    velocity.Y = -(velocity.Y);
+            }
+
+            //TODO ...and the bricks
             
-            //and the bricks
 
-            //and the paddls
-
-
-
-            //For the moment...  TMP
-            position.X += (int)deltaX;
-            position.Y += (int)deltaY;
+            //Then we'll actually move the ball
+            position.X = test_position.X; //+= (int)deltaX;
+            position.Y = test_position.Y; //+= (int)deltaY;
         }
 
         //DONE, MAYBE?: Have the ball speed up when a certain # of bricks are destroyed
