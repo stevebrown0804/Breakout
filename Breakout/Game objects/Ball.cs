@@ -20,7 +20,7 @@ namespace Breakout.Game_elements
     {
         //IN PROGRESS: Ball class
 
-        //TODO: Have the ball update its velocity in response to a collisions
+        //IN PROGRESS: Have the ball update its velocity in response to a collisions (Remaining: bricks)
 
         //Base class:
         /*internal Rectangle position;
@@ -34,10 +34,10 @@ namespace Breakout.Game_elements
             Initialize();
         }
 
-        internal Ball(Rectangle position, Rectangle boundingBox) : base(position, boundingBox)
+        /*internal Ball(Rectangle position, Rectangle boundingBox) : base(position, boundingBox)
         {
             Initialize();
-        }
+        }*/
 
         /*internal Ball(Vector2 position) : base(position)      //let's just use a Rectangle  //<---actually...TBD
         {
@@ -50,8 +50,9 @@ namespace Breakout.Game_elements
 
         private void Initialize()
         {
+            //LATER: Update these values (in Ball.Initialize()) later, as needed
             speedupFactor = new Dictionary<int, float> {
-                {4, 2f },  //just to pick some numbers atm;  TODO: Update these later, as needed
+                {4, 2f },  //just to pick some numbers atm 
                 {12, 2f },
                 {36, 2f },
                 {62, 2f }
@@ -62,9 +63,9 @@ namespace Breakout.Game_elements
 
         public void GiveVelocity()
         {
-            //EVENTUALLY: screw around with these values until they feel right
-            velocity.X = 1f; //0.3f; //45 degrees to the right, I think. <--positive is right, negative is left
-            velocity.Y = -1f; //-0.3f; 
+            //EVENTUALLY: mess around with these values until they feel right
+            velocity.X = 0.5f; //45 degrees to the right, I think. <--positive is right, negative is left
+            velocity.Y = -0.5f; 
         }
 
         internal bool IsAtRest()
@@ -78,9 +79,6 @@ namespace Breakout.Game_elements
             TimeSpan time = gameTime.ElapsedGameTime;
             float deltaX = velocity.X * (float)time.TotalMilliseconds;
             float deltaY = velocity.Y * (float)time.TotalMilliseconds;
-
-            //IN PROGRESS check for collisions and bounce accordingly
-            
             Rectangle test_position = position;
             test_position.X += (int)deltaX;
             test_position.Y += (int)deltaY;
@@ -116,7 +114,15 @@ namespace Breakout.Game_elements
                     velocity.Y = -(velocity.Y);
             }
 
-            //TODO ...and the bricks
+            //...and the bricks
+            if(CollisionDetection.DoTheyIntersect(position, gpv.brickGrid.position))
+            {
+                //TODO: Generate a region for each row of bricks, then do CD with those
+                //TODO: CD with the individual bricks of the row (from the line above)
+                //TODO: React to collisions with the bricks (by hiding the brick and replacing it with a particle effect, I believe..or maybe have the brick class do those)
+
+
+            }
             
 
             //Then we'll actually move the ball
@@ -124,7 +130,8 @@ namespace Breakout.Game_elements
             position.Y = test_position.Y; //+= (int)deltaY;
         }
 
-        //DONE, MAYBE?: Have the ball speed up when a certain # of bricks are destroyed
+        //TODO: Have the ball speed up when a certain # of bricks are destroyed (waiting on bricks to have CD applied to them)
+        //NOTE: This function (Ball.SpeedUp()) has been written; it's waiting to be applied elsewhere
         internal void SpeedUp(int bricksDestroyed)
         {
             velocity.X *= speedupFactor[bricksDestroyed];

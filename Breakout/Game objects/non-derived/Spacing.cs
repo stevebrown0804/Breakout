@@ -10,7 +10,7 @@ namespace Breakout.Game_objects.non_derived
 {
     internal class Spacing
     {
-        //IN PROGRESS: Figure out the spacing of the various regions of the game screen
+        //DONE, MOSTLY: Figure out the spacing of the various regions of the game screen
         // ...and give stuff (public) variable names.  *thumbs up*
 
         public int topAreaHeight;
@@ -82,7 +82,6 @@ namespace Breakout.Game_objects.non_derived
             countdownTopSpacing = 100;
             countdownBottomSpacing = 300;
 
-            //IN PROGRES: pause menu
             pauseMenuTopSpacing = 100;            
             pauseMenuInternalTopSpacing = 10;
             pauseMenuInternalBottomSpacing = 10;

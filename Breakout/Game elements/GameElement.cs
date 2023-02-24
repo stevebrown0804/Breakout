@@ -24,7 +24,7 @@ namespace Breakout.Game_elements
 
     internal enum ElementType
     {
-        unset = 0,   //IN PROGRESS: fill this in with the game's...what we we using this for, again? ElementType?
+        unset = 0,   //UNUSED: fill this in with the game's...what we we using this for, again? ElementType?
         Wall,
         Brick,
         Paddle,

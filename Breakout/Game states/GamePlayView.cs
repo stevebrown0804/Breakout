@@ -19,7 +19,10 @@ using System.Collections.Generic;
 
 /* "Background music during the gameplay." */
 
-//TODO: Make/find a sprite for the '# paddles remaining.'  (Pac Man sprite? hmm...)
+//TODO: Make/find a sprite for the '# paddles remaining' and render it  (Pac Man sprite? hmm...)
+
+//TODO: Detect when the ball goes off the screen at the bottom and subtract a life (and start over or do game over)
+
 //TODO: Find some BGM and integrate it
 
 namespace Breakout.Game_states
@@ -60,26 +63,27 @@ namespace Breakout.Game_states
         internal List<Ball> balls = new();
         internal List<Wall> walls = new(); 
 
-        // Non-list
+        // Non-list types
         BottomAreaOfInteriorToWalls bottomAreaOfInteriorToWalls;
         //BottomAreaOfPlayingField bottomAreaOfPlayingField;        
-        BrickGrid brickGrid;
+        internal BrickGrid brickGrid;
         Countdown countdown;
         internal InteriorToWalls interiorToWalls;
         LeftHalfOfBottomArea leftHalfOfBottomArea;
         MiddleAreaOfInteriorToWalls middleAreaOfInteriorToWalls;
         //MiddleAreaOfPlayingField middleAreaOfPlayingField;
-        internal Paddle paddle; // = new();
+        internal Paddle paddle;
         internal PaddleArea paddleArea;
         internal PlayingField playingField;
-        PauseMenu pauseMenu; // = new();
+        PauseMenu pauseMenu;
         RemainingLivesIcons remainingLivesIcons;
         RightHalfOfBottomArea rightHalfOfBottomArea;
         Score score;
         TopAreaOfInteriorToWalls topAreaOfInteriorToWalls;
-        //TopAreaOfPlayingField topAreaOfPlayingField;
-        
-        WindowInterior windowInterior; // = new();
+        //TopAreaOfPlayingField topAreaOfPlayingField;        
+        WindowInterior windowInterior;
+
+        //the one that's not derived from GameObject
         internal Spacing spacing;
 
         //Misc. variables
@@ -88,7 +92,7 @@ namespace Breakout.Game_states
         bool showPauseMenuRegion = false;
         //bool isPaused = false;        /moving this to the pauseMenu object
         GamePlayState gamePlayState;
-        internal bool waitingOnRender = false;
+        //internal bool waitingOnRender = false;
 
         //And some constants
         const int numRowsOfBricks = 8;
@@ -103,9 +107,8 @@ namespace Breakout.Game_states
         public override void initialize(GraphicsDevice graphicsDevice, GraphicsDeviceManager graphics)
         {
             base.initialize(graphicsDevice, graphics);
-            //and then...
-
-            //...set up the game objects
+            
+            //Set up the game objects
             spacing = new(graphics);
             windowInterior = new(new Rectangle(0, 0,
                                  graphics.PreferredBackBufferWidth,
@@ -143,16 +146,16 @@ namespace Breakout.Game_states
                 playingField.position.Height - spacing.wallThickness));
 
             //Then we'll split up the area within the walls
-            //Top
+            // Top
             topAreaOfInteriorToWalls = new(new Rectangle(interiorToWalls.position.X, interiorToWalls.position.Y,
                           interiorToWalls.position.Width, spacing.topAreaHeight));
-            //Bottom
+            // Bottom
             bottomAreaOfInteriorToWalls = new(new Rectangle(interiorToWalls.position.X, interiorToWalls.position.Y + interiorToWalls.position.Height - spacing.bottomAreaHeight, interiorToWalls.position.Width, spacing.bottomAreaHeight));
-            //Paddle area
+            // Paddle area
             paddleArea = new(new Rectangle(interiorToWalls.position.X,
                 interiorToWalls.position.Y + interiorToWalls.position.Height - bottomAreaOfInteriorToWalls.position.Height - spacing.paddleAreaHeight, interiorToWalls.position.Width,
                 spacing.paddleAreaHeight));
-            //Middle
+            // Middle
             middleAreaOfInteriorToWalls = new(new Rectangle(interiorToWalls.position.X,
                 interiorToWalls.position.Y + topAreaOfInteriorToWalls.position.Height,
                 interiorToWalls.position.Width,
@@ -225,7 +228,7 @@ namespace Breakout.Game_states
         }
 
         //DONE, FOR THE MOST PART: Implement GamePlayView.loadContent()
-        //IMPORTANT!:  Contains the line where we skip countdown
+        //IMPORTANT:  Contains the line where we skip countdown
         public override void loadContent(ContentManager contentManager)  
         {
             pauseMenuFont = contentManager.Load<SpriteFont>("Fonts/ingame-menu");      //Fonts
@@ -249,57 +252,65 @@ namespace Breakout.Game_states
 
         public override GameStateEnum processInput(GameTime gameTime, BO_Keyboard keyboard)   
         {
-            if (!waitingOnRender)
-            {
-                //IN PROGRESS: Implement GamePlayView.processInput()
-                //REMINDER: This is called at the beginning of BreakoutGame.Input()
+            /*if (!waitingOnRender)
+            {*/
 
-                if (keyboard.IsKeyPressed(Keys.S))  //toggle showRegions
+            //IN PROGRESS: Implement GamePlayView.processInput()
+            //Note to self: This is called at the beginning of BreakoutGame.Input() //<---what was the significance of that, again? hm...
+            
+            //MAYBE: Remove states from this OR as necessary
+            if (gamePlayState == GamePlayState.Initializing || gamePlayState == GamePlayState.Countdown
+                || gamePlayState == GamePlayState.InGame || gamePlayState == GamePlayState.Paused 
+                || gamePlayState == GamePlayState.GameOver)     //is that everything?  should be, atm.
+            if (keyboard.IsKeyPressed(Keys.S))  //toggle showRegions
+            {
+                if (showRegions)
                 {
-                    if (showRegions)
+                    showRegions = false;
+                    showCountdownRegion = false;
+                    showPauseMenuRegion = false;
+                }
+                else
+                    showRegions = true;
+            }
+
+            if (keyboard.IsKeyPressed(Keys.A))  //toggle showCountdownRegion
+            {
+                if (showRegions)
+                {
+                    if (showCountdownRegion)
                     {
-                        showRegions = false;
                         showCountdownRegion = false;
+                    }
+                    else
+                    {
+                        showPauseMenuRegion = false;
+                        showCountdownRegion = true;
+                    }
+                }
+            }
+
+            if (keyboard.IsKeyPressed(Keys.D))  //toggle showPauseMenuRegion
+            {
+                if (showRegions)
+                {
+                    if (showPauseMenuRegion)
+                    {
                         showPauseMenuRegion = false;
                     }
                     else
-                        showRegions = true;
-                }
-
-                if (keyboard.IsKeyPressed(Keys.A))  //toggle showCountdownRegion
-                {
-                    if (showRegions)
                     {
-                        if (showCountdownRegion)
-                        {
-                            showCountdownRegion = false;
-                        }
-                        else
-                        {
-                            showPauseMenuRegion = false;
-                            showCountdownRegion = true;
-                        }
+                        showCountdownRegion = false;
+                        showPauseMenuRegion = true;
                     }
                 }
+            }
 
-                if (keyboard.IsKeyPressed(Keys.D))  //toggle showPauseMenuRegion
-                {
-                    if (showRegions)
-                    {
-                        if (showPauseMenuRegion)
-                        {
-                            showPauseMenuRegion = false;
-                        }
-                        else
-                        {
-                            showCountdownRegion = false;
-                            showPauseMenuRegion = true;
-                        }
-                    }
-                }
+            //TODO: Enter/arrow keys during the pause menu
 
-                //TODO: Change this to have Esc bring up a pause window (and pause the game) with 'quit' and 'resume' options -- or change a state variable to 'paused' then call a method that renders the pause menu
-                if (gamePlayState == GamePlayState.InGame || gamePlayState == GamePlayState.Countdown)
+
+            //TODO: Change this to have Esc bring up a pause window (and pause the game) with 'quit' and 'resume' options -- or change a state variable to 'paused' then call a method that renders the pause menu
+            if (gamePlayState == GamePlayState.InGame || gamePlayState == GamePlayState.Countdown)
                 {
                     if (keyboard.IsKeyPressed(Keys.Escape))
                     {
@@ -310,7 +321,7 @@ namespace Breakout.Game_states
                 //Controls: Spacebar (to release the ball), left, right...and that's it, right?  TBD
                 //Oh, and Enter, to select an option during the pause menu
 
-                //IN PROGRESS
+                //DONE, I THINK: in-game keys
                 if (gamePlayState == GamePlayState.InGame)
                 {
                     if (keyboard.IsKeyHeld(Keys.Left))
@@ -334,7 +345,7 @@ namespace Breakout.Game_states
                     }
                 }
 
-            }//END if(!waitingOnRender)
+            //}//END if(!waitingOnRender)
 
             return GameStateEnum.GamePlay;
         }
@@ -342,21 +353,21 @@ namespace Breakout.Game_states
         public override void render(GameTime gameTime, Renderer renderer)
         {
             base.render(gameTime, renderer);
-            waitingOnRender = false;
+            //waitingOnRender = false;
         }
 
-        //IN PROGRESS: GamePlayview.update()
+        //DONE FOR NOW, I THINK: GamePlayview.update()
         public override void update(GameTime gameTime, Renderer renderer)
         {
-            if (!waitingOnRender)
-            {
+            /*if (!waitingOnRender)
+            {*/
                 //Vector2 stringSize = pauseMenuFont.MeasureString(MESSAGE);
                 GameElement el;
                 /*el = new GameElement(RenderType.Text, pauseMenuFont, MESSAGE, 
-                                     new Vector2(graphics.PreferredBackBufferWidth / 2 - stringSize.X / 2,                                 graphics.PreferredBackBufferHeight / 2 - stringSize.Y),                      Color.Yellow);
+                                     new Vector2(graphics.PreferredBackBufferWidth / 2 - stringSize.X / 2,                                 graphics.PreferredBackBufferHeight / 2 - stringSize.Y), Color.Yellow);
                 renderer.AddToRenderList(el);*/
 
-                //FOR NOW: Draw each region of the screen as a solid color
+                //Draw each region of the screen as a solid color
                 // We'll make sure we get the render-order right, plus it'll be fun to see.  *thumbs up*
                 if (showRegions)
                 {
@@ -418,7 +429,7 @@ namespace Breakout.Game_states
                             tx = yellow1x1;
                             break;
                         default:
-                            throw new System.Exception("How did we get here?  (By 'here' we mean that i = 9 (or greater, or less than zero) in the switch statement to add the bricks from brickGrid)");
+                            throw new System.Exception("Unrecognized row number");
 
                     }
                     for (int j = 0; j < 14; j++)
@@ -473,9 +484,9 @@ namespace Breakout.Game_states
                     renderer.AddToRenderList(el);
                 }
 
-                waitingOnRender = true;
+                /*waitingOnRender = true;
 
-            }//END if (!waitingOnRender)
+            }//END if (!waitingOnRender)*/
 
         }//END update()
 

@@ -33,7 +33,7 @@ namespace Breakout.Game_objects
             pauseMenuPrompts["exit"] = "Quit";
         }
 
-        //DONE, I THINK: figuring out the pause menu rectangle
+        //DONE, I THINK: figuring out the pause menu rectangle; TODO: Actually try the pause menu out
         public void SecondInitialize(GamePlayView gamePlay)
         {
             //spacing.

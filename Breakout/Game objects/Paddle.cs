@@ -38,10 +38,10 @@ namespace Breakout.Game_elements
         {
         }*/
 
+        //TODO: Shrink the paddle (as an animation)
         public void Shrink(GameTime gameTime)
         {
-            //Shrink!
-            //TODO: Shrink the paddle (as an animation)
+            //Shrink!            
         }
 
         //Animate the paddle
@@ -52,12 +52,12 @@ namespace Breakout.Game_elements
             float deltaX;
             if (direction == Direction.Left)
             {
-                velocity.X = -1f;   //Turn out, this is perfect.  who knew!                
+                velocity.X = -(GetPaddleSpeed());                  
                 deltaX = velocity.X * (float)time.TotalMilliseconds;
             }
             else //direction == Direction.Right
             {
-                velocity.X = 1f;                
+                velocity.X = GetPaddleSpeed();
                 deltaX = velocity.X * (float)time.TotalMilliseconds;
             }
 
@@ -77,7 +77,15 @@ namespace Breakout.Game_elements
             }
         }//END Move()
 
-        private void MoveAttachedBalls(int deltaX, GamePlayView gpv)
+        private static float GetPaddleSpeed()
+        {
+            //PROBABLY LATER: apply the balls' multiplier to the paddle (or some kind of speedup)
+
+            //EVENTUALLY: Mess around with this value until we get something that feels right
+            return 1.5f;  
+        }
+
+        private static void MoveAttachedBalls(int deltaX, GamePlayView gpv)
         {
             for(int i = 0; i < gpv.balls.Count; i++)
             {

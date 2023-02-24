@@ -24,13 +24,15 @@ namespace Breakout.Game_objects.Base
 
         }*/
 
+        //LATER: Delete this (GameObject.GameObject(Rect, Rect)), if it gets no references
         internal GameObject(Rectangle position, Rectangle boundingBox)  //for when boundingBox is different from position
         {
             this.position = position;
             this.boundingBox = boundingBox;
         }
 
-        internal GameObject()   //pretty sure this serves no real purpose; TODO: Delete it, eventually
+        //LATER: Delete this (GameObject.GameObject()), if it gets no references
+        internal GameObject()   //pretty sure this serves no real purpose; 
         {
             position = new();
             boundingBox = new();

@@ -21,7 +21,9 @@ namespace Breakout.Game_elements
         /*internal Rectangle position;
         internal Rectangle boundingBox;*/
 
-        public bool hasBeenHit = false;    //TODO: change this based on a collision
+        public bool hasBeenHit = false;    
+            //TODO: change this (Brick.hasBeenHit) based on a collision
+            //TODO (ELSEWHERE): Don't render a brick that hasBeenHit (or CD with it)
 
         internal Brick(Rectangle position) : base(position)
         {
@@ -38,7 +40,7 @@ namespace Breakout.Game_elements
         public void Explode()
         {
             //Boom!
-            //TODO: Exploding bricks
+            //TODO: Exploding bricks!
         }
     }
 }
