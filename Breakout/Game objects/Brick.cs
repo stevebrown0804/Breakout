@@ -21,9 +21,7 @@ namespace Breakout.Game_elements
         /*internal Rectangle position;
         internal Rectangle boundingBox;*/
 
-        //TODO (ELSEWHERE): Don't render a brick that hasBeenHit
         public bool hasBeenHit = false;
-        
         public bool isExploding = false;
         private GameTime explosionEndsAt;
 

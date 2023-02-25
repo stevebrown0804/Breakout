@@ -37,7 +37,6 @@ namespace Breakout.Game_states
         Paused,
         GameOver  //what else?  TBD
     }
-    //How about a stack to track this? (maybe) TBD
 
 
     public class GamePlayView : GameStateView
@@ -57,9 +56,7 @@ namespace Breakout.Game_states
         private Texture2D white1x1;
         private Texture2D black1x1;
 
-        //private const string MESSAGE = "TODO: Game";
-
-        //Game Objects
+         //Game Objects
         // Lists (so we'll new() them here)
         internal List<Ball> balls = new();
         internal List<Wall> walls = new();
@@ -93,7 +90,7 @@ namespace Breakout.Game_states
         bool showRowRegions = false;
         bool showCountdownRegion = false;
         bool showPauseMenuRegion = false;
-        //bool isPaused = false;        /moving this to the pauseMenu object
+        //bool isPaused = false;        //moving this to the pauseMenu object
         GamePlayState gamePlayState;
         //internal bool waitingOnRender = false;
 
@@ -207,7 +204,7 @@ namespace Breakout.Game_states
                 x = brickGrid.position.X; // + spacing.intraBrickHorizontalSpacing;
                 y = brickGrid.position.Y + (i * h) + (spacing.intraBrickVerticalSpacing * (i+1));
                 w = brickGrid.position.Width; // - spacing.intraBrickHorizontalSpacing;
-                //h =  <--already set, I think (from splitting up brickGrid) 
+                //h =  <--already set (from line 179) 
                 rowRegions.Add(new(new Rectangle(x,y,w,h)));
             }
 

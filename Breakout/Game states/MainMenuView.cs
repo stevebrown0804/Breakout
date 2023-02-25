@@ -22,9 +22,7 @@ namespace Breakout.Game_states
             About,
             Quit
         }
-
         private MenuState m_currentSelection = MenuState.NewGame;
-        private bool m_waitForKeyRelease = false;
 
         public override void initialize(GraphicsDevice graphicsDevice, GraphicsDeviceManager graphics)
         {
@@ -41,48 +39,39 @@ namespace Breakout.Game_states
 
         public override GameStateEnum processInput(GameTime gameTime, BO_Keyboard keyboard)
         {
-            // This is the technique I'm using to ensure one keypress makes one menu navigation move - the prof
-
-            if (!m_waitForKeyRelease)
+            // Arrow keys to navigate the menu
+            if (keyboard.IsKeyPressed(Keys.Down))
             {
-                //TODO: Add logic to not scroll up past New Game or scroll down past Quit
-
-                // Arrow keys to navigate the menu
-                if (keyboard.IsKeyHeld(Keys.Down))  //Any reason we can't do IsKeyPRessed?  TBD
+                if(m_currentSelection != MenuState.Quit)
                 {
                     m_currentSelection = m_currentSelection + 1;
-                    m_waitForKeyRelease = true;
                 }
-                  if (keyboard.IsKeyHeld(Keys.Up))
+            }
+            if (keyboard.IsKeyPressed(Keys.Up))
+            {
+                if(m_currentSelection != MenuState.NewGame)
                 {
                     m_currentSelection = m_currentSelection - 1;
-                    m_waitForKeyRelease = true;
                 }
+            }
                 
-                // If enter is pressed, return the appropriate new state
-                if (keyboard.IsKeyPressed(Keys.Enter))
-                {
-                    switch (m_currentSelection)
-                    {
-                        case (MenuState.NewGame): return GameStateEnum.GamePlay;
-                        case (MenuState.HighScores): return GameStateEnum.HighScores;
-                        case (MenuState.About): return GameStateEnum.About;
-                        case (MenuState.Quit): return GameStateEnum.Exit;
-                        default:
-                            throw new System.Exception("MainMenuview.processInput says: Unrecognized MenuState");
-                    }
-                }
-
-                //And if ESC is pressed, exit
-                if (keyboard.IsKeyPressed(Keys.Escape))
-                    return GameStateEnum.Exit;
-
-            }
-            //else if (Keyboard.GetState().IsKeyUp(Keys.Down) && Keyboard.GetState().IsKeyUp(Keys.Up))
-            else if (keyboard.IsKeyUp(Keys.Down) && keyboard.IsKeyUp(Keys.Up))
+            // If enter is pressed, return the appropriate new state
+            if (keyboard.IsKeyPressed(Keys.Enter))
             {
-                m_waitForKeyRelease = false;
+                switch (m_currentSelection)
+                {
+                    case (MenuState.NewGame): return GameStateEnum.GamePlay;
+                    case (MenuState.HighScores): return GameStateEnum.HighScores;
+                    case (MenuState.About): return GameStateEnum.About;
+                    case (MenuState.Quit): return GameStateEnum.Exit;
+                    default:
+                        throw new System.Exception("MainMenuview.processInput says: Unrecognized MenuState");
+                }
             }
+
+            //And if ESC is pressed, exit
+            if (keyboard.IsKeyPressed(Keys.Escape))
+                return GameStateEnum.Exit;
 
             //Otherwise, continue doing the main menu
             return GameStateEnum.MainMenu;
