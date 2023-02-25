@@ -586,7 +586,7 @@ namespace Breakout.Game_states
         }//END update()
 
 
-        //IN PROGRESS: reinitializing the GamePlayView
+        //DONE, I THINK: reinitializing the GamePlayView
         public void Reinitialize(GraphicsDevice graphicsDevice, GraphicsDeviceManager graphics)
         {
             Debug.Print("Now in GamePlayView.Reinitialize()");
