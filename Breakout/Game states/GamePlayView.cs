@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
+using System.ComponentModel;
 
 /* "When starting the game, provide a 3, 2, 1 count down timer, showing the numbers 3, 2, 1 in the middle of the screen for the count down.  Following the completion of the countdown, the ball starts from the paddle in a nice direction (nice meaning not too steep of an angle and not straight up)." */
 
@@ -61,7 +62,8 @@ namespace Breakout.Game_states
         //Game Objects
         // Lists (so we'll new() them here)
         internal List<Ball> balls = new();
-        internal List<Wall> walls = new(); 
+        internal List<Wall> walls = new();
+        internal List<RowRegion> rowRegions = new();
 
         // Non-list types
         BottomAreaOfInteriorToWalls bottomAreaOfInteriorToWalls;
@@ -88,6 +90,7 @@ namespace Breakout.Game_states
 
         //Misc. variables
         bool showRegions = false;
+        bool showRowRegions = false;
         bool showCountdownRegion = false;
         bool showPauseMenuRegion = false;
         //bool isPaused = false;        /moving this to the pauseMenu object
@@ -197,6 +200,17 @@ namespace Breakout.Game_states
                 y += h + spacing.intraBrickHorizontalSpacing;
             }
 
+            //the 'row regions'
+            // note: we'll reuse x,y,w,h.  (h, in particular.  don't change h from line 179!)
+            for (int i = 0; i < numRowsOfBricks; i++)
+            {
+                x = brickGrid.position.X;
+                y = brickGrid.position.Y + (i * h) + (spacing.intraBrickVerticalSpacing * (i+1));
+                w = brickGrid.position.Width;
+                //h =  <--already set, I think (from splitting up brickGrid) 
+                rowRegions.Add(new(new Rectangle(x,y,w,h)));
+            }
+
             //We'll split up the bottom area into left/right halves
             leftHalfOfBottomArea = new(new Rectangle(bottomAreaOfInteriorToWalls.position.X, bottomAreaOfInteriorToWalls.position.Y, bottomAreaOfInteriorToWalls.position.Width / 2, bottomAreaOfInteriorToWalls.position.Height));
 
@@ -302,6 +316,19 @@ namespace Breakout.Game_states
                     {
                         showCountdownRegion = false;
                         showPauseMenuRegion = true;
+                    }
+                }
+            }
+
+            if (keyboard.IsKeyPressed(Keys.R))
+            {
+                if (showRegions)
+                {
+                    if (showRowRegions)
+                        showRowRegions = false;
+                    else
+                    {
+                        showRowRegions = true;
                     }
                 }
             }
@@ -441,6 +468,16 @@ namespace Breakout.Game_states
 
                 if (showRegions)
                 {
+                    //the 'row regions'
+                    if (showRowRegions)
+                    {
+                        for (int i = 0; i < rowRegions.Count; i++)
+                        {
+                            el = new GameElement(RenderType.UI, CallType.Rectangle, white1x1, rowRegions[i].position, Color.White);
+                            renderer.AddToRenderList(el);
+                        }
+                    }
+
                     //Bottom area, left and right
                     el = new GameElement(RenderType.UI, CallType.Rectangle, blue1x1, leftHalfOfBottomArea.position, Color.White);
                     renderer.AddToRenderList(el);
