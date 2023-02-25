@@ -204,9 +204,9 @@ namespace Breakout.Game_states
             // note: we'll reuse x,y,w,h.  (h, in particular.  don't change h from line 179!)
             for (int i = 0; i < numRowsOfBricks; i++)
             {
-                x = brickGrid.position.X;
+                x = brickGrid.position.X; // + spacing.intraBrickHorizontalSpacing;
                 y = brickGrid.position.Y + (i * h) + (spacing.intraBrickVerticalSpacing * (i+1));
-                w = brickGrid.position.Width;
+                w = brickGrid.position.Width; // - spacing.intraBrickHorizontalSpacing;
                 //h =  <--already set, I think (from splitting up brickGrid) 
                 rowRegions.Add(new(new Rectangle(x,y,w,h)));
             }
@@ -388,140 +388,148 @@ namespace Breakout.Game_states
         {
             /*if (!waitingOnRender)
             {*/
-                //Vector2 stringSize = pauseMenuFont.MeasureString(MESSAGE);
-                GameElement el;
-                /*el = new GameElement(RenderType.Text, pauseMenuFont, MESSAGE, 
-                                     new Vector2(graphics.PreferredBackBufferWidth / 2 - stringSize.X / 2,                                 graphics.PreferredBackBufferHeight / 2 - stringSize.Y), Color.Yellow);
-                renderer.AddToRenderList(el);*/
 
-                //Draw each region of the screen as a solid color
-                // We'll make sure we get the render-order right, plus it'll be fun to see.  *thumbs up*
-                if (showRegions)
+            //Vector2 stringSize = pauseMenuFont.MeasureString(MESSAGE);
+            GameElement el;
+            /*el = new GameElement(RenderType.Text, pauseMenuFont, MESSAGE, 
+                                    new Vector2(graphics.PreferredBackBufferWidth / 2 - stringSize.X / 2,                                 graphics.PreferredBackBufferHeight / 2 - stringSize.Y), Color.Yellow);
+            renderer.AddToRenderList(el);*/
+
+            //Draw each region of the screen as a solid color
+            // We'll make sure we get the render-order right, plus it'll be fun to see.  *thumbs up*
+            if (showRegions)
+            {
+                el = new GameElement(RenderType.UI, CallType.Rectangle, white1x1, windowInterior.position, Color.White);
+                renderer.AddToRenderList(el);
+
+                el = new GameElement(RenderType.UI, CallType.Rectangle, limeGreen1x1, playingField.position, Color.White);
+                renderer.AddToRenderList(el);
+            }
+
+            foreach (Wall wall in walls)
+            {
+                el = new GameElement(RenderType.UI, CallType.Rectangle, darkgray1x1, wall.position, Color.White);
+                renderer.AddToRenderList(el);
+            }
+
+            if (showRegions)
+            {
+                el = new GameElement(RenderType.UI, CallType.Rectangle, purple1x1, interiorToWalls.position, Color.White);
+                renderer.AddToRenderList(el);
+
+                el = new GameElement(RenderType.UI, CallType.Rectangle, blue1x1, topAreaOfInteriorToWalls.position, Color.White);
+                renderer.AddToRenderList(el);
+
+                el = new GameElement(RenderType.UI, CallType.Rectangle, orange1x1, bottomAreaOfInteriorToWalls.position, Color.White);
+                renderer.AddToRenderList(el);
+
+                el = new GameElement(RenderType.UI, CallType.Rectangle, white1x1, paddleArea.position, Color.White);
+                renderer.AddToRenderList(el);
+
+                el = new GameElement(RenderType.UI, CallType.Rectangle, purple1x1, middleAreaOfInteriorToWalls.position, Color.White);
+                renderer.AddToRenderList(el);
+
+                el = new GameElement(RenderType.UI, CallType.Rectangle, black1x1, brickGrid.position, Color.White);
+                renderer.AddToRenderList(el);
+            }//END if(showRegions)
+
+            //Add the bricks from brickGrid
+            var bg = brickGrid.brickGrid;
+            for (int i = 0; i < 8; i++)
+            {
+                Texture2D tx;
+                switch (i)
                 {
-                    el = new GameElement(RenderType.UI, CallType.Rectangle, white1x1, windowInterior.position, Color.White);
-                    renderer.AddToRenderList(el);
+                    case 0:
+                    case 1:
+                        tx = limeGreen1x1;
+                        break;
+                    case 2:
+                    case 3:
+                        tx = blue1x1;
+                        break;
+                    case 4:
+                    case 5:
+                        tx = orange1x1;
+                        break;
+                    case 6:
+                    case 7:
+                        tx = yellow1x1;
+                        break;
+                    default:
+                        throw new System.Exception("Unrecognized row number");
 
-                    el = new GameElement(RenderType.UI, CallType.Rectangle, limeGreen1x1, playingField.position, Color.White);
-                    renderer.AddToRenderList(el);
                 }
-
-                foreach (Wall wall in walls)
+                for (int j = 0; j < 14; j++)
                 {
-                    el = new GameElement(RenderType.UI, CallType.Rectangle, darkgray1x1, wall.position, Color.White);
-                    renderer.AddToRenderList(el);
-                }
-
-                if (showRegions)
-                {
-                    el = new GameElement(RenderType.UI, CallType.Rectangle, purple1x1, interiorToWalls.position, Color.White);
-                    renderer.AddToRenderList(el);
-
-                    el = new GameElement(RenderType.UI, CallType.Rectangle, blue1x1, topAreaOfInteriorToWalls.position, Color.White);
-                    renderer.AddToRenderList(el);
-
-                    el = new GameElement(RenderType.UI, CallType.Rectangle, orange1x1, bottomAreaOfInteriorToWalls.position, Color.White);
-                    renderer.AddToRenderList(el);
-
-                    el = new GameElement(RenderType.UI, CallType.Rectangle, white1x1, paddleArea.position, Color.White);
-                    renderer.AddToRenderList(el);
-
-                    el = new GameElement(RenderType.UI, CallType.Rectangle, purple1x1, middleAreaOfInteriorToWalls.position, Color.White);
-                    renderer.AddToRenderList(el);
-
-                    el = new GameElement(RenderType.UI, CallType.Rectangle, black1x1, brickGrid.position, Color.White);
-                    renderer.AddToRenderList(el);
-                }//END if(showRegions)
-
-                //Add the bricks from brickGrid
-                var bg = brickGrid.brickGrid;
-                for (int i = 0; i < 8; i++)
-                {
-                    Texture2D tx;
-                    switch (i)
-                    {
-                        case 0:
-                        case 1:
-                            tx = limeGreen1x1;
-                            break;
-                        case 2:
-                        case 3:
-                            tx = blue1x1;
-                            break;
-                        case 4:
-                        case 5:
-                            tx = orange1x1;
-                            break;
-                        case 6:
-                        case 7:
-                            tx = yellow1x1;
-                            break;
-                        default:
-                            throw new System.Exception("Unrecognized row number");
-
-                    }
-                    for (int j = 0; j < 14; j++)
+                    if (!bg[i][j].hasBeenHit)
                     {
                         el = new GameElement(RenderType.UI, CallType.Rectangle, tx, bg[i][j].position, Color.White);
                         renderer.AddToRenderList(el);
                     }
+                    else
+                    {
+                        //A THOUGHT: We COULD put the call to DoExplode (or w/e it's called) here.  any advantage?  TBD
+                    }
+                }
+            }
+
+            if (showRegions)
+            {
+                //the 'row regions'
+                if (showRowRegions)
+                {
+                    for (int i = 0; i < rowRegions.Count; i++)
+                    {
+                        el = new GameElement(RenderType.UI, CallType.Rectangle, white1x1, rowRegions[i].position, Color.White);
+                        renderer.AddToRenderList(el);
+                    }
                 }
 
-                if (showRegions)
-                {
-                    //the 'row regions'
-                    if (showRowRegions)
-                    {
-                        for (int i = 0; i < rowRegions.Count; i++)
-                        {
-                            el = new GameElement(RenderType.UI, CallType.Rectangle, white1x1, rowRegions[i].position, Color.White);
-                            renderer.AddToRenderList(el);
-                        }
-                    }
-
-                    //Bottom area, left and right
-                    el = new GameElement(RenderType.UI, CallType.Rectangle, blue1x1, leftHalfOfBottomArea.position, Color.White);
-                    renderer.AddToRenderList(el);
-
-                    el = new GameElement(RenderType.UI, CallType.Rectangle, limeGreen1x1, rightHalfOfBottomArea.position, Color.White);
-                    renderer.AddToRenderList(el);
-
-                    //remainingLivesIcons
-                    el = new GameElement(RenderType.UI, CallType.Rectangle, orange1x1, remainingLivesIcons.position, Color.White);
-                    renderer.AddToRenderList(el);
-
-                    //score section
-                    el = new GameElement(RenderType.UI, CallType.Rectangle, yellow1x1, score.position, Color.White);
-                    renderer.AddToRenderList(el);
-
-                }//END if(showRegions)
-
-                //paddle
-                el = new GameElement(RenderType.UI, CallType.Rectangle, bluegray1x1, paddle.position, Color.White);
+                //Bottom area, left and right
+                el = new GameElement(RenderType.UI, CallType.Rectangle, blue1x1, leftHalfOfBottomArea.position, Color.White);
                 renderer.AddToRenderList(el);
 
-                //ball
-                for (int i = 0; i < balls.Count; i++)
-                {
-                    balls[i].Move(gameTime, this);
-                    el = new GameElement(RenderType.UI, CallType.Rectangle, ball50x50, balls[i].position, Color.White);
-                    renderer.AddToRenderList(el);
-                }
+                el = new GameElement(RenderType.UI, CallType.Rectangle, limeGreen1x1, rightHalfOfBottomArea.position, Color.White);
+                renderer.AddToRenderList(el);
 
-                //countdown
-                if (showRegions && showCountdownRegion)
-                {
-                    el = new GameElement(RenderType.UI, CallType.Rectangle, yellow1x1, countdown.position, Color.White);
-                    renderer.AddToRenderList(el);
-                }
+                //remainingLivesIcons
+                el = new GameElement(RenderType.UI, CallType.Rectangle, orange1x1, remainingLivesIcons.position, Color.White);
+                renderer.AddToRenderList(el);
 
-                //pause menu
-                if (showRegions && showPauseMenuRegion)
-                {
-                    el = new GameElement(RenderType.UI, CallType.Rectangle, orange1x1, pauseMenu.position, Color.White);
-                    renderer.AddToRenderList(el);
-                }
+                //score section
+                el = new GameElement(RenderType.UI, CallType.Rectangle, yellow1x1, score.position, Color.White);
+                renderer.AddToRenderList(el);
 
-                /*waitingOnRender = true;
+            }//END if(showRegions)
+
+            //paddle
+            el = new GameElement(RenderType.UI, CallType.Rectangle, bluegray1x1, paddle.position, Color.White);
+            renderer.AddToRenderList(el);
+
+            //ball
+            for (int i = 0; i < balls.Count; i++)
+            {
+                balls[i].Move(gameTime, this);
+                el = new GameElement(RenderType.UI, CallType.Rectangle, ball50x50, balls[i].position, Color.White);
+                renderer.AddToRenderList(el);
+            }
+
+            //countdown
+            if (showRegions && showCountdownRegion)
+            {
+                el = new GameElement(RenderType.UI, CallType.Rectangle, yellow1x1, countdown.position, Color.White);
+                renderer.AddToRenderList(el);
+            }
+
+            //pause menu
+            if (showRegions && showPauseMenuRegion)
+            {
+                el = new GameElement(RenderType.UI, CallType.Rectangle, orange1x1, pauseMenu.position, Color.White);
+                renderer.AddToRenderList(el);
+            }
+
+            /*waitingOnRender = true;
 
             }//END if (!waitingOnRender)*/
 

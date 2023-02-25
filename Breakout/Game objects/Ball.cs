@@ -4,8 +4,10 @@ using Breakout.Subsystems;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 /* "The ball speed increases (you can choose the rate) at the following intervals; start over when starting a new paddle:
@@ -64,8 +66,8 @@ namespace Breakout.Game_elements
         public void GiveVelocity()
         {
             //EVENTUALLY: mess around with these values until they feel right
-            velocity.X = 0.5f; //45 degrees to the right, I think. <--positive is right, negative is left
-            velocity.Y = -0.5f; 
+            velocity.X = 0.4f; //45 degrees to the right, I think. <--positive is right, negative is left
+            velocity.Y = -0.4f; 
         }
 
         internal bool IsAtRest()
@@ -115,15 +117,77 @@ namespace Breakout.Game_elements
             }
 
             //...and the bricks
-            if(CollisionDetection.DoTheyIntersect(position, gpv.brickGrid.position))
+            if(CollisionDetection.DoTheyIntersect(gpv.brickGrid.position, test_position))
             {
-                //TODO: Generate a region for each row of bricks, then do CD with those
-                //TODO: CD with the individual bricks of the row (from the line above)
-                //TODO: React to collisions with the bricks (by hiding the brick and replacing it with a particle effect, I believe..or maybe have the brick class do those)
+                //do CD with each 'row region'
+                var rr = gpv.rowRegions;
+                for (int i = 0; i < rr.Count; i++)
+                {
+                    if (CollisionDetection.DoTheyIntersect(rr[i].position, test_position))
+                    {
+                        Debug.Print($"RowRegion intersection found: ball: {test_position}; rowRegion[{i}]: {rr[i].position}");
 
+                        //HAving found a 'row region' that we collided with...
+                        // Do CD with the individual bricks of the row (from the line above)
+                        var bg = gpv.brickGrid.brickGrid;                        
+                        for (int j = 0; j < bg[i].Count; j++)  //rowRegion and brickGrid.brickGrid appear to use the same row indices!  (...I hope)
+                        {
+                            if (!bg[i][j].hasBeenHit)
+                            {
+                                if (CollisionDetection.DoTheyIntersect(bg[i][j].position, test_position))
+                                {
+                                    //We seem to have a found a brick that's being collided with!
+                                    // From the sides
+                                    if (CollisionDetection.FromTheRight(position, deltaX, bg[i][j].position) ||
+                                        CollisionDetection.FromTheLeft(position, deltaX, bg[i][j].position))
+                                    {
+                                        //Debug.Print($"Collision from the side: test_position:{test_position}, bg[{i}][{j}] position: {bg[i][j].position}");
+                                        velocity.X = -(velocity.X);
 
-            }
-            
+                                    }
+                                    else
+                                    {
+                                        //Debug.Print($"No ball/brick collision found from the side");
+                                    }
+
+                                    // From the Top/bottom
+                                    if (CollisionDetection.FromTheBottom(position, deltaY, bg[i][j].position) ||
+                                        CollisionDetection.FromTheTop(position, deltaY, bg[i][j].position))
+                                    {
+                                        //Debug.Print($"Collision from the top/bottom: test_position:{test_position}, bg[{i}][{j}] position: {bg[i][j].position}");
+                                        velocity.Y = -(velocity.Y);
+
+                                    }
+                                    else
+                                    {
+                                        //Debug.Print($"No ball/brick collision found from the top/bottom");
+                                    }
+
+                                    //Hide the brick and trigger the explosion animation
+                                    bg[i][j].hasBeenHit = true;
+                                    bg[i][j].isExploding = true;
+
+                                }//END if (CollisionDetection.DoTheyIntersect(bg[i][j].position, test_position))
+                            }
+                            else
+                            {
+                                //This brick has already been hit!
+                                //Should we start/continue the explosion animation?  TBD!
+                                if (bg[i][j].isExploding)
+                                {
+                                    bg[i][j].Explode(gameTime);
+                                }
+
+                            }//END if (!bg[i][j].hasBeenHit) / else
+
+                        }//END for (int j = 0; j < bg[i].Count; j++) 
+
+                    }//END if (CollisionDetection.DoTheyIntersect(rr[i].position, test_position))
+
+                }//END for (int i = 0; i < rr.Count; i++)
+
+            }//END if(CollisionDetection.DoTheyIntersect(gpv.brickGrid.position, test_position))
+
 
             //Then we'll actually move the ball
             position.X = test_position.X; //+= (int)deltaX;
