@@ -20,9 +20,7 @@ namespace Breakout.Game_elements
 {
     internal class Ball : GameObject
     {
-        //IN PROGRESS: Ball class
-
-        //IN PROGRESS: Have the ball update its velocity in response to a collisions (Remaining: bricks)
+        //DONE, MAYBE?: Ball class
 
         //Base class:
         /*internal Rectangle position;
@@ -125,7 +123,7 @@ namespace Breakout.Game_elements
                 {
                     if (CollisionDetection.DoTheyIntersect(rr[i].position, test_position))
                     {
-                        Debug.Print($"RowRegion intersection found: ball: {test_position}; rowRegion[{i}]: {rr[i].position}");
+                        //Debug.Print($"RowRegion intersection found: ball: {test_position}; rowRegion[{i}]: {rr[i].position}");
 
                         //HAving found a 'row region' that we collided with...
                         // Do CD with the individual bricks of the row (from the line above)

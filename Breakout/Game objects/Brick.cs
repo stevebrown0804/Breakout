@@ -42,7 +42,7 @@ namespace Breakout.Game_elements
             if (isExploding)
             {
                 //Boom!
-                Debug.Print($"The brick at {position} says: Boom!");
+                //Debug.Print($"The brick at {position} says: Boom!");
 
                 //TODO: Exploding bricks!
                 //explosionEndsAt = gameTime.ElapsedGameTime + new System.TimeSpan(0, 0, 3);  //3 second explosion.

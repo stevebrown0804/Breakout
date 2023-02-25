@@ -29,6 +29,7 @@ namespace Breakout.Game_states
             base.initialize(graphicsDevice, graphics);
 
             //Was I going to do something else in MainMenuView.initialize()?  TBD
+            //Debug.Print("Now in MainMenuView.initialize()");
         }
 
         public override void loadContent(ContentManager contentManager)
