@@ -43,7 +43,7 @@ namespace Breakout.Game_states
             base.render(gameTime, renderer);
         }
 
-        //IN PROGRESS-ish: HighScoresView.update()
+        //TODO: HighScoresView.update()
         public override void update(GameTime gameTime, Renderer renderer)
         {
             Vector2 stringSize = m_font.MeasureString(MESSAGE);

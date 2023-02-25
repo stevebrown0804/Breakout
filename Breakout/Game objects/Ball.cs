@@ -170,11 +170,7 @@ namespace Breakout.Game_elements
                             else
                             {
                                 //This brick has already been hit!
-                                //Should we start/continue the explosion animation?  TBD!
-                                if (bg[i][j].isExploding)
-                                {
-                                    bg[i][j].Explode(gameTime);
-                                }
+                                
 
                             }//END if (!bg[i][j].hasBeenHit) / else
 

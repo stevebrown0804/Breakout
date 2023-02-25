@@ -63,7 +63,7 @@ namespace Breakout.Game_states
         private Texture2D ball50x50;        //Ball
         private Texture2D bluegray1x1;      //Paddle
         private Texture2D purple1x1;        //misc.  //MAYBE: Remove, once we're done with it.
-        private Texture2D white1x1;
+        internal Texture2D white1x1;
         private Texture2D black1x1;
 
         //Game Objects -- Everything below here (I think) is initialized in initialize()
@@ -116,7 +116,7 @@ namespace Breakout.Game_states
         //DONE, I THINK - GamePlayView.initialize()
         public override void initialize(GraphicsDevice graphicsDevice, GraphicsDeviceManager graphics)
         {
-            //Debug.Print("Now in GamePlayView.initialize");
+            Debug.Print("Now in GamePlayView.initialize");
 
             base.initialize(graphicsDevice, graphics);
 
@@ -218,7 +218,7 @@ namespace Breakout.Game_states
             }
 
             //the 'row regions'
-            // note: we'll reuse x,y,w,h.  (h, in particular.  don't change h from line 179!)
+            // NOTE: we'll reuse x,y,w,h.  (h, in particular.  don't change h from line 179!)
             for (int i = 0; i < numRowsOfBricks; i++)
             {
                 x = brickGrid.position.X; // + spacing.intraBrickHorizontalSpacing;
@@ -291,98 +291,114 @@ namespace Breakout.Game_states
             gamePlayState = GamePlayState.InGame; //GamePlayState.Countdown;    //<--note: skipping countdown
         }
 
+        //IN PROGRESS: Implement GamePlayView.processInput()
         public override GameStateEnum processInput(GameTime gameTime, BO_Keyboard keyboard)   
         {
             //Debug.Print("Now in GamePlayView.processInput");
 
+            //Controls: Spacebar (to release the ball), left, right...and that's it, right?  TBD
+            //Oh, and Enter, to select an option during the pause menu
+            //And Escape, to bring up the pause menu
+
             /*if (!waitingOnRender)
             {*/
 
-            //IN PROGRESS: Implement GamePlayView.processInput()
-            //Note to self: This is called at the beginning of BreakoutGame.Input() //<---what was the significance of that, again? hm...
-            
             //MAYBE: Remove states from this OR as necessary
-            if (gamePlayState == GamePlayState.Initializing || gamePlayState == GamePlayState.Countdown
-                || gamePlayState == GamePlayState.InGame || gamePlayState == GamePlayState.Paused 
-                || gamePlayState == GamePlayState.GameOver)     //is that everything?  should be, atm.
-            if (keyboard.IsKeyPressed(Keys.S))  //toggle showRegions
+            if (/*gamePlayState == GamePlayState.Initializing ||*/ gamePlayState == GamePlayState.Countdown
+                || gamePlayState == GamePlayState.InGame /*|| gamePlayState == GamePlayState.Paused */
+                || gamePlayState == GamePlayState.GameOver /* || GamePlayState.Cleanup */)
             {
-                if (showRegions)
+                if (keyboard.IsKeyPressed(Keys.S))  //toggle showRegions
                 {
-                    showRegions = false;
-                    showCountdownRegion = false;
-                    showPauseMenuRegion = false;
-                }
-                else
-                    showRegions = true;
-            }
-
-            if (keyboard.IsKeyPressed(Keys.A))  //toggle showCountdownRegion
-            {
-                if (showRegions)
-                {
-                    if (showCountdownRegion)
+                    if (showRegions)
                     {
+                        showRegions = false;
                         showCountdownRegion = false;
-                    }
-                    else
-                    {
                         showPauseMenuRegion = false;
-                        showCountdownRegion = true;
-                    }
-                }
-            }
-
-            if (keyboard.IsKeyPressed(Keys.D))  //toggle showPauseMenuRegion
-            {
-                if (showRegions)
-                {
-                    if (showPauseMenuRegion)
-                    {
-                        showPauseMenuRegion = false;
-                    }
-                    else
-                    {
-                        showCountdownRegion = false;
-                        showPauseMenuRegion = true;
-                    }
-                }
-            }
-
-            if (keyboard.IsKeyPressed(Keys.R))
-            {
-                if (showRegions)
-                {
-                    if (showRowRegions)
                         showRowRegions = false;
+                    }
                     else
+                        showRegions = true;
+                }
+
+                if (keyboard.IsKeyPressed(Keys.A))  //toggle showCountdownRegion
+                {
+                    if (showRegions)
                     {
-                        showRowRegions = true;
+                        if (showCountdownRegion)
+                        {
+                            showCountdownRegion = false;
+                        }
+                        else
+                        {
+                            showPauseMenuRegion = false;
+                            showCountdownRegion = true;
+                        }
                     }
                 }
-            }
+
+                if (keyboard.IsKeyPressed(Keys.D))  //toggle showPauseMenuRegion
+                {
+                    if (showRegions)
+                    {
+                        if (showPauseMenuRegion)
+                        {
+                            showPauseMenuRegion = false;
+                        }
+                        else
+                        {
+                            showCountdownRegion = false;
+                            showPauseMenuRegion = true;
+                        }
+                    }
+                }
+
+                if (keyboard.IsKeyPressed(Keys.R))
+                {
+                    if (showRegions)
+                    {
+                        if (showRowRegions)
+                            showRowRegions = false;
+                        else
+                        {
+                            showRowRegions = true;
+                        }
+                    }
+                }
+            }   
+           
 
             if(gamePlayState == GamePlayState.Paused)
             {
                 //TODO: Enter/arrow keys during the pause menu
             }
 
-
-            //TODO: Change this to have Esc bring up a pause window (and pause the game) with 'quit' and 'resume' options -- or change a state variable to 'paused' then call a method that renders the pause menu
+            //TODO: Change this to have Esc bring up a pause menu
+            // That is...a menu with 'quit' and 'resume' options
             if (gamePlayState == GamePlayState.InGame || gamePlayState == GamePlayState.Countdown)
             {
                 if (keyboard.IsKeyPressed(Keys.Escape))
                 {
+                    //For the moment, this just cleans up the game and exits to the menu
                     gamePlayState = GamePlayState.Cleanup;
                     Reinitialize(graphicsDevice, graphics);
                     return GameStateEnum.MainMenu;
                 }
             }
 
-            //Controls: Spacebar (to release the ball), left, right...and that's it, right?  TBD
-            //Oh, and Enter, to select an option during the pause menu
+            //In GameOver, we'll just have the user press Escape to return to the menu
+            if (gamePlayState == GamePlayState.GameOver)
+            {
+                if (keyboard.IsKeyPressed(Keys.Escape))
+                {
+                    //For the moment, this just cleans up the game and exits to the menu
+                    gamePlayState = GamePlayState.Cleanup;
+                    Reinitialize(graphicsDevice, graphics);
+                    return GameStateEnum.MainMenu;
+                }
+            }
 
-            //DONE, I THINK: in-game keys
+            //in-game keys
             if (gamePlayState == GamePlayState.InGame)
             {
                 if (keyboard.IsKeyHeld(Keys.Left))
@@ -435,7 +451,7 @@ namespace Breakout.Game_states
             if (gamePlayState != GamePlayState.Initializing || gamePlayState != GamePlayState.Cleanup)
             {
                 /*if (!waitingOnRender)
-            {*/
+                {*/
 
                 //Vector2 stringSize = pauseMenuFont.MeasureString(MESSAGE);
 
@@ -483,7 +499,7 @@ namespace Breakout.Game_states
 
                 //Add the bricks from brickGrid
                 var bg = brickGrid.brickGrid;
-                for (int i = 0; i < 8; i++)
+                for (int i = 0; i < numRowsOfBricks; i++)
                 {
                     Texture2D tx;
                     switch (i)
@@ -508,7 +524,7 @@ namespace Breakout.Game_states
                             throw new System.Exception("Unrecognized row number");
 
                     }
-                    for (int j = 0; j < 14; j++)
+                    for (int j = 0; j < numBricksPerRow; j++)
                     {
                         if (!bg[i][j].hasBeenHit)
                         {
@@ -517,7 +533,10 @@ namespace Breakout.Game_states
                         }
                         else
                         {
-                            //A THOUGHT: We COULD put the call to DoExplode (or w/e it's called) here.  any advantage?  TBD
+                            if (bg[i][j].isExploding)
+                            {
+                                bg[i][j].Explode(gameTime, this, renderer); //the 2nd/3rd argument(s) is/are temporary
+                            }
                         }
                     }
                 }

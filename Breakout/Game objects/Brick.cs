@@ -1,6 +1,8 @@
 ﻿using Breakout.Game_objects.Base;
+using Breakout.Game_states;
+using Breakout.Subsystems;
 using Microsoft.Xna.Framework;
-//using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -23,7 +25,10 @@ namespace Breakout.Game_elements
 
         public bool hasBeenHit = false;
         public bool isExploding = false;
-        private GameTime explosionEndsAt;
+        private bool timersSet = false;
+        private TimeSpan explosionEndsAt;
+        private TimeSpan startTimer;
+        private TimeSpan elapsedTime = TimeSpan.FromSeconds(0);
 
         internal Brick(Rectangle position) : base(position)
         {
@@ -37,20 +42,37 @@ namespace Breakout.Game_elements
         {
         }*/
 
-        public void Explode(GameTime gameTime)
+        public void Explode(GameTime gameTime, GamePlayView gpv, Renderer renderer)
         {
             if (isExploding)
             {
-                //Boom!
                 //Debug.Print($"The brick at {position} says: Boom!");
 
-                //TODO: Exploding bricks!
-                //explosionEndsAt = gameTime.ElapsedGameTime + new System.TimeSpan(0, 0, 3);  //3 second explosion.
+                if(!timersSet)
+                {
+                    explosionEndsAt = gameTime.TotalGameTime + new System.TimeSpan(0, 0, 3);  //3 second explosion
+                    timersSet = true;
+                    startTimer = gameTime.TotalGameTime;
+                }
 
-                //TODO: When it hits the end of its 3sec (or w/e we settle on) if exploding, disable
-                isExploding = false;    //TMP (isExploding = false;)
+                if(startTimer + elapsedTime < explosionEndsAt)
+                {
+                    //TODO: do the particle animation for an exploding brick
+                    //TMP (Adding a white brick to the render list for 3sec)
+                    renderer.AddToRenderList(new(RenderType.UI, CallType.Rectangle, gpv.white1x1, position, Color.White));
+                    //END TMP
+                    
+                }
+                else
+                {
+                    isExploding = false;
+                    //Debug.Print("Brick.Explode says: isExploding has been set to false (after 3sec elapsed)");
+                }
+
+                elapsedTime += gameTime.ElapsedGameTime;
             }
-            
-        }
-    }
+
+        }//END Explode()
+
+    }//END class Brick
 }
