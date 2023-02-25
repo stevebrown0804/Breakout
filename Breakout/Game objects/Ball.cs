@@ -125,8 +125,8 @@ namespace Breakout.Game_elements
                     {
                         //Debug.Print($"RowRegion intersection found: ball: {test_position}; rowRegion[{i}]: {rr[i].position}");
 
-                        //HAving found a 'row region' that we collided with...
-                        // Do CD with the individual bricks of the row (from the line above)
+                        //Having found a 'row region' that we collided with...
+                        // Do CD with the individual bricks of the row (from aforementioned row region)
                         var bg = gpv.brickGrid.brickGrid;                        
                         for (int j = 0; j < bg[i].Count; j++)  //rowRegion and brickGrid.brickGrid appear to use the same row indices!  (...I hope)
                         {
@@ -141,11 +141,6 @@ namespace Breakout.Game_elements
                                     {
                                         //Debug.Print($"Collision from the side: test_position:{test_position}, bg[{i}][{j}] position: {bg[i][j].position}");
                                         velocity.X = -(velocity.X);
-
-                                    }
-                                    else
-                                    {
-                                        //Debug.Print($"No ball/brick collision found from the side");
                                     }
 
                                     // From the Top/bottom
@@ -154,24 +149,14 @@ namespace Breakout.Game_elements
                                     {
                                         //Debug.Print($"Collision from the top/bottom: test_position:{test_position}, bg[{i}][{j}] position: {bg[i][j].position}");
                                         velocity.Y = -(velocity.Y);
-
-                                    }
-                                    else
-                                    {
-                                        //Debug.Print($"No ball/brick collision found from the top/bottom");
-                                    }
+                                    }                                   
 
                                     //Hide the brick and trigger the explosion animation
                                     bg[i][j].hasBeenHit = true;
                                     bg[i][j].isExploding = true;
 
                                 }//END if (CollisionDetection.DoTheyIntersect(bg[i][j].position, test_position))
-                            }
-                            else
-                            {
-                                //This brick has already been hit!
-                                
-
+                            
                             }//END if (!bg[i][j].hasBeenHit) / else
 
                         }//END for (int j = 0; j < bg[i].Count; j++) 

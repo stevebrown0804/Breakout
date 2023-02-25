@@ -67,7 +67,7 @@ namespace Breakout.Game_states
         private Texture2D black1x1;
 
         //Game Objects -- Everything below here (I think) is initialized in initialize()
-        // Lists (so we'll new() them here)
+        // Lists
         internal List<Ball> balls; // = new();
         internal List<Wall> walls; // = new();
         internal List<RowRegion> rowRegions; // = new();
@@ -105,7 +105,6 @@ namespace Breakout.Game_states
         bool showCountdownRegion = false;
         bool showPauseMenuRegion = false;
         
-        //bool isPaused = false;        //moving this to the pauseMenu object
         //internal bool waitingOnRender = false;
 
         public GamePlayView()
