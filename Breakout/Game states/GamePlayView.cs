@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -22,7 +23,7 @@ using System.Diagnostics;
 
 /* "Background music during the gameplay." */
 
-//TODO: Make/find a sprite for the '# paddles remaining' and render it  (Pac Man sprite? hmm...)
+//TODO: Make/find a sprite for the '# paddles remaining' and render it
 
 //TODO: Detect when the ball goes off the screen at the bottom and subtract a life (and start over or do game over)
 
@@ -37,6 +38,7 @@ namespace Breakout.Game_states
         Countdown,
         InGame,
         Paused,
+        ResettingLevel,
         GameOver,
         Cleanup //what else?  TBD
     }
@@ -62,7 +64,7 @@ namespace Breakout.Game_states
         private Texture2D limeGreen1x1;
         private Texture2D orange1x1;
         private Texture2D yellow1x1;
-        private Texture2D darkgray1x1;     //Wall
+        private Texture2D darkgray1x1;      //Wall
         private Texture2D ball50x50;        //Ball
         private Texture2D bluegray1x1;      //Paddle
         private Texture2D galaxy;           //BG Image
@@ -72,9 +74,9 @@ namespace Breakout.Game_states
 
         //Game Objects -- Everything below here (I think) is initialized in initialize()
         // Lists
-        internal List<Ball> balls; // = new();
-        internal List<Wall> walls; // = new();
-        internal List<RowRegion> rowRegions; // = new();
+        internal List<Ball> balls;
+        internal List<Wall> walls;
+        internal List<RowRegion> rowRegions;
 
         // Non-list types
         BottomAreaOfInteriorToWalls bottomAreaOfInteriorToWalls;
@@ -89,7 +91,7 @@ namespace Breakout.Game_states
         internal PaddleArea paddleArea;
         internal PlayingField playingField;
         PauseMenu pauseMenu;
-        RemainingLivesIcons remainingLivesIcons;
+        internal RemainingLives remainingLives;
         RightHalfOfBottomArea rightHalfOfBottomArea;
         Score score;
         TopAreaOfInteriorToWalls topAreaOfInteriorToWalls;
@@ -106,11 +108,12 @@ namespace Breakout.Game_states
         bool showPauseMenuRegion;
 
         //Variables that do NOT need to be reinitialize in Reinitalize()
-        bool contentIsLoaded = false;
-        bool subsystemsAreStashed = false;
+        bool isContentLoaded = false;
+        bool areSubsystemsStashed = false;
         GamePlayState gamePlayState;
 
-        //internal bool waitingOnRender = false;
+        //unsure about where to reinitialize this! TBD
+        internal bool waitingOnRender = false;
 
         public GamePlayView()
         {
@@ -123,14 +126,14 @@ namespace Breakout.Game_states
             //Debug.Print("Now in GamePlayView.initialize");
 
             //stash these
-            if (!subsystemsAreStashed)
+            if (!areSubsystemsStashed)
             {
                 base.initialize(graphicsDevice, graphics, subsystems);
                 this.graphicsDevice = graphicsDevice;
                 keyboard = subsystems["keyboard"];
                 renderer = subsystems["renderer"];
 
-                subsystemsAreStashed = true;
+                areSubsystemsStashed = true;
             }
 
             //new the lists
@@ -250,7 +253,7 @@ namespace Breakout.Game_states
             rightHalfOfBottomArea = new(new Rectangle(interiorToWalls.position.X + leftHalfOfBottomArea.position.Width, bottomAreaOfInteriorToWalls.position.Y, bottomAreaOfInteriorToWalls.position.Width / 2, bottomAreaOfInteriorToWalls.position.Height));
 
             //Next up, the 'lives remaining' section
-            remainingLivesIcons = new(new Rectangle(leftHalfOfBottomArea.position.X + spacing.remainingLivesLeftSpacing, leftHalfOfBottomArea.position.Y + spacing.remainingLivesTopSpacing, leftHalfOfBottomArea.position.Width - spacing.remainingLivesLeftSpacing - spacing.remainingLivesRightSpacing, leftHalfOfBottomArea.position.Height - spacing.remainingLivesTopSpacing - spacing.remainingLivesBottomSpacing));
+            remainingLives = new(new Rectangle(leftHalfOfBottomArea.position.X + spacing.remainingLivesLeftSpacing, leftHalfOfBottomArea.position.Y + spacing.remainingLivesTopSpacing, leftHalfOfBottomArea.position.Width - spacing.remainingLivesLeftSpacing - spacing.remainingLivesRightSpacing, leftHalfOfBottomArea.position.Height - spacing.remainingLivesTopSpacing - spacing.remainingLivesBottomSpacing));
 
             //And the score section
             score = new(new Rectangle(rightHalfOfBottomArea.position.X + spacing.scoreSectionLeftSpacing, rightHalfOfBottomArea.position.Y + spacing.scoreSectionTopSpacing, rightHalfOfBottomArea.position.Width - spacing.scoreSectionLeftSpacing - spacing.scoreSectionRightSpacing, rightHalfOfBottomArea.position.Height - spacing.scoreSectionTopSpacing - spacing.scoreSectionBottomSpacing));
@@ -275,12 +278,11 @@ namespace Breakout.Game_states
         }
 
         //DONE, FOR THE MOST PART: Implement GamePlayView.loadContent()
-        //IMPORTANT:  Contains the line where we skip countdown
         public override void loadContent(ContentManager contentManager)  
         {
             //Debug.Print("Now in GamePlayView.loadContent");
 
-            if (!contentIsLoaded)
+            if (!isContentLoaded)
             {
                 //stash this
                 this.contentManager = contentManager;
@@ -300,12 +302,11 @@ namespace Breakout.Game_states
                 white1x1 = contentManager.Load<Texture2D>("Sprites/white1x1");
                 black1x1 = contentManager.Load<Texture2D>("Sprites/black1x1");
 
-                contentIsLoaded = true;
+                isContentLoaded = true;
             }
 
             pauseMenu.SecondInitialize(this); //this needs pauseMenuFont to be non-null
                                               //so we'll do it here
-            gamePlayState = GamePlayState.InGame; //GamePlayState.Countdown;    //<--note: skipping countdown
         }
 
         //IN PROGRESS: Implement GamePlayView.processInput()
@@ -317,13 +318,12 @@ namespace Breakout.Game_states
             //Oh, and Enter, to select an option during the pause menu
             //And Escape, to bring up the pause menu
 
-            /*if (!waitingOnRender)
-            {*/
-
-            //MAYBE: Remove states from this OR as necessary
-            if (/*gamePlayState == GamePlayState.Initializing ||*/ gamePlayState == GamePlayState.Countdown
+            if (!waitingOnRender)
+            {
+                //MAYBE: Remove states from this OR as necessary
+                if (/*gamePlayState == GamePlayState.Initializing ||*/ gamePlayState == GamePlayState.Countdown
                 || gamePlayState == GamePlayState.InGame /*|| gamePlayState == GamePlayState.Paused */
-                || gamePlayState == GamePlayState.GameOver /* || GamePlayState.Cleanup */)
+                || gamePlayState == GamePlayState.GameOver || gamePlayState == GamePlayState.ResettingLevel /* || GamePlayState.Cleanup */)
             {
                 if (keyboard.IsKeyPressed(Keys.S))  //toggle showRegions
                 {
@@ -385,255 +385,331 @@ namespace Breakout.Game_states
             }   
            
 
-            if(gamePlayState == GamePlayState.Paused)
-            {
-                //TODO: Enter/arrow keys during the pause menu
-            }
+                if(gamePlayState == GamePlayState.Paused)
+                {
+                    //TODO: Enter/arrow keys during the pause menu
+                }
 
-            //TODO: Change this to have Esc bring up a pause menu
-            // That is...a menu with 'quit' and 'resume' options
-            if (gamePlayState == GamePlayState.InGame || gamePlayState == GamePlayState.Countdown)
-            {
-                if (keyboard.IsKeyPressed(Keys.Escape))
+                //TODO: Change this to have Esc bring up a pause menu
+                // That is...a menu with 'quit' and 'resume' options
+                if (gamePlayState == GamePlayState.InGame || gamePlayState == GamePlayState.Countdown || gamePlayState == GamePlayState.ResettingLevel)
                 {
-                    //For the moment, this just cleans up the game and exits to the menu
-                    gamePlayState = GamePlayState.Cleanup;
-                    Reinitialize(graphicsDevice, graphics);
-                    return GameStateEnum.MainMenu;
-                }
-            }
-
-            //In GameOver, we'll just have the user press Escape to return to the menu
-            if (gamePlayState == GamePlayState.GameOver)
-            {
-                if (keyboard.IsKeyPressed(Keys.Escape))
-                {
-                    //For the moment, this just cleans up the game and exits to the menu
-                    gamePlayState = GamePlayState.Cleanup;
-                    Reinitialize(graphicsDevice, graphics);
-                    return GameStateEnum.MainMenu;
-                }
-            }
-
-            //in-game keys
-            if (gamePlayState == GamePlayState.InGame)
-            {
-                if (keyboard.IsKeyHeld(Keys.Left))
-                {
-                    paddle.Move(Direction.Left, gameTime, this);
-                }
-                if (keyboard.IsKeyHeld(Keys.Right))
-                {
-                    paddle.Move(Direction.Right, gameTime, this);
-                }
-                if (keyboard.IsKeyPressed(Keys.Space))
-                {
-                    //Find balls that're at rest and give them an initial velocity
-                    for (int i = 0; i < balls.Count; i++)
+                    if (keyboard.IsKeyPressed(Keys.Escape))
                     {
-                        if (balls[i].IsAtRest())
+                        //For the moment, this just cleans up the game and exits to the menu
+                        gamePlayState = GamePlayState.Cleanup;
+                        //ReinitializeGame(graphicsDevice, graphics);
+                        return GameStateEnum.MainMenu;
+                    }
+                }
+
+                //In GameOver, we'll just have the user press Escape to return to the menu
+                //TODO: Change this to react to "Quit" selected and Enter pressed
+                if (gamePlayState == GamePlayState.GameOver)
+                {
+                    if (keyboard.IsKeyPressed(Keys.Escape))
+                    {
+                        //For the moment, this just cleans up the game and exits to the menu
+                        gamePlayState = GamePlayState.Cleanup;
+                        //ReinitializeGame(graphicsDevice, graphics);
+                        return GameStateEnum.MainMenu;
+                    }
+                }
+
+                //in-game keys
+                if (gamePlayState == GamePlayState.InGame)
+                {
+                    if (keyboard.IsKeyHeld(Keys.Left))
+                    {
+                        paddle.Move(Direction.Left, gameTime, this);
+                    }
+                    if (keyboard.IsKeyHeld(Keys.Right))
+                    {
+                        paddle.Move(Direction.Right, gameTime, this);
+                    }
+                    if (keyboard.IsKeyPressed(Keys.Space))
+                    {
+                        //Find balls that're at rest and give them an initial velocity
+                        for (int i = 0; i < balls.Count; i++)
                         {
-                            balls[i].GiveVelocity();
+                            if (balls[i].IsAtRest())
+                            {
+                                balls[i].GiveVelocity();
+                            }
                         }
                     }
                 }
-            }
 
-            //}//END if(!waitingOnRender)
+            }//END if(!waitingOnRender)
 
             return GameStateEnum.GamePlay;
         }
 
+        //NOTE: GamePlayView.render() contains a line that skips base.render() on certain states
+        //TODO: Check any new GamePlayStates to see if it should be added to the conditional
         public override void render(GameTime gameTime)
         {
             //Debug.Print("Now in GamePlayView.render()");
 
-            if (gamePlayState != GamePlayState.Initializing || gamePlayState != GamePlayState.Cleanup)
+            if (gamePlayState != GamePlayState.Initializing || gamePlayState != GamePlayState.Cleanup || gamePlayState != GamePlayState.ResettingLevel)
                 base.render(gameTime);
 
-            //waitingOnRender = false;
+            waitingOnRender = false;
         }
 
-        //DONE FOR NOW, I THINK: GamePlayview.update()
+        //IN PROGRESS: GamePlayview.update() (adding ResettingLevel game state)
         public override void update(GameTime gameTime)
         {
             //Debug.Print("Now in GamePlayView.update()");
 
             /*if (gamePlayState == GamePlayState.Initializing || gamePlayState == GamePlayState.Countdown
                 || gamePlayState == GamePlayState.InGame || gamePlayState == GamePlayState.Paused
-                || gamePlayState == GamePlayState.GameOver)*/
+                || gamePlayState == GamePlayState.ResettingLevel || gamePlayState == GamePlayState.GameOver
+                || gamePlayState != GamePlayState.Cleanup)*/
 
             GameElement el;
 
-            if (gamePlayState != GamePlayState.Initializing || gamePlayState != GamePlayState.Cleanup)
+            if(gamePlayState == GamePlayState.Initializing)
             {
-                /*if (!waitingOnRender)
-                {*/
-
-                //Vector2 stringSize = pauseMenuFont.MeasureString(MESSAGE);
-
-                /*el = new GameElement(RenderType.Text, pauseMenuFont, MESSAGE, 
-                                        new Vector2(graphics.PreferredBackBufferWidth / 2 - stringSize.X / 2,                                 graphics.PreferredBackBufferHeight / 2 - stringSize.Y), Color.Yellow);
-                renderer.AddToRenderList(el);*/
-
-                //Draw each region of the screen as a solid color
-                // We'll make sure we get the render-order right, plus it'll be fun to see.  *thumbs up*
-                if (showRegions)
+                //DrawGame();  //<--let's NOT draw the game state while initializing
+                // What say you!
+                if (isContentLoaded)
                 {
-                    el = new GameElement(RenderType.UI, CallType.Rectangle, white1x1, windowInterior.position, Color.White);
-                    renderer.AddToRenderList(el);
-
-                    el = new GameElement(RenderType.UI, CallType.Rectangle, limeGreen1x1, playingField.position, Color.White);
-                    renderer.AddToRenderList(el);
+                    gamePlayState = GamePlayState.Countdown;
                 }
+            }
+            else if (gamePlayState == GamePlayState.Countdown)
+            {
+                //FOR NOW: we'll skip the countdown state and go directly to inGame
+                gamePlayState = GamePlayState.InGame;
 
-                foreach (Wall wall in walls)
-                {
-                    el = new GameElement(RenderType.UI, CallType.Rectangle, darkgray1x1, wall.position, Color.White);
-                    renderer.AddToRenderList(el);
-                }
+            }
+            else if (gamePlayState == GamePlayState.InGame)
+            {
+                DrawGame(gameTime);
+                //do in-game controls; anything else?
+            }
+            else if (gamePlayState == GamePlayState.Paused)
+            {
+                DrawGame(gameTime);  
+                //don't update the game (which I think means not responding to controls, but we'll see)
+                //TODO: update timers (so that the ending timer gets pushed forward by a cycle)
 
-                //interiorToWalls w/ BG image
-                el = new GameElement(RenderType.UI, CallType.Rectangle, galaxy, interiorToWalls.position, Color.White);
-                renderer.AddToRenderList(el);
+            }
+            else if(gamePlayState == GamePlayState.ResettingLevel)
+            {
+                // Draw the game + update it but don't respond to controls
+                DrawGame(gameTime);
 
-                if (showRegions)
-                {
-                    el = new GameElement(RenderType.UI, CallType.Rectangle, purple1x1, interiorToWalls.position, Color.White);
-                    renderer.AddToRenderList(el);
+                //Call ResetLevel() or some such
+                ResetLevel(gameTime);
+            }
+            else if(gamePlayState == GamePlayState.GameOver)
+            {
+                DrawGame(gameTime);
+                //disable controls, but keep the game updating
+                //EXCEPT respond to Escape
+                //and draw "Game Over" on-screen
+                DrawGameOver(gameTime);
+            }
+            else if (gamePlayState == GamePlayState.Cleanup)
+            {
+                //DrawGame();  //<--Let's try NOT drawing the game during cleanup
 
-                    el = new GameElement(RenderType.UI, CallType.Rectangle, blue1x1, topAreaOfInteriorToWalls.position, Color.White);
-                    renderer.AddToRenderList(el);
-
-                    el = new GameElement(RenderType.UI, CallType.Rectangle, orange1x1, bottomAreaOfInteriorToWalls.position, Color.White);
-                    renderer.AddToRenderList(el);
-
-                    el = new GameElement(RenderType.UI, CallType.Rectangle, white1x1, paddleArea.position, Color.White);
-                    renderer.AddToRenderList(el);
-
-                    el = new GameElement(RenderType.UI, CallType.Rectangle, purple1x1, middleAreaOfInteriorToWalls.position, Color.White);
-                    renderer.AddToRenderList(el);
-
-                    el = new GameElement(RenderType.UI, CallType.Rectangle, black1x1, brickGrid.position, Color.White);
-                    renderer.AddToRenderList(el);
-                }//END if(showRegions)
-
-                //Add the bricks from brickGrid
-                var bg = brickGrid.brickGrid;
-                for (int i = 0; i < numRowsOfBricks; i++)
-                {
-                    Texture2D tx;
-                    switch (i)
-                    {
-                        case 0:
-                        case 1:
-                            tx = limeGreen1x1;
-                            break;
-                        case 2:
-                        case 3:
-                            tx = blue1x1;
-                            break;
-                        case 4:
-                        case 5:
-                            tx = orange1x1;
-                            break;
-                        case 6:
-                        case 7:
-                            tx = yellow1x1;
-                            break;
-                        default:
-                            throw new System.Exception("Unrecognized row number");
-
-                    }
-                    for (int j = 0; j < numBricksPerRow; j++)
-                    {
-                        if (!bg[i][j].hasBeenHit)
-                        {
-                            el = new GameElement(RenderType.UI, CallType.Rectangle, tx, bg[i][j].position, Color.White);
-                            renderer.AddToRenderList(el);
-                        }
-                        else
-                        { //if the brick has been hit
-                            if (bg[i][j].isExploding) //check to see if it's still exploding
-                            {
-                                bg[i][j].Explode(gameTime, this, renderer); //the 2nd/3rd argument(s) is/are temporary
-                            }
-                        }
-                    }
-                }
-
-                if (showRegions)
-                {
-                    //the 'row regions'
-                    if (showRowRegions)
-                    {
-                        for (int i = 0; i < rowRegions.Count; i++)
-                        {
-                            el = new GameElement(RenderType.UI, CallType.Rectangle, white1x1, rowRegions[i].position, Color.White);
-                            renderer.AddToRenderList(el);
-                        }
-                    }
-
-                    //Bottom area, left and right
-                    el = new GameElement(RenderType.UI, CallType.Rectangle, blue1x1, leftHalfOfBottomArea.position, Color.White);
-                    renderer.AddToRenderList(el);
-
-                    el = new GameElement(RenderType.UI, CallType.Rectangle, limeGreen1x1, rightHalfOfBottomArea.position, Color.White);
-                    renderer.AddToRenderList(el);
-
-                    //remainingLivesIcons
-                    el = new GameElement(RenderType.UI, CallType.Rectangle, orange1x1, remainingLivesIcons.position, Color.White);
-                    renderer.AddToRenderList(el);
-
-                    //score section
-                    el = new GameElement(RenderType.UI, CallType.Rectangle, yellow1x1, score.position, Color.White);
-                    renderer.AddToRenderList(el);
-
-                }//END if(showRegions)
-
-                //paddle
-                el = new GameElement(RenderType.UI, CallType.Rectangle, bluegray1x1, paddle.position, Color.White);
-                renderer.AddToRenderList(el);
-
-                //ball
-                for (int i = 0; i < balls.Count; i++)
-                {
-                    balls[i].Move(gameTime, this);
-                    el = new GameElement(RenderType.UI, CallType.Rectangle, ball50x50, balls[i].position, Color.White);
-                    renderer.AddToRenderList(el);
-                }
-
-                //countdown
-                if (showRegions && showCountdownRegion)
-                {
-                    el = new GameElement(RenderType.UI, CallType.Rectangle, yellow1x1, countdown.position, Color.White);
-                    renderer.AddToRenderList(el);
-                }
-
-                //pause menu
-                if (showRegions && showPauseMenuRegion)
-                {
-                    el = new GameElement(RenderType.UI, CallType.Rectangle, orange1x1, pauseMenu.position, Color.White);
-                    renderer.AddToRenderList(el);
-                }
-
-                /*waitingOnRender = true;
-
-                }//END if (!waitingOnRender)*/
-
-            }//END if (gamePlayState != GamePlayState.Initializing || gamePlayState != GamePlayState.Cleanup)
+                ReinitializeGame(graphicsDevice, graphics); //REMINDER: ReinitializeGame() sets gamePlayState to initialize
+            }
+            else
+            {
+                throw new System.Exception("GamePlayView.update says: Invalid gamePlayState");
+            }
 
         }//END update()
 
+        private void DrawGame(GameTime gameTime)
+        {
+            GameElement el;
+
+            /*if (!waitingOnRender)
+                {*/
+
+            //Vector2 stringSize = pauseMenuFont.MeasureString(MESSAGE);
+
+            /*el = new GameElement(RenderType.Text, pauseMenuFont, MESSAGE, 
+                                    new Vector2(graphics.PreferredBackBufferWidth / 2 - stringSize.X / 2,                                 graphics.PreferredBackBufferHeight / 2 - stringSize.Y), Color.Yellow);
+            renderer.AddToRenderList(el);*/
+
+            //Draw each region of the screen as a solid color
+            // We'll make sure we get the render-order right, plus it'll be fun to see.  *thumbs up*
+            if (showRegions)
+            {
+                el = new GameElement(RenderType.UI, CallType.Rectangle, white1x1, windowInterior.position, Color.White);
+                renderer.AddToRenderList(el);
+
+                el = new GameElement(RenderType.UI, CallType.Rectangle, limeGreen1x1, playingField.position, Color.White);
+                renderer.AddToRenderList(el);
+            }
+
+            foreach (Wall wall in walls)
+            {
+                el = new GameElement(RenderType.UI, CallType.Rectangle, darkgray1x1, wall.position, Color.White);
+                renderer.AddToRenderList(el);
+            }
+
+            //interiorToWalls w/ BG image
+            el = new GameElement(RenderType.UI, CallType.Rectangle, galaxy, interiorToWalls.position, Color.White);
+            renderer.AddToRenderList(el);
+
+            if (showRegions)
+            {
+                el = new GameElement(RenderType.UI, CallType.Rectangle, purple1x1, interiorToWalls.position, Color.White);
+                renderer.AddToRenderList(el);
+
+                el = new GameElement(RenderType.UI, CallType.Rectangle, blue1x1, topAreaOfInteriorToWalls.position, Color.White);
+                renderer.AddToRenderList(el);
+
+                el = new GameElement(RenderType.UI, CallType.Rectangle, orange1x1, bottomAreaOfInteriorToWalls.position, Color.White);
+                renderer.AddToRenderList(el);
+
+                el = new GameElement(RenderType.UI, CallType.Rectangle, white1x1, paddleArea.position, Color.White);
+                renderer.AddToRenderList(el);
+
+                el = new GameElement(RenderType.UI, CallType.Rectangle, purple1x1, middleAreaOfInteriorToWalls.position, Color.White);
+                renderer.AddToRenderList(el);
+
+                el = new GameElement(RenderType.UI, CallType.Rectangle, black1x1, brickGrid.position, Color.White);
+                renderer.AddToRenderList(el);
+            }//END if(showRegions)
+
+            //Add the bricks from brickGrid
+            var bg = brickGrid.brickGrid;
+            for (int i = 0; i < numRowsOfBricks; i++)
+            {
+                Texture2D tx;
+                switch (i)
+                {
+                    case 0:
+                    case 1:
+                        tx = limeGreen1x1;
+                        break;
+                    case 2:
+                    case 3:
+                        tx = blue1x1;
+                        break;
+                    case 4:
+                    case 5:
+                        tx = orange1x1;
+                        break;
+                    case 6:
+                    case 7:
+                        tx = yellow1x1;
+                        break;
+                    default:
+                        throw new System.Exception("Unrecognized row number");
+
+                }
+                for (int j = 0; j < numBricksPerRow; j++)
+                {
+                    if (!bg[i][j].hasBeenHit)
+                    {
+                        el = new GameElement(RenderType.UI, CallType.Rectangle, tx, bg[i][j].position, Color.White);
+                        renderer.AddToRenderList(el);
+                    }
+                    else
+                    { //if the brick has been hit
+                        if (bg[i][j].isExploding) //check to see if it's still exploding
+                        {
+                            bg[i][j].Explode(gameTime, this, renderer); //the 2nd/3rd argument(s) is/are temporary
+                        }
+                    }
+                }
+            }
+
+            if (showRegions)
+            {
+                //the 'row regions'
+                if (showRowRegions)
+                {
+                    for (int i = 0; i < rowRegions.Count; i++)
+                    {
+                        el = new GameElement(RenderType.UI, CallType.Rectangle, white1x1, rowRegions[i].position, Color.White);
+                        renderer.AddToRenderList(el);
+                    }
+                }
+
+                //Bottom area, left and right
+                el = new GameElement(RenderType.UI, CallType.Rectangle, blue1x1, leftHalfOfBottomArea.position, Color.White);
+                renderer.AddToRenderList(el);
+
+                el = new GameElement(RenderType.UI, CallType.Rectangle, limeGreen1x1, rightHalfOfBottomArea.position, Color.White);
+                renderer.AddToRenderList(el);
+
+                //remainingLives
+                el = new GameElement(RenderType.UI, CallType.Rectangle, orange1x1, remainingLives.position, Color.White);
+                renderer.AddToRenderList(el);
+
+                //score section
+                el = new GameElement(RenderType.UI, CallType.Rectangle, yellow1x1, score.position, Color.White);
+                renderer.AddToRenderList(el);
+
+            }//END if(showRegions)
+
+            //paddle
+            el = new GameElement(RenderType.UI, CallType.Rectangle, bluegray1x1, paddle.position, Color.White);
+            renderer.AddToRenderList(el);
+
+            //ball
+            for (int i = 0; i < balls.Count; i++)
+            {
+                balls[i].Move(gameTime, this);
+                el = new GameElement(RenderType.UI, CallType.Rectangle, ball50x50, balls[i].position, Color.White);
+                renderer.AddToRenderList(el);
+            }
+
+            //countdown
+            if (showRegions && showCountdownRegion)
+            {
+                el = new GameElement(RenderType.UI, CallType.Rectangle, yellow1x1, countdown.position, Color.White);
+                renderer.AddToRenderList(el);
+            }
+
+            //pause menu
+            if (showRegions && showPauseMenuRegion)
+            {
+                el = new GameElement(RenderType.UI, CallType.Rectangle, orange1x1, pauseMenu.position, Color.White);
+                renderer.AddToRenderList(el);
+            }
+
+            /*waitingOnRender = true;
+
+            }//END if (!waitingOnRender)*/
+
+        }//END DrawGame()
+
+        //TODO!  (GamePlayView.ResetLevel())
+        private void ResetLevel(GameTime gameTime)
+        {
+            //TODO: decrement remainingLives?  TBD if that goes in here
+
+            //TODO: reset the ball's position & velocity
+
+            //and then...
+            gamePlayState = GamePlayState.InGame;
+        }
 
         //DONE, I THINK: reinitializing the GamePlayView
-        public void Reinitialize(GraphicsDevice graphicsDevice, GraphicsDeviceManager graphics)
+        public void ReinitializeGame(GraphicsDevice graphicsDevice, GraphicsDeviceManager graphics)
         {
-            //Debug.Print("Now in GamePlayView.Reinitialize()");
+            //Debug.Print("Now in GamePlayView.ReinitializeGame()");
 
             gamePlayState = GamePlayState.Initializing;
             initialize(graphicsDevice, graphics, subsystems);
             loadContent(contentManager);
+        }
+
+        //TODO: GamePlayView.DrawGameOver()
+        private void DrawGameOver(GameTime gameTime)
+        {
+            //do we need a new font for this?  TBD
         }
 
     }//END class GamePlayView

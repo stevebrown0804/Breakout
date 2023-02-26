@@ -8,19 +8,19 @@ using System.Threading.Tasks;
 
 namespace Breakout.Game_objects
 {
-    internal class RemainingLivesIcons : GameObject
+    internal class RemainingLives : GameObject
     {
          public int remainingLives = 3;  // 2?  TBD
 
-        internal RemainingLivesIcons(Rectangle position) : base(position)
+        internal RemainingLives(Rectangle position) : base(position)
         {
         }
 
-        /*internal RemainingLivesIcons(Rectangle position, Rectangle boundingBox) : base(position, boundingBox)
+        /*internal RemainingLives(Rectangle position, Rectangle boundingBox) : base(position, boundingBox)
         {
         }
 
-        internal RemainingLivesIcons() : base()
+        internal RemainingLives() : base()
         {
         }*/
     }

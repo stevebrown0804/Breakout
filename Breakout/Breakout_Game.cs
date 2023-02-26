@@ -114,7 +114,7 @@ namespace Breakout
             currentState.render(gameTime);
             currentState = states[gameStateEnum];
 
-            //And, with the drawing done, clear out the render list in preparation for next time
+            //Then clear out the render list in preparation for the next loop
             renderer.ClearRenderList();
 
             base.Draw(gameTime);

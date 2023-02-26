@@ -27,6 +27,7 @@ namespace Breakout.Game_objects.non_derived
         public int remainingLivesRightSpacing;
         public int remainingLivesTopSpacing;
         public int remainingLivesBottomSpacing;
+        public int remainingLivesIntraSpriteSpacing;
         public int scoreSectionLeftSpacing;
         public int scoreSectionRightSpacing;
         public int scoreSectionTopSpacing;
@@ -65,6 +66,7 @@ namespace Breakout.Game_objects.non_derived
             remainingLivesRightSpacing = 60;
             remainingLivesTopSpacing = 20;
             remainingLivesBottomSpacing = 20;
+            remainingLivesIntraSpriteSpacing = 30;  //initial guess
 
             scoreSectionLeftSpacing = 60;
             scoreSectionRightSpacing = 60;

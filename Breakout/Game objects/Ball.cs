@@ -1,9 +1,11 @@
 ﻿using Breakout.Game_objects.Base;
+using Breakout.Game_objects.Window_areas;
 using Breakout.Game_states;
 using Breakout.Subsystems.@static;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 /* "The ball speed increases (you can choose the rate) at the following intervals; start over when starting a new paddle:
     4 bricks removed
@@ -79,7 +81,7 @@ namespace Breakout.Game_elements
             test_position.X += (int)deltaX;
             test_position.Y += (int)deltaY;
 
-            //CD with the walls
+            //Do CD with the walls
             foreach (Wall w in gpv.walls)
             {                
                 if (CollisionDetection.DoTheyIntersect(w.position, test_position))
@@ -169,10 +171,38 @@ namespace Breakout.Game_elements
 
             }//END if(CollisionDetection.DoTheyIntersect(gpv.brickGrid.position, test_position))
 
-
             //Then we'll actually move the ball
-            position.X = test_position.X; //+= (int)deltaX;
-            position.Y = test_position.Y; //+= (int)deltaY;
+            position.X = test_position.X;
+            position.Y = test_position.Y;
+
+            //IN PROGRESS: Then we'll check and see if the ball is out of bounds; if so, remove a life and start over or do game over
+            if(position.Y > gpv.interiorToWalls.position.Y + gpv.interiorToWalls.position.Height)
+            {
+                Debug.Print("Ball is out of bounds!");
+
+                //Set to a 'BAllOutOfBounds' state? TBD
+
+                if(gpv.remainingLives.remainingLives - 1 > 0)  //off by one?  TBD
+                {
+                    //Reset the ball (position, velocity...anything else?)
+
+                    //Reset the paddle's position
+
+                    //Do a new countdown?  TBD
+
+                    //Let the player begin
+
+                }
+                else
+                {
+                    //do game over...whatever that means
+                    // how about: disable controls, show 'game over' text on-screen, wait for Escape
+
+                }
+
+
+            }
+
         }
 
         internal void SpeedUp(int bricksDestroyed)
