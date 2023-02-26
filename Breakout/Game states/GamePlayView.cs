@@ -65,6 +65,7 @@ namespace Breakout.Game_states
         private Texture2D darkgray1x1;     //Wall
         private Texture2D ball50x50;        //Ball
         private Texture2D bluegray1x1;      //Paddle
+        private Texture2D galaxy;           //BG Image
         private Texture2D purple1x1;        //misc.  //MAYBE: Remove, once we're done with it.
         internal Texture2D white1x1;
         private Texture2D black1x1;
@@ -97,19 +98,18 @@ namespace Breakout.Game_states
 
         //the one that's not derived from GameObject
         internal Spacing spacing;
+      
+        //Misc. variables
+        bool showRegions;
+        bool showRowRegions;
+        bool showCountdownRegion;
+        bool showPauseMenuRegion;
 
         //Variables that do NOT need to be reinitialize in Reinitalize()
         bool contentIsLoaded = false;
         bool subsystemsAreStashed = false;
         GamePlayState gamePlayState;
 
-        //Misc. variables  (REMINDER: If we add anything to this list, reinitialize it in Reinitialize()
-        //A THOUGHT: Why don't we just initailze these in Initialize()?  //TODO!
-        bool showRegions = false;
-        bool showRowRegions = false;
-        bool showCountdownRegion = false;
-        bool showPauseMenuRegion = false;
-        
         //internal bool waitingOnRender = false;
 
         public GamePlayView()
@@ -137,6 +137,12 @@ namespace Breakout.Game_states
             balls = new();
             walls = new();
             rowRegions = new();
+
+            //initialize some variables
+            showRegions = false;
+            showRowRegions = false;
+            showCountdownRegion = false;
+            showPauseMenuRegion = false;
 
             //Set up the game objects
             spacing = new(graphics);
@@ -289,6 +295,7 @@ namespace Breakout.Game_states
                 darkgray1x1 = contentManager.Load<Texture2D>("Sprites/dark-gray1x1");      //Walls
                 ball50x50 = contentManager.Load<Texture2D>("Sprites/ball50x50");            //Ball
                 bluegray1x1 = contentManager.Load<Texture2D>("Sprites/bluegray1x1");        //Paddle
+                galaxy = contentManager.Load<Texture2D>("Sprites/galaxy");                  //BG image
                 purple1x1 = contentManager.Load<Texture2D>("Sprites/purple1x1");            //misc.
                 white1x1 = contentManager.Load<Texture2D>("Sprites/white1x1");
                 black1x1 = contentManager.Load<Texture2D>("Sprites/black1x1");
@@ -486,6 +493,10 @@ namespace Breakout.Game_states
                     renderer.AddToRenderList(el);
                 }
 
+                //interiorToWalls w/ BG image
+                el = new GameElement(RenderType.UI, CallType.Rectangle, galaxy, interiorToWalls.position, Color.White);
+                renderer.AddToRenderList(el);
+
                 if (showRegions)
                 {
                     el = new GameElement(RenderType.UI, CallType.Rectangle, purple1x1, interiorToWalls.position, Color.White);
@@ -623,11 +634,6 @@ namespace Breakout.Game_states
             gamePlayState = GamePlayState.Initializing;
             initialize(graphicsDevice, graphics, subsystems);
             loadContent(contentManager);
-
-            showRegions = false;
-            showRowRegions = false;
-            showCountdownRegion = false;
-            showPauseMenuRegion = false;
         }
 
     }//END class GamePlayView
