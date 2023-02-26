@@ -1,31 +1,20 @@
 ﻿using Microsoft.Xna.Framework;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Breakout.Subsystems
+
+namespace Breakout.Subsystems.@static
 {
     //DONE, I THINK: CollisionDetection class
 
-    /*internal enum CollisionType
-    {
-        none,
-        horizontal,
-        vertical
-    }*/
-
-    //The "FromThe..." algorigthms came from here (after I'd tried unsuccessfully to implement them myself):
+    //The "FromThe..." algorithms came from here (after I'd tried unsuccessfully to implement them myself):
     //https://gamedev.stackexchange.com/questions/13774/how-do-i-detect-the-direction-of-2d-rectangular-object-collisions?noredirect=1&lq=1
 
     internal static class CollisionDetection
     {
         public static bool DoTheyIntersect(Rectangle r1, Rectangle r2)
         {
-            bool theyDo = !(r2.X > r1.X + r1.Width || 
-                            r2.X + r2.Width < r1.X || 
-                            r2.Y > r1.Y + r1.Height || 
+            bool theyDo = !(r2.X > r1.X + r1.Width ||
+                            r2.X + r2.Width < r1.X ||
+                            r2.Y > r1.Y + r1.Height ||
                             r2.Y + r2.Height < r1.Y);
             return theyDo;
         }
@@ -40,15 +29,15 @@ namespace Breakout.Subsystems
 
         public static bool FromTheLeft(Rectangle spriteRect, float deltaX, Rectangle objRect)
         {
-            if(spriteRect.X + spriteRect.Width < objRect.X && spriteRect.X + deltaX + spriteRect.Height >= objRect.X)
+            if (spriteRect.X + spriteRect.Width < objRect.X && spriteRect.X + deltaX + spriteRect.Height >= objRect.X)
                 return true;
- 
+
             return false;
         }
 
         public static bool FromTheBottom(Rectangle spriteRect, float deltaY, Rectangle objRect)
         {
-            if(spriteRect.Y >= objRect.Y + objRect.Height && spriteRect.Y + deltaY < objRect.Y + objRect.Height)
+            if (spriteRect.Y >= objRect.Y + objRect.Height && spriteRect.Y + deltaY < objRect.Y + objRect.Height)
                 return true;
 
             return false;
@@ -63,16 +52,5 @@ namespace Breakout.Subsystems
             return false;
         }
 
-
-        /*public static CollisionType GetIntersectType(Rectangle r1, Rectangle r2)
-        {
-            if (!(r2.X > r1.X + r2.Width || r2.X + r2.Width < r1.X))
-                return CollisionType.horizontal;
-
-            if (!(r2.Y > r1.Y + r1.Height || r2.Y + r2.Height < r1.Y))
-                return CollisionType.vertical;
-
-            return CollisionType.none;
-        }*/
-    }
+    }//END static class CollisionDetection
 }

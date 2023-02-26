@@ -1,18 +1,31 @@
 ﻿using Breakout.Game_elements;
 using Breakout.Subsystems;
+using Breakout.Subsystems.Base;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System.Collections.Generic;
 
 namespace Breakout.Game_states
 {
     public class AboutView : GameStateView
     {
+        ISubsystem keyboard;
+        ISubsystem renderer;
+
         private SpriteFont m_font;
         private SpriteFont m_font_smaller;
         private const string MESSAGE = "Game by Steve Brown";
         private const string MESSAGE2 = "Press ESC to return to menu";
+
+        public override void initialize(GraphicsDevice graphicsDevice, GraphicsDeviceManager graphics, Dictionary<string, ISubsystem> subsystems)
+        {
+            base.initialize(graphicsDevice, graphics, subsystems);
+
+            keyboard = subsystems["keyboard"];
+            renderer = subsystems["renderer"];
+        }
 
         public override void loadContent(ContentManager contentManager)
         {
@@ -20,7 +33,7 @@ namespace Breakout.Game_states
             m_font_smaller = contentManager.Load<SpriteFont>("Fonts/about-screen-smaller");
         }
 
-        public override GameStateEnum processInput(GameTime gameTime, BO_Keyboard keyboard)
+        public override GameStateEnum processInput(GameTime gameTime)
         {
             //If the user presses Escape, exit to main menu
             if (keyboard.IsKeyPressed(Keys.Escape))
@@ -32,12 +45,12 @@ namespace Breakout.Game_states
             return GameStateEnum.About;
         }
 
-        public override void render(GameTime gameTime, Renderer renderer)
+        public override void render(GameTime gameTime)
         {
-            base.render(gameTime, renderer);
+            base.render(gameTime);
         }
 
-        public override void update(GameTime gameTime, Renderer renderer)
+        public override void update(GameTime gameTime)
         {
             GameElement el;
             Vector2 stringSize = m_font.MeasureString(MESSAGE);

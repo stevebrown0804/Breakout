@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework.Input;
 using Breakout.Subsystems;
 using Breakout.Game_elements;
 using System.Diagnostics;
+using Breakout.Subsystems.Base;
 
 namespace Breakout.Game_states
 {
@@ -15,17 +16,25 @@ namespace Breakout.Game_states
         protected GraphicsDeviceManager graphics;
         protected SpriteBatch spriteBatch;
 
-        public virtual void initialize(GraphicsDevice graphicsDevice, GraphicsDeviceManager graphics)
+        protected Dictionary<string, ISubsystem> subsystems;
+        //ISubsystem keyboard;
+        ISubsystem renderer;
+
+        public virtual void initialize(GraphicsDevice graphicsDevice, GraphicsDeviceManager graphics, Dictionary<string, ISubsystem> subsystems)
         {
             this.graphics = graphics;
             spriteBatch = new SpriteBatch(graphicsDevice);
+            this.subsystems = subsystems;
+
+            //keyboard = subsystems["keyboard"];
+            renderer = subsystems["renderer"];
         }
 
         public abstract void loadContent(ContentManager contentManager);
         
-        public abstract GameStateEnum processInput(GameTime gameTime, BO_Keyboard keyboard);
+        public abstract GameStateEnum processInput(GameTime gameTime);
         
-        public virtual void render(GameTime gameTime, Renderer renderer)
+        public virtual void render(GameTime gameTime)
         {
             spriteBatch.Begin();
 
@@ -48,6 +57,6 @@ namespace Breakout.Game_states
             spriteBatch.End();
         }
         
-        public abstract void update(GameTime gameTime, Renderer renderer);
+        public abstract void update(GameTime gameTime);
     }
 }

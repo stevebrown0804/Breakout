@@ -3,6 +3,7 @@ using Breakout.Game_objects;
 using Breakout.Game_objects.non_derived;
 using Breakout.Game_objects.Window_areas;
 using Breakout.Subsystems;
+using Breakout.Subsystems.Base;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -46,7 +47,9 @@ namespace Breakout.Game_states
         //Some stuff to stash
         GraphicsDevice graphicsDevice;
         ContentManager contentManager;
-
+        ISubsystem keyboard;
+        ISubsystem renderer;
+ 
         //Some constants
         const int numRowsOfBricks = 8;
         const int numBricksPerRow = 14;
@@ -97,9 +100,11 @@ namespace Breakout.Game_states
 
         //Variables that do NOT need to be reinitialize in Reinitalize()
         bool contentIsLoaded = false;
+        bool subsystemsAreStashed = false;
         GamePlayState gamePlayState;
 
         //Misc. variables  (REMINDER: If we add anything to this list, reinitialize it in Reinitialize()
+        //A THOUGHT: Why don't we just initailze these in Initialize()?  //TODO!
         bool showRegions = false;
         bool showRowRegions = false;
         bool showCountdownRegion = false;
@@ -113,14 +118,20 @@ namespace Breakout.Game_states
         }
 
         //DONE, I THINK - GamePlayView.initialize()
-        public override void initialize(GraphicsDevice graphicsDevice, GraphicsDeviceManager graphics)
+        public override void initialize(GraphicsDevice graphicsDevice, GraphicsDeviceManager graphics, Dictionary<string, ISubsystem> subsystems)
         {
             //Debug.Print("Now in GamePlayView.initialize");
 
-            base.initialize(graphicsDevice, graphics);
+            //stash these
+            if (!subsystemsAreStashed)
+            {
+                base.initialize(graphicsDevice, graphics, subsystems);
+                this.graphicsDevice = graphicsDevice;
+                keyboard = subsystems["keyboard"];
+                renderer = subsystems["renderer"];
 
-            //stash this
-            this.graphicsDevice = graphicsDevice;
+                subsystemsAreStashed = true;
+            }
 
             //new the lists
             balls = new();
@@ -291,7 +302,7 @@ namespace Breakout.Game_states
         }
 
         //IN PROGRESS: Implement GamePlayView.processInput()
-        public override GameStateEnum processInput(GameTime gameTime, BO_Keyboard keyboard)   
+        public override GameStateEnum processInput(GameTime gameTime)   
         {
             //Debug.Print("Now in GamePlayView.processInput");
 
@@ -426,18 +437,18 @@ namespace Breakout.Game_states
             return GameStateEnum.GamePlay;
         }
 
-        public override void render(GameTime gameTime, Renderer renderer)
+        public override void render(GameTime gameTime)
         {
             //Debug.Print("Now in GamePlayView.render()");
 
-            if (gamePlayState != GamePlayState.Initializing)
-                base.render(gameTime, renderer);
+            if (gamePlayState != GamePlayState.Initializing || gamePlayState != GamePlayState.Cleanup)
+                base.render(gameTime);
 
             //waitingOnRender = false;
         }
 
         //DONE FOR NOW, I THINK: GamePlayview.update()
-        public override void update(GameTime gameTime, Renderer renderer)
+        public override void update(GameTime gameTime)
         {
             //Debug.Print("Now in GamePlayView.update()");
 
@@ -610,7 +621,7 @@ namespace Breakout.Game_states
             //Debug.Print("Now in GamePlayView.Reinitialize()");
 
             gamePlayState = GamePlayState.Initializing;
-            initialize(graphicsDevice, graphics);
+            initialize(graphicsDevice, graphics, subsystems);
             loadContent(contentManager);
 
             showRegions = false;

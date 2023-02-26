@@ -7,14 +7,22 @@ using Breakout.Subsystems;
 using System.Diagnostics;
 using Breakout.Game_elements;
 using System.ComponentModel;
+using Breakout.Subsystems.Base;
+using System.Collections.Generic;
 
 namespace Breakout.Game_states
 {
     public class MainMenuView : GameStateView
     {
+        //subsystems
+        ISubsystem keyboard;
+        ISubsystem renderer;
+
+        //Fonts
         private SpriteFont m_fontMenu;
         private SpriteFont m_fontMenuSelect;
 
+        //An enum!
         private enum MenuState
         {
             NewGame,
@@ -24,12 +32,14 @@ namespace Breakout.Game_states
         }
         private MenuState m_currentSelection = MenuState.NewGame;
 
-        public override void initialize(GraphicsDevice graphicsDevice, GraphicsDeviceManager graphics)
+        public override void initialize(GraphicsDevice graphicsDevice, GraphicsDeviceManager graphics, Dictionary<string, ISubsystem> subsystems)
         {
-            base.initialize(graphicsDevice, graphics);
-
-            //Was I going to do something else in MainMenuView.initialize()?  TBD
             //Debug.Print("Now in MainMenuView.initialize()");
+
+            base.initialize(graphicsDevice, graphics, subsystems);
+
+            keyboard = subsystems["keyboard"];
+            renderer = subsystems["renderer"];
         }
 
         public override void loadContent(ContentManager contentManager)
@@ -38,7 +48,7 @@ namespace Breakout.Game_states
             m_fontMenuSelect = contentManager.Load<SpriteFont>("Fonts/menu-select");
         }
 
-        public override GameStateEnum processInput(GameTime gameTime, BO_Keyboard keyboard)
+        public override GameStateEnum processInput(GameTime gameTime)
         {
             // Arrow keys to navigate the menu
             if (keyboard.IsKeyPressed(Keys.Down))
@@ -78,18 +88,16 @@ namespace Breakout.Game_states
             return GameStateEnum.MainMenu;
         }
 
-        public override void render(GameTime gameTime, Renderer renderer)
+        public override void render(GameTime gameTime)
         {
-            /*spriteBatch.Begin();
-            spriteBatch.End();*/
-
-            base.render(gameTime, renderer);
+            base.render(gameTime);
         }
 
         private (float, GameElement) drawMenuItem(SpriteFont font, string text, float y, Color color)
         {
             Vector2 stringSize = font.MeasureString(text);
 
+            //TODO: Change this to use StringRenderer
             GameElement el = new(RenderType.Text, font, text,
                                  new Vector2(graphics.PreferredBackBufferWidth / 2 - stringSize.X / 2, y),
                                  color);
@@ -97,7 +105,7 @@ namespace Breakout.Game_states
             return (y + stringSize.Y, el);
         }
 
-        public override void update(GameTime gameTime, Renderer renderer)
+        public override void update(GameTime gameTime)
         {
             (float bottom, GameElement el) = drawMenuItem(
                 m_currentSelection == MenuState.NewGame ? m_fontMenuSelect : m_fontMenu,
@@ -112,7 +120,7 @@ namespace Breakout.Game_states
             (bottom, el) = drawMenuItem(m_currentSelection == MenuState.About ? m_fontMenuSelect : m_fontMenu, "About", bottom, m_currentSelection == MenuState.About ? Color.Yellow : Color.White);
             renderer.AddToRenderList(el);
 
-            (bottom, el) = drawMenuItem(m_currentSelection == MenuState.Quit ? m_fontMenuSelect : m_fontMenu, "Quit", bottom, m_currentSelection == MenuState.Quit ? Color.Yellow : Color.White);
+            (_, el) = drawMenuItem(m_currentSelection == MenuState.Quit ? m_fontMenuSelect : m_fontMenu, "Quit", bottom, m_currentSelection == MenuState.Quit ? Color.Yellow : Color.White);
             renderer.AddToRenderList(el);
         }
     }

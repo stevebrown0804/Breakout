@@ -1,6 +1,7 @@
 ﻿using Breakout.Game_objects.Base;
 using Breakout.Game_states;
 using Breakout.Subsystems;
+using Breakout.Subsystems.Base;
 using Microsoft.Xna.Framework;
 using System;
 
@@ -9,7 +10,7 @@ using System;
 
 namespace Breakout.Game_elements
 {
-    //IN PROGRESS: Brick class
+    //IN PROGRESS: Brick class (Remaining: exploding bricks, ..?)
     internal class Brick : GameObject
     {
         //"Starting from the bottom, two rows of yellow, two rows of orange, two rows of blue, and two rows of green."
@@ -29,15 +30,7 @@ namespace Breakout.Game_elements
         {
         }
 
-        /*internal Brick(Rectangle position, Rectangle boundingBox) : base(position, boundingBox)
-        {
-        }*/
-
-        /*internal Brick() : base()
-        {
-        }*/
-
-        public void Explode(GameTime gameTime, GamePlayView gpv, Renderer renderer)
+        public void Explode(GameTime gameTime, GamePlayView gpv, ISubsystem renderer)
         {
             if (isExploding)
             {

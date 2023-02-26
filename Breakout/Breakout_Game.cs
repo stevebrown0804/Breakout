@@ -1,6 +1,7 @@
 ﻿using Breakout.Game_objects;
 using Breakout.Game_states;
 using Breakout.Subsystems;
+using Breakout.Subsystems.Base;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -28,8 +29,10 @@ namespace Breakout
         private Dictionary<GameStateEnum, IGameState> states;
 
         //Subsystems
-        BO_Keyboard keyboard;
-        Renderer renderer;
+        Dictionary<string, ISubsystem> subsystems;
+        ISubsystem keyboard;
+        ISubsystem renderer;
+
 
         public Breakout_Game()
         {
@@ -41,9 +44,15 @@ namespace Breakout
         protected override void Initialize()
         {
             //Initialize subsystems!
-            keyboard = new();
-            keyboard.InitializePreviousState(); //just to make it (the 'keyboard' variable) non-empty
-            renderer = new();
+            subsystems = new Dictionary<string, ISubsystem>
+            {
+                { "keyboard", new BO_Keyboard() }, 
+                { "renderer", new Renderer() },
+                { "stringRenderer", new StringRenderer() }
+            };
+            keyboard = subsystems["keyboard"];
+            keyboard.InitializePreviousState();
+            renderer = subsystems["renderer"];
 
             //Then do other stuff!
             graphics.PreferredBackBufferWidth = 1920;
@@ -60,7 +69,7 @@ namespace Breakout
 
             foreach (var key in states.Keys)
             {
-                states[key].initialize(this.GraphicsDevice, graphics);
+                states[key].initialize(this.GraphicsDevice, graphics, subsystems);
             }
 
             currentState = states[gameStateEnum];
@@ -79,7 +88,7 @@ namespace Breakout
         protected override void Update(GameTime gameTime)
         {
             keyboard.UpdateCurrentState();            
-            gameStateEnum = currentState.processInput(gameTime, keyboard);
+            gameStateEnum = currentState.processInput(gameTime);
 
             //Now's our chance to exit! ...(/^^)/
             if (gameStateEnum == GameStateEnum.Exit)
@@ -88,7 +97,7 @@ namespace Breakout
             }
 
             keyboard.SetPreviousStateToCurrentState();
-            currentState.update(gameTime, renderer);
+            currentState.update(gameTime);
 
             base.Update(gameTime);
         }
@@ -102,7 +111,7 @@ namespace Breakout
             //GraphicsDevice.Clear(Color.White);
 
             //Do some drawing
-            currentState.render(gameTime, renderer);
+            currentState.render(gameTime);
             currentState = states[gameStateEnum];
 
             //And, with the drawing done, clear out the render list in preparation for next time

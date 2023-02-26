@@ -33,7 +33,7 @@ namespace Breakout.Game_elements
     }
 
 
-    internal class GameElement      //All the stuff necessary to make a single Draw() or DrawString() call
+    public class GameElement      //All the stuff necessary to make a single Draw() or DrawString() call
     {
         //Member variables
         internal Vector2 vec;

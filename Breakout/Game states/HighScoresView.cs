@@ -1,9 +1,11 @@
 ﻿using Breakout.Game_elements;
 using Breakout.Subsystems;
+using Breakout.Subsystems.Base;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System.Collections.Generic;
 
 /* "High Scores are persisted to the browser's local storage; keep and display up to the top 5 scores." */
 //A browser, you say?
@@ -14,21 +16,37 @@ namespace Breakout.Game_states
 {
     public class HighScoresView : GameStateView
     {
-        private SpriteFont m_font;
-        private const string MESSAGE = "TODO: High scores";
+        //Dictionary<string, ISubsystem> subsystems;
+        ISubsystem renderer;
+        ISubsystem keyboard;
 
-        //TODO: Implement high scores (once the prof. has lectured on local storage, I suppose)
+        private SpriteFont highScoresFont;
+        private SpriteFont highScoresHeaderFont;
+        private const string MESSAGE = "TODO: High scores";
+        private const string resetHighScoresMsg = "Press 'r' to reset the high scores";
+
+        //TODO: Implement high scores
+
+        public override void initialize(GraphicsDevice graphicsDevice, GraphicsDeviceManager graphics, Dictionary<string, ISubsystem> subsystems)
+        {
+            base.initialize(graphicsDevice, graphics, subsystems);
+
+            renderer = subsystems["renderer"];
+            keyboard = subsystems["keyboard"];
+        }
 
         public override void loadContent(ContentManager contentManager)
         {
-            m_font = contentManager.Load<SpriteFont>("Fonts/high-scores");  //MAYBE: More HighScores fonts?
-                                                                            // Or just the one?  TBD
+            highScoresFont = contentManager.Load<SpriteFont>("Fonts/high-scores");
+            highScoresHeaderFont = contentManager.Load<SpriteFont>("Fonts/highScoresHeader");
         }
 
-        public override GameStateEnum processInput(GameTime gameTime, BO_Keyboard keyboard)
+        public override GameStateEnum processInput(GameTime gameTime)
         {
-
-            //TODO: HighScoresView.processInput()
+            if (keyboard.IsKeyPressed(Keys.R))
+            {
+                resetHighScores();
+            }
 
             if (keyboard.IsKeyPressed(Keys.Escape))
             {
@@ -38,19 +56,36 @@ namespace Breakout.Game_states
             return GameStateEnum.HighScores;
         }
 
-        public override void render(GameTime gameTime, Renderer renderer)
+        public override void render(GameTime gameTime)
         {
-            base.render(gameTime, renderer);
+            base.render(gameTime);
         }
 
         //TODO: HighScoresView.update()
-        public override void update(GameTime gameTime, Renderer renderer)
+        //Print a message like so:
+        //  High Scores
+        //  10000
+        //  9000
+        //  (etc.)
+        //
+        //  Press 'r' to reset the high scores
+        //  Press Escape to return to the main menu
+        
+        public override void update(GameTime gameTime)
         {
-            Vector2 stringSize = m_font.MeasureString(MESSAGE);
-            GameElement el = new(RenderType.Text, m_font, MESSAGE,
+            //TODO: Change this to use StringRenderer
+            Vector2 stringSize = highScoresFont.MeasureString(MESSAGE);
+            GameElement el = new(RenderType.Text, highScoresFont, MESSAGE,
                 new Vector2(graphics.PreferredBackBufferWidth / 2 - stringSize.X / 2, graphics.PreferredBackBufferHeight / 2 - stringSize.Y),
                 Color.White);
             renderer.AddToRenderList(el);
         }
-    }
+
+        //TODO: Reset the high scores (in resetHighScores())
+        private void resetHighScores()
+        {
+            
+        }
+
+    }//END class HighScoresView
 }

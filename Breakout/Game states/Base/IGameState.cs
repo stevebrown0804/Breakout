@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Breakout.Subsystems;
+using Breakout.Subsystems.Base;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -13,14 +14,14 @@ namespace Breakout.Game_states
 {
     public interface IGameState
     {
-        void initialize(GraphicsDevice graphicsDevice, GraphicsDeviceManager graphics);
+        void initialize(GraphicsDevice graphicsDevice, GraphicsDeviceManager graphics, Dictionary<string, ISubsystem> subsystems);
 
         void loadContent(ContentManager contentManager);
         
-        GameStateEnum processInput(GameTime gameTime, BO_Keyboard keyboard);
+        GameStateEnum processInput(GameTime gameTime);
         
-        void update(GameTime gameTime, Renderer renderer);
+        void update(GameTime gameTime);
         
-        void render(GameTime gameTime, Renderer renderer);
+        void render(GameTime gameTime);
     }
 }
