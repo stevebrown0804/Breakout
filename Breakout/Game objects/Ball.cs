@@ -4,11 +4,6 @@ using Breakout.Subsystems;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 
 /* "The ball speed increases (you can choose the rate) at the following intervals; start over when starting a new paddle:
     4 bricks removed
@@ -20,7 +15,7 @@ namespace Breakout.Game_elements
 {
     internal class Ball : GameObject
     {
-        //DONE, MAYBE?: Ball class
+        //DONE, I THINK: Ball class
 
         //Base class:
         /*internal Rectangle position;
@@ -50,12 +45,12 @@ namespace Breakout.Game_elements
 
         private void Initialize()
         {
-            //LATER: Update these values (in Ball.Initialize()) later, as needed
+            //MAYBE: Keep messing these values (in Ball.Initialize()) later, as needed
             speedupFactor = new Dictionary<int, float> {
-                {4, 2f },  //just to pick some numbers atm 
-                {12, 2f },
-                {36, 2f },
-                {62, 2f }
+                {4, 1.2f },
+                {12, 1.3f },
+                {36, 1.4f },
+                {62, 1.5f }
             };
 
             velocity = new Vector2(0, 0);  //Initially at rest -> moving with the paddle
@@ -63,9 +58,9 @@ namespace Breakout.Game_elements
 
         public void GiveVelocity()
         {
-            //EVENTUALLY: mess around with these values until they feel right
-            velocity.X = 0.4f; //45 degrees to the right, I think. <--positive is right, negative is left
-            velocity.Y = -0.4f; 
+            //MAYBE: keep messing around with these values (in Ball.GiveVelocity()), as needed
+            velocity.X = 0.3f; //45 degrees to the right, I think. <--positive is right, negative is left
+            velocity.Y = -0.3f; 
         }
 
         internal bool IsAtRest()
@@ -73,7 +68,8 @@ namespace Breakout.Game_elements
             return velocity.X == 0 && velocity.Y == 0;  
         }
 
-        //IN PROGRESS: Ball.Move()
+        //
+        //DONE, I THINK: Ball.Move()
         internal void Move(GameTime gameTime, GamePlayView gpv)
         {
             TimeSpan time = gameTime.ElapsedGameTime;
@@ -154,6 +150,12 @@ namespace Breakout.Game_elements
                                     //Hide the brick and trigger the explosion animation
                                     bg[i][j].hasBeenHit = true;
                                     bg[i][j].isExploding = true;
+                                    gpv.brickGrid.numBricksHit++;   //keep a tally of the number of bricks that have been hit
+                                    if(speedupFactor.ContainsKey(gpv.brickGrid.numBricksHit))
+                                    {
+                                        SpeedUp(gpv.brickGrid.numBricksHit);
+                                    }
+                                    
 
                                 }//END if (CollisionDetection.DoTheyIntersect(bg[i][j].position, test_position))
                             
@@ -173,10 +175,9 @@ namespace Breakout.Game_elements
             position.Y = test_position.Y; //+= (int)deltaY;
         }
 
-        //TODO: Have the ball speed up when a certain # of bricks are destroyed (waiting on bricks to have CD applied to them)
-        //NOTE: This function (Ball.SpeedUp()) has been written; it's waiting to be applied elsewhere
         internal void SpeedUp(int bricksDestroyed)
         {
+            //Debug.Print($"Speeding up ball by a factor of {speedupFactor[bricksDestroyed]} (for {bricksDestroyed} bricks)");
             velocity.X *= speedupFactor[bricksDestroyed];
             velocity.Y *= speedupFactor[bricksDestroyed];
         }

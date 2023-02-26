@@ -18,13 +18,15 @@ namespace Breakout.Game_elements
                 
         internal Dictionary<int, List<Brick>> brickGrid;
 
-        internal BrickGrid(Rectangle position) : base(position)
+        internal int numBricksHit = 0;
+
+        internal BrickGrid(Rectangle position, int numRowsofBricks) : base(position)
         {
             //Initalize the dictionary
             brickGrid = new();
-            
-            //Initialize the 8 lists of bricks within the dictionary
-            for(int i = 0; i < 8; i++)
+
+            //Initialize the (numRowsofBricks) lists of bricks within the dictionary
+            for (int i = 0; i < numRowsofBricks; i++)
             {
                 brickGrid[i] = new();
             }

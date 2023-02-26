@@ -115,7 +115,7 @@ namespace Breakout.Game_states
         //DONE, I THINK - GamePlayView.initialize()
         public override void initialize(GraphicsDevice graphicsDevice, GraphicsDeviceManager graphics)
         {
-            Debug.Print("Now in GamePlayView.initialize");
+            //Debug.Print("Now in GamePlayView.initialize");
 
             base.initialize(graphicsDevice, graphics);
 
@@ -184,7 +184,7 @@ namespace Breakout.Game_states
             brickGrid = new(new Rectangle(middleAreaOfInteriorToWalls.position.X + padding,
                 middleAreaOfInteriorToWalls.position.Y + padding,
                 middleAreaOfInteriorToWalls.position.Width - 2 * padding,
-                middleAreaOfInteriorToWalls.position.Height - 2 * padding - spacing.brickGridBottomSpacing));
+                middleAreaOfInteriorToWalls.position.Height - 2 * padding - spacing.brickGridBottomSpacing), numRowsOfBricks);
 
             //Add the bricks to brickGrid
             //Figure out each brick's size (and spacing within the brickgrid)
@@ -261,7 +261,7 @@ namespace Breakout.Game_states
         //IMPORTANT:  Contains the line where we skip countdown
         public override void loadContent(ContentManager contentManager)  
         {
-            Debug.Print("Now in GamePlayView.loadContent");
+            //Debug.Print("Now in GamePlayView.loadContent");
 
             if (!contentIsLoaded)
             {
@@ -531,8 +531,8 @@ namespace Breakout.Game_states
                             renderer.AddToRenderList(el);
                         }
                         else
-                        {
-                            if (bg[i][j].isExploding)
+                        { //if the brick has been hit
+                            if (bg[i][j].isExploding) //check to see if it's still exploding
                             {
                                 bg[i][j].Explode(gameTime, this, renderer); //the 2nd/3rd argument(s) is/are temporary
                             }
@@ -607,7 +607,7 @@ namespace Breakout.Game_states
         //DONE, I THINK: reinitializing the GamePlayView
         public void Reinitialize(GraphicsDevice graphicsDevice, GraphicsDeviceManager graphics)
         {
-            Debug.Print("Now in GamePlayView.Reinitialize()");
+            //Debug.Print("Now in GamePlayView.Reinitialize()");
 
             gamePlayState = GamePlayState.Initializing;
             initialize(graphicsDevice, graphics);

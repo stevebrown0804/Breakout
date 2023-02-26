@@ -3,11 +3,6 @@ using Breakout.Game_states;
 using Breakout.Subsystems;
 using Microsoft.Xna.Framework;
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 /* "Every time a brick is hit, a tasteful explosion of particles occurs.  The explosion happens by having particles take up the same space (surface area) as the brick and then explode out based upon their position relative to the center.  Alternatively, the explosion could be the particles falling down, with a stickiness based upon their relative position on the brick (higher in the brick, the stickier).
 "*/
@@ -46,22 +41,20 @@ namespace Breakout.Game_elements
         {
             if (isExploding)
             {
-                //Debug.Print($"The brick at {position} says: Boom!");
-
                 if(!timersSet)
                 {
+                    startTimer = gameTime.TotalGameTime;
                     explosionEndsAt = gameTime.TotalGameTime + new System.TimeSpan(0, 0, 3);  //3 second explosion
                     timersSet = true;
-                    startTimer = gameTime.TotalGameTime;
                 }
 
                 if(startTimer + elapsedTime < explosionEndsAt)
                 {
                     //TODO: do the particle animation for an exploding brick
+
                     //TMP (Adding a white brick to the render list for 3sec)
                     renderer.AddToRenderList(new(RenderType.UI, CallType.Rectangle, gpv.white1x1, position, Color.White));
                     //END TMP
-                    
                 }
                 else
                 {
@@ -70,7 +63,8 @@ namespace Breakout.Game_elements
                 }
 
                 elapsedTime += gameTime.ElapsedGameTime;
-            }
+
+            }//END if (isExploding)
 
         }//END Explode()
 
