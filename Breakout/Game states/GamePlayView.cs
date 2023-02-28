@@ -113,7 +113,7 @@ namespace Breakout.Game_states
         bool areSubsystemsStashed = false;
         internal GamePlayState gamePlayState;
 
-        //unsure about where to reinitialize this! TBD  <--it might be taken care of.  we'll see.
+        //and then..other stuff?  *shrug*
         internal bool waitingOnRender = false;
         internal bool waitingToReinitializeBalls = false;
 
@@ -443,7 +443,7 @@ namespace Breakout.Game_states
                             {
                                 if (balls[i].IsAtRest())
                                 {
-                                    Debug.Print($"Ball spawned; hitBricksAtSpawnTime set to: {brickGrid.numBricksHit}");
+                                    //Debug.Print($"Ball spawned; hitBricksAtSpawnTime set to: {brickGrid.numBricksHit}");
                                     balls[i].SetHitBricksAtSpawnTime(brickGrid.numBricksHit);
                                     balls[i].GiveVelocity();
                                 }

@@ -54,7 +54,7 @@ namespace Breakout.Game_objects.non_derived
         internal Spacing(GraphicsDeviceManager graphics)
         {
             //Set various hard-coded values
-            playingFieldPaddingOnAllFourSides = 20; // 30; //50;
+            playingFieldPaddingOnAllFourSides = 0; // 20; // 30; //50;
             
             wallThickness = 24;
             
