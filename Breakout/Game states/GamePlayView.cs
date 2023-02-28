@@ -50,7 +50,7 @@ namespace Breakout.Game_states
     {
         //Some stuff to stash
         GraphicsDevice graphicsDevice;
-        ContentManager contentManager;
+        internal ContentManager contentManager;
         
         //Some constants
         const int numRowsOfBricks = 8;
@@ -58,7 +58,7 @@ namespace Breakout.Game_states
 
         //Sprites & fonts
         internal SpriteFont pauseMenuFont;  //Fonts
-        private SpriteFont inGameScoreFont;
+        internal SpriteFont inGameScoreFont;
         private SpriteFont countdownFont;
         private SpriteFont gameOverFont;
         private SpriteFont gameOverEscapePromptFont;
@@ -256,10 +256,10 @@ namespace Breakout.Game_states
             rightHalfOfBottomArea = new(new Rectangle(interiorToWalls.position.X + leftHalfOfBottomArea.position.Width, bottomAreaOfInteriorToWalls.position.Y, bottomAreaOfInteriorToWalls.position.Width / 2, bottomAreaOfInteriorToWalls.position.Height));
 
             //Next up, the 'lives remaining' section
-            remainingLives = new(new Rectangle(leftHalfOfBottomArea.position.X + spacing.remainingLivesLeftSpacing, leftHalfOfBottomArea.position.Y + spacing.remainingLivesTopSpacing, leftHalfOfBottomArea.position.Width - spacing.remainingLivesLeftSpacing - spacing.remainingLivesRightSpacing, leftHalfOfBottomArea.position.Height - spacing.remainingLivesTopSpacing - spacing.remainingLivesBottomSpacing));
+            remainingLives = new(new Rectangle(leftHalfOfBottomArea.position.X + spacing.remainingLivesLeftSpacing, leftHalfOfBottomArea.position.Y + spacing.remainingLivesTopSpacing, leftHalfOfBottomArea.position.Width - spacing.remainingLivesLeftSpacing - spacing.remainingLivesRightSpacing, leftHalfOfBottomArea.position.Height - spacing.remainingLivesTopSpacing - spacing.remainingLivesBottomSpacing), subsystems, this);
 
             //And the score section
-            score = new(new Rectangle(rightHalfOfBottomArea.position.X + spacing.scoreSectionLeftSpacing, rightHalfOfBottomArea.position.Y + spacing.scoreSectionTopSpacing, rightHalfOfBottomArea.position.Width - spacing.scoreSectionLeftSpacing - spacing.scoreSectionRightSpacing, rightHalfOfBottomArea.position.Height - spacing.scoreSectionTopSpacing - spacing.scoreSectionBottomSpacing));
+            score = new(new Rectangle(rightHalfOfBottomArea.position.X + spacing.scoreSectionLeftSpacing, rightHalfOfBottomArea.position.Y + spacing.scoreSectionTopSpacing, rightHalfOfBottomArea.position.Width - spacing.scoreSectionLeftSpacing - spacing.scoreSectionRightSpacing, rightHalfOfBottomArea.position.Height - spacing.scoreSectionTopSpacing - spacing.scoreSectionBottomSpacing), subsystems, this);
 
             //and the paddle
             paddle = new(new Rectangle(paddleArea.position.X + paddleArea.position.Width / 2 - spacing.paddleWidth / 2, paddleArea.position.Y, spacing.paddleWidth, spacing.paddleHeight));
@@ -306,6 +306,8 @@ namespace Breakout.Game_states
                 purple1x1 = contentManager.Load<Texture2D>("Sprites/purple1x1");            //misc.
                 white1x1 = contentManager.Load<Texture2D>("Sprites/white1x1");
                 black1x1 = contentManager.Load<Texture2D>("Sprites/black1x1");
+
+                remainingLives.loadContent();
 
                 isContentLoaded = true;
             }
@@ -522,7 +524,7 @@ namespace Breakout.Game_states
                 }
                 else if (gamePlayState == GamePlayState.Cleanup)
                 {
-                    ReinitializeGame(graphicsDevice, graphics); //REMINDER: ReinitializeGame() sets gamePlayState to initialize
+                    ReinitializeGame(graphicsDevice, graphics); //REMINDER: ReinitializeGame() sets gamePlayState to initialize (in Initalize())
                 }
                 else
                 {
@@ -547,6 +549,7 @@ namespace Breakout.Game_states
             waitingToReinitializeBalls = false;
         }
 
+        //MOSTLY DONE (GamePlayView.DrawGame())
         private void DrawGame(GameTime gameTime)
         {
             GameElement el;
@@ -700,6 +703,12 @@ namespace Breakout.Game_states
                 el = new GameElement(RenderType.UI, CallType.Rectangle, orange1x1, pauseMenu.position, Color.White);
                 renderer.AddToRenderList(el);
             }
+
+            //remaining lives
+            remainingLives.DrawRemainingLives();
+
+            //Score
+            score.DrawScore();
 
             /*waitingOnRender = true;
 

@@ -1,8 +1,15 @@
-﻿using Breakout.Game_objects.Base;
+﻿using Breakout.Game_elements;
+using Breakout.Game_objects.Base;
+using Breakout.Game_states;
+using Breakout.Subsystems;
+using Breakout.Subsystems.Base;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.PortableExecutable;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -19,8 +26,31 @@ namespace Breakout.Game_objects
     //TODO: Implement class Score
     internal class Score : GameObject
     {
-        internal Score(Rectangle position) : base(position)
+
+        GamePlayView gpv;
+        Renderer renderer;
+        SpriteFont inGameScoreFont;
+
+        internal Score(Rectangle position, SubsystemsHolder subsystems, GamePlayView gpv) : base(position)
         {
+            this.gpv = gpv;
+            renderer = subsystems.renderer;
         }
+
+        internal void loadContent()
+        {
+            inGameScoreFont = gpv.contentManager.Load<SpriteFont>("Fonts/ingame-score");
+        }
+
+        internal void DrawScore()
+        {
+            GameElement el;
+
+            Vector2 vec = new(position.X, position.Y);
+            el = new(RenderType.Text, gpv.inGameScoreFont, "TODO: Score", vec, Color.White);
+
+            renderer.AddToRenderList(el);
+        }
+
     }
 }
