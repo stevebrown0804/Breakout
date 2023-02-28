@@ -776,7 +776,6 @@ namespace Breakout.Game_states
             renderer.AddToRenderList(el3);
             renderer.AddToRenderList(el);
             renderer.AddToRenderList(el2);
-
         }
 
     }//END class GamePlayView
