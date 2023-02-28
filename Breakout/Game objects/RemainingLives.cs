@@ -10,7 +10,7 @@ namespace Breakout.Game_objects
 {
     internal class RemainingLives : GameObject
     {
-         public int remainingLives = 3;  // 2?  TBD
+         public int remainingLives = 3;  // 2?  TBD  //<--nah, 3 works
 
         internal RemainingLives(Rectangle position) : base(position)
         {

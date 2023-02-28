@@ -16,6 +16,7 @@ using System.Threading.Tasks;
 
 namespace Breakout.Game_objects
 {
+    //TODO: Implement class Score
     internal class Score : GameObject
     {
         internal Score(Rectangle position) : base(position)
