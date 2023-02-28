@@ -31,6 +31,7 @@ namespace Breakout.Game_objects.non_derived
         public int scoreSectionLeftSpacing;
         public int scoreSectionRightSpacing;
         public int scoreSectionTopSpacing;
+        public int scoreSectionIntraWordSpacing;
         public int scoreSectionBottomSpacing;
         public int paddleWidth;
         public int paddleHeight;
@@ -66,16 +67,17 @@ namespace Breakout.Game_objects.non_derived
             topAreaHeight = 70;
             bottomAreaHeight = 110;
 
-            remainingLivesLeftSpacing = 60;
-            remainingLivesRightSpacing = 60;
-            remainingLivesTopSpacing = 20;
-            remainingLivesBottomSpacing = 20;
-            remainingLivesIntraSpriteSpacing = 30;  //initial guess
+            remainingLivesLeftSpacing = 20;
+            remainingLivesRightSpacing = 60;  //unused? TBD
+            remainingLivesTopSpacing = 10;
+            remainingLivesBottomSpacing = 20;  //? TBD
+            remainingLivesIntraSpriteSpacing = 20;  //initial guess
 
-            scoreSectionLeftSpacing = 60;
-            scoreSectionRightSpacing = 60;
-            scoreSectionTopSpacing = 20;
-            scoreSectionBottomSpacing = 20;
+            scoreSectionLeftSpacing = 270;
+            scoreSectionRightSpacing = 60;  //?
+            scoreSectionTopSpacing = 10;
+            scoreSectionBottomSpacing = 20; //?
+            scoreSectionIntraWordSpacing = 30;
                         
             paddleAreaHeight = 40;
             paddleWidth = 300;

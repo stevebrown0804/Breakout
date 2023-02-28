@@ -23,13 +23,19 @@ using System.Threading.Tasks;
 
 namespace Breakout.Game_objects
 {
-    //TODO: Implement class Score
+    //IN PROGRESS: Implement class Score
     internal class Score : GameObject
     {
-
+        //stuff to stash
         GamePlayView gpv;
         Renderer renderer;
-        SpriteFont inGameScoreFont;
+        ContentManager contentManager;
+
+        //sprites, fonts
+        //SpriteFont inGameScoreFont;
+
+        string scoreStr = "TODO: Score";
+        int score = 0;
 
         internal Score(Rectangle position, SubsystemsHolder subsystems, GamePlayView gpv) : base(position)
         {
@@ -39,18 +45,25 @@ namespace Breakout.Game_objects
 
         internal void loadContent()
         {
-            inGameScoreFont = gpv.contentManager.Load<SpriteFont>("Fonts/ingame-score");
+            //stash this
+            this.contentManager = gpv.contentManager;
+
+            //inGameScoreFont = contentManager.Load<SpriteFont>("Fonts/ingame-score");
         }
 
         internal void DrawScore()
         {
             GameElement el;
 
-            Vector2 vec = new(position.X, position.Y);
-            el = new(RenderType.Text, gpv.inGameScoreFont, "TODO: Score", vec, Color.White);
+            Vector2 spriteSize = gpv.inGameScoreFont.MeasureString(scoreStr);
+            Vector2 vec = new(position.X + gpv.spacing.scoreSectionLeftSpacing, position.Y + gpv.spacing.scoreSectionTopSpacing);
+            el = new(RenderType.Text, gpv.inGameScoreFont, scoreStr, vec, Color.White);
+            renderer.AddToRenderList(el);
 
+            vec.X += spriteSize.X + gpv.spacing.scoreSectionIntraWordSpacing;
+            el = new(RenderType.Text, gpv.inGameScoreFont, $"{score}", vec, Color.White);
             renderer.AddToRenderList(el);
         }
 
-    }
+    }//END class Score
 }
