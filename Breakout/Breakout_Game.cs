@@ -29,14 +29,10 @@ namespace Breakout
         private Dictionary<GameStateEnum, IGameState> states;
 
         //Subsystems
-        /*Dictionary<string, Subsystems.Base.Subsystems> subsystems;  //Note for next time:  Don't use interfaces when the objects are this different.  Inherit a base class, maybe? TBD
-        Subsystems.Base.Subsystems keyboard;
-        Subsystems.Base.Subsystems renderer;*/
         SubsystemsHolder subsystems;
         BO_Keyboard keyboard;
         Renderer renderer;
         StringRenderer stringRenderer;
-
 
         public Breakout_Game()
         {
@@ -47,19 +43,14 @@ namespace Breakout
 
         protected override void Initialize()
         {
-            /*//Initialize subsystems!
-            subsystems = new Dictionary<string, Subsystems.Base.Subsystems>
-            {
-                { "keyboard", new BO_Keyboard() }, 
-                { "renderer", new Renderer() },
-                { "stringRenderer", new StringRenderer() }
-            };*/
+            //Initialize subsystems!            
             subsystems = new();
             keyboard = subsystems.keyboard;
             keyboard.InitializePreviousState();
             renderer = subsystems.renderer;
+            stringRenderer = subsystems.stringRenderer;
 
-            //Then do other stuff!
+            //Then do other stuff
             graphics.PreferredBackBufferWidth = 1920;
             graphics.PreferredBackBufferHeight = 1080;
             graphics.ApplyChanges();

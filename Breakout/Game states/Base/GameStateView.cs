@@ -16,7 +16,6 @@ namespace Breakout.Game_states
         protected GraphicsDeviceManager graphics;
         protected SpriteBatch spriteBatch;
 
-        //protected Dictionary<string, Subsystems.Base.Subsystems> subsystems;
         internal SubsystemsHolder subsystems;
         internal BO_Keyboard keyboard;
         internal Renderer renderer;
@@ -28,8 +27,6 @@ namespace Breakout.Game_states
             spriteBatch = new SpriteBatch(graphicsDevice);
             this.subsystems = subsystems;
 
-            //keyboard = subsystems["keyboard"];
-            //renderer = subsystems["renderer"];
             renderer = subsystems.renderer;
             keyboard = subsystems.keyboard;
             stringRenderer = subsystems.stringRenderer;

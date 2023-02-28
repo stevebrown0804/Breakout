@@ -33,40 +33,5 @@ namespace Breakout.@Subsystems
             renderList.Clear();
         }
 
-        /*//Other interface methods (which throw)
-        public void InitializePreviousState()
-        {
-            throw new Exception("Renderer subsystem does not implement InitializePreviousState().  BO_Keyboard, perhaps?");
-        }
-
-        public void UpdateCurrentState()
-        {
-            throw new Exception("Renderer subsystem does not implement UpdateCurrentState().  BO_Keyboard, perhaps?");
-        }
-
-        public void SetPreviousStateToCurrentState()
-        {
-            throw new Exception("Renderer subsystem does not implement SetPreviousStateToCurrentState().  BO_Keyboard, perhaps?");
-        }
-
-        public bool IsKeyPressed(Keys key)
-        {
-            throw new Exception("Renderer subsystem does not implement IsKeyPressed().  BO_Keyboard, perhaps?");
-        }
-
-        public bool IsKeyHeld(Keys key)
-        {
-            throw new Exception("Renderer subsystem does not implement IsKeyHeld().  BO_Keyboard, perhaps?");
-        }
-
-        public (float, Vector2) RenderStringHVCentered(string str, SpriteFont font, Rectangle renderSurface)
-        {
-            throw new Exception("Renderer subsystem does not implement RenderStringHVCentered().  stringRenderer, perhaps?");
-        }
-
-        public float RenderStringHCentered(string str, SpriteFont font, Rectangle renderSurface)
-        {
-            throw new NotImplementedException();
-        }*/
     }//END class Renderer
 }

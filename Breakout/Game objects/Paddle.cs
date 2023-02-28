@@ -3,6 +3,7 @@ using Breakout.Game_states;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,26 +23,14 @@ namespace Breakout.Game_elements
 
     internal class Paddle : GameObject
     {
-        //Base class:
-        /*internal Rectangle position;
-        internal Rectangle boundingBox;*/
-
         internal Paddle(Rectangle position) : base(position)
         {
         }
 
-        /*internal Paddle(Rectangle position, Rectangle boundingBox) : base(position, boundingBox)
-        {
-        }*/
-
-        /*internal Paddle() : base()
-        {
-        }*/
-
         //TODO: Shrink the paddle (as an animation)
         public void Shrink(GameTime gameTime)
         {
-            //Shrink!            
+            Debug.Print("TODO: Shrink the paddle");        
         }
 
         //Animate the paddle

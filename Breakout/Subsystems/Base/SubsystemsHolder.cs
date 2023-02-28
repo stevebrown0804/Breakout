@@ -23,27 +23,5 @@ namespace Breakout.@Subsystems.Base
             stringRenderer = new();
         }
 
-        /*//Keyboard
-        void InitializePreviousState();
-
-        void UpdateCurrentState();
-
-        void SetPreviousStateToCurrentState();
-
-        bool IsKeyPressed(Keys key);
-
-        bool IsKeyHeld(Keys key);
-
-        //Renderer
-        List<GameElement> GetRenderList();
-
-        List<GameElement> AddToRenderList(GameElement element);
-
-        void ClearRenderList();
-
-        //StringRenderer
-        (float, Vector2) RenderStringHVCentered(string str, SpriteFont font, Rectangle renderSurface);
-
-        float RenderStringHCentered(string str, SpriteFont font, Rectangle renderSurface);*/
     }
 }

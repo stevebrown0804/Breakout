@@ -46,30 +46,5 @@ namespace Breakout.@Subsystems
             return Keyboard.GetState().IsKeyUp(key);
         }
 
-/*        //Other interface methods (which throw)
-        public List<GameElement> GetRenderList()
-        {
-            throw new Exception("BO_Keyboard does not implement GetRenderList(). Renderer, perhaps?");
-        }
-
-        public List<GameElement> AddToRenderList(GameElement element)
-        {
-            throw new Exception("BO_Keyboard does not implement AddToRenderList(). Renderer, perhaps?");
-        }
-
-        public void ClearRenderList()
-        {
-            throw new Exception("BO_Keyboard does not implement ClearRenderList(). Renderer, perhaps?");
-        }
-
-        public (float, Vector2) RenderStringHVCentered(string str, SpriteFont font, Rectangle renderSurface)
-        {
-            throw new Exception("BO_Keyboard does not implement RenderStringHVCentered(). stringRenderer, perhaps?");
-        }
-
-        public float RenderStringHCentered(string str, SpriteFont font, Rectangle renderSurface)
-        {
-            throw new NotImplementedException();
-        }*/
     }//END class BO_Keyboard
 }

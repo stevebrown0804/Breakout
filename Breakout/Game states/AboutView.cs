@@ -11,9 +11,6 @@ namespace Breakout.Game_states
 {
     public class AboutView : GameStateView
     {
-        /*Subsystems.Base.Subsystems keyboard;
-        Subsystems.Base.Subsystems renderer;*/
-
         private SpriteFont m_font;
         private SpriteFont m_font_smaller;
         private const string MESSAGE = "Game by Steve Brown";
@@ -22,9 +19,6 @@ namespace Breakout.Game_states
         public override void initialize(GraphicsDevice graphicsDevice, GraphicsDeviceManager graphics, SubsystemsHolder subsystems)
         {
             base.initialize(graphicsDevice, graphics, subsystems);
-
-            /*keyboard = subsystems["keyboard"];
-            renderer = subsystems["renderer"];*/
         }
 
         public override void loadContent(ContentManager contentManager)

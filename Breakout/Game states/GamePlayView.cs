@@ -51,9 +51,6 @@ namespace Breakout.Game_states
         //Some stuff to stash
         GraphicsDevice graphicsDevice;
         ContentManager contentManager;
-        /*Subsystems.Base.Subsystems keyboard;
-        Subsystems.Base.Subsystems renderer;
-        Subsystems.Base.Subsystems stringRenderer;*/
         
         //Some constants
         const int numRowsOfBricks = 8;
@@ -130,8 +127,7 @@ namespace Breakout.Game_states
         public override void initialize(GraphicsDevice graphicsDevice, GraphicsDeviceManager graphics, SubsystemsHolder subsystems)
         {
             //Debug.Print("Now in GamePlayView.initialize");
-
-            Debug.Print($"Setting gamePlayState to: Initializing; current value is: {gamePlayState}");
+            //Debug.Print($"Setting gamePlayState to: Initializing; current value is: {gamePlayState}");
             gamePlayState = GamePlayState.Initializing;
 
             //stash these
@@ -139,9 +135,6 @@ namespace Breakout.Game_states
             {
                 base.initialize(graphicsDevice, graphics, subsystems);
                 this.graphicsDevice = graphicsDevice;
-                /*keyboard = subsystems["keyboard"];
-                renderer = subsystems["renderer"];
-                stringRenderer = subsystems["stringRenderer"];*/
 
                 areSubsystemsStashed = true;
             }
@@ -491,8 +484,6 @@ namespace Breakout.Game_states
 
                 if (gamePlayState == GamePlayState.Initializing)
                 {
-                    //DrawGame();  //<--let's NOT draw the game state while initializing
-                    // What say you!
                     if (isContentLoaded)
                     {
                         Debug.Print($"Setting gamePlayState to: Countdown; current value is: {gamePlayState}");
@@ -509,7 +500,6 @@ namespace Breakout.Game_states
                 else if (gamePlayState == GamePlayState.InGame)
                 {
                     DrawGame(gameTime);
-                    //do in-game controls; anything else?
                 }
                 else if (gamePlayState == GamePlayState.Paused)
                 {
@@ -522,32 +512,21 @@ namespace Breakout.Game_states
                 }
                 else if (gamePlayState == GamePlayState.ResettingLevel)
                 {
-                    // Draw the game + update it but don't respond to controls
                     DrawGame(gameTime);
-
-                    //Call ResetLevel() or some such
                     ResetLevel(gameTime);
                 }
                 else if (gamePlayState == GamePlayState.GameOver)
                 {
                     DrawGame(gameTime);
-                    //disable controls, but keep the game updating
-                    //EXCEPT respond to Escape
-                    //and draw "Game Over" on-screen
                     DrawGameOver(gameTime);
                 }
                 else if (gamePlayState == GamePlayState.Cleanup)
                 {
-                    //DrawGame();  //<--Let's try NOT drawing the game during cleanup
-
                     ReinitializeGame(graphicsDevice, graphics); //REMINDER: ReinitializeGame() sets gamePlayState to initialize
-
-                    //gamePlayState = GamePlayState.OutOfGame;    //What will this do, I wonder? TBD!
-                    //FOLLOW-UP: As we kinda suspected, this line would prevent re-entering the game from the main menu
                 }
                 else
                 {
-                    throw new System.Exception("GamePlayView.update says: Invalid gamePlayState");
+                    throw new Exception("GamePlayView.update says: Invalid gamePlayState");
                 }
             }
 
@@ -773,7 +752,7 @@ namespace Breakout.Game_states
             Rectangle r = new(x, y, w, h);
             GameElement el3 = new(RenderType.UI, CallType.Rectangle, black1x1, r, Color.White);
  
-            renderer.AddToRenderList(el3);
+            renderer.AddToRenderList(el3);  //<-- note! UI element gets rendered first
             renderer.AddToRenderList(el);
             renderer.AddToRenderList(el2);
         }

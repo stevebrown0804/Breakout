@@ -50,6 +50,9 @@ namespace Breakout.Game_elements
         //
         //Constructors
         //
+        //NOTE TO SELF: For next time, let's have GameElement base class then inherit a UIElement and a TextElement.'
+        // Then each class can have its own constructor(s).
+        // UIElement could then be split up into UIElement_Rect and UIElement_Vector2, if we want.  (Which...maybe.)
         internal GameElement(RenderType renderType, SpriteFont font, string text, Vector2 vec, Color color)
         {
             if (renderType == RenderType.UI)

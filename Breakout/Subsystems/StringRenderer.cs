@@ -17,10 +17,10 @@ namespace Breakout.@Subsystems
 
             float rs_y = rs.Y + rs.Height / 2 - stringSize.Y / 2;
 
+            //Note: The first value of the tuple is a float containing the bottom coordinate of the text
             return (rs_y + stringSize.Y, new Vector2(rs.X + rs.Width / 2 - stringSize.X / 2, rs_y));
         }
 
-        //IN PROGRESS, if needed (StringRenderer.RenderStringHCentered())  //<--eh?  (j/k)
         public float RenderStringHCentered(string str, SpriteFont font, Rectangle renderSurface)
         {
             Vector2 stringSize = font.MeasureString(str);
@@ -29,45 +29,5 @@ namespace Breakout.@Subsystems
             return rs.X + rs.Width / 2 - stringSize.X / 2;
         }
 
-        /*//other interface methods (which throw)
-        public void InitializePreviousState()
-        {
-            throw new Exception("StringRenderer subsystem does not implement this interface.  BO_Keyboard, perhaps?");
-        }
-
-        public List<GameElement> GetRenderList()
-        {
-            throw new Exception("StringRenderer subsystem does not implement this interface.  Renderer, perhaps?");
-        }
-
-        public void UpdateCurrentState()
-        {
-            throw new Exception("StringRenderer subsystem does not implement this interface.  BO_Keyboard, perhaps?");
-        }
-
-        public void SetPreviousStateToCurrentState()
-        {
-            throw new Exception("StringRenderer subsystem does not implement SetPreviousStateToCurrentState().  BO_Keyboard, perhaps?");
-        }
-
-        public List<GameElement> AddToRenderList(GameElement element)
-        {
-            throw new Exception("StringRenderer subsystem does not implement AddToRenderList().  Renderer, perhaps?");
-        }
-
-        public bool IsKeyPressed(Keys key)
-        {
-            throw new Exception("StringRenderer subsystem does not implement IsKeyPressed().  BO_Keyboard, perhaps?");
-        }
-
-        public bool IsKeyHeld(Keys key)
-        {
-            throw new Exception("StringRenderer subsystem does not implement IsKeyHeld().  BO_Keyboard, perhaps?");
-        }
-
-        public void ClearRenderList()
-        {
-            throw new Exception("StringRenderer subsystem does not implement ClearRenderList().  Renderer, perhaps?");
-        }*/
     }//END class StringRenderer
 }
