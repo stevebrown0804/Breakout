@@ -9,17 +9,12 @@ using Microsoft.Xna.Framework.Input;
 
 /* "Player movement is controlled by using the arrow keys." */
 
-namespace Breakout.Subsystems
+namespace Breakout.@Subsystems
 {
-    public class BO_Keyboard : ISubsystem
+    public class BO_Keyboard
     {
         KeyboardState prevKeyboardState;
         KeyboardState currentKeyboardState;
-
-        internal BO_Keyboard()
-        {
-            //nothing to see here!
-        }
 
         public void InitializePreviousState()
         {
@@ -36,7 +31,7 @@ namespace Breakout.Subsystems
             currentKeyboardState = Keyboard.GetState();
         }
 
-        public bool IsKeyPressed(Keys key)
+        internal bool IsKeyPressed(Keys key)
         {
             return (!prevKeyboardState.IsKeyDown(key) && currentKeyboardState.IsKeyDown(key));
         }
@@ -51,7 +46,7 @@ namespace Breakout.Subsystems
             return Keyboard.GetState().IsKeyUp(key);
         }
 
-        //Other interface methods (which throw)
+/*        //Other interface methods (which throw)
         public List<GameElement> GetRenderList()
         {
             throw new Exception("BO_Keyboard does not implement GetRenderList(). Renderer, perhaps?");
@@ -75,6 +70,6 @@ namespace Breakout.Subsystems
         public float RenderStringHCentered(string str, SpriteFont font, Rectangle renderSurface)
         {
             throw new NotImplementedException();
-        }
+        }*/
     }//END class BO_Keyboard
 }

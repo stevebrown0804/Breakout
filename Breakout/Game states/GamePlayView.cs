@@ -51,10 +51,10 @@ namespace Breakout.Game_states
         //Some stuff to stash
         GraphicsDevice graphicsDevice;
         ContentManager contentManager;
-        ISubsystem keyboard;
-        ISubsystem renderer;
-        ISubsystem stringRenderer;
-
+        /*Subsystems.Base.Subsystems keyboard;
+        Subsystems.Base.Subsystems renderer;
+        Subsystems.Base.Subsystems stringRenderer;*/
+        
         //Some constants
         const int numRowsOfBricks = 8;
         const int numBricksPerRow = 14;
@@ -127,7 +127,7 @@ namespace Breakout.Game_states
         }
 
         //DONE, I THINK - GamePlayView.initialize()
-        public override void initialize(GraphicsDevice graphicsDevice, GraphicsDeviceManager graphics, Dictionary<string, ISubsystem> subsystems)
+        public override void initialize(GraphicsDevice graphicsDevice, GraphicsDeviceManager graphics, SubsystemsHolder subsystems)
         {
             //Debug.Print("Now in GamePlayView.initialize");
 
@@ -139,9 +139,9 @@ namespace Breakout.Game_states
             {
                 base.initialize(graphicsDevice, graphics, subsystems);
                 this.graphicsDevice = graphicsDevice;
-                keyboard = subsystems["keyboard"];
+                /*keyboard = subsystems["keyboard"];
                 renderer = subsystems["renderer"];
-                stringRenderer = subsystems["stringRenderer"];
+                stringRenderer = subsystems["stringRenderer"];*/
 
                 areSubsystemsStashed = true;
             }

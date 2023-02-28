@@ -6,9 +6,9 @@ using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
 
-namespace Breakout.Subsystems
+namespace Breakout.@Subsystems
 {
-    public class Renderer : ISubsystem
+    public class Renderer
     {
         readonly List<GameElement> renderList;
 
@@ -33,7 +33,7 @@ namespace Breakout.Subsystems
             renderList.Clear();
         }
 
-        //Other interface methods (which throw)
+        /*//Other interface methods (which throw)
         public void InitializePreviousState()
         {
             throw new Exception("Renderer subsystem does not implement InitializePreviousState().  BO_Keyboard, perhaps?");
@@ -67,6 +67,6 @@ namespace Breakout.Subsystems
         public float RenderStringHCentered(string str, SpriteFont font, Rectangle renderSurface)
         {
             throw new NotImplementedException();
-        }
+        }*/
     }//END class Renderer
 }

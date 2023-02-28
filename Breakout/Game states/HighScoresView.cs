@@ -16,9 +16,9 @@ namespace Breakout.Game_states
 {
     public class HighScoresView : GameStateView
     {
-        //Dictionary<string, ISubsystem> subsystems;
-        ISubsystem renderer;
-        ISubsystem keyboard;
+        //Dictionary<string, Subsystems> subsystems;
+        /*Subsystems.Base.Subsystems renderer;
+        Subsystems.Base.Subsystems keyboard;*/
 
         private SpriteFont highScoresFont;
         private SpriteFont highScoresHeaderFont;
@@ -27,12 +27,12 @@ namespace Breakout.Game_states
 
         //TODO: Implement high scores
 
-        public override void initialize(GraphicsDevice graphicsDevice, GraphicsDeviceManager graphics, Dictionary<string, ISubsystem> subsystems)
+        public override void initialize(GraphicsDevice graphicsDevice, GraphicsDeviceManager graphics, SubsystemsHolder subsystems)
         {
             base.initialize(graphicsDevice, graphics, subsystems);
 
-            renderer = subsystems["renderer"];
-            keyboard = subsystems["keyboard"];
+            /*renderer = subsystems["renderer"];
+            keyboard = subsystems["keyboard"];*/
         }
 
         public override void loadContent(ContentManager contentManager)

@@ -15,8 +15,8 @@ namespace Breakout.Game_states
     public class MainMenuView : GameStateView
     {
         //subsystems
-        ISubsystem keyboard;
-        ISubsystem renderer;
+        /*Subsystems.Base.Subsystems keyboard;
+        Subsystems.Base.Subsystems renderer;*/
 
         //Fonts
         private SpriteFont m_fontMenu;
@@ -32,14 +32,14 @@ namespace Breakout.Game_states
         }
         private MenuState m_currentSelection = MenuState.NewGame;
 
-        public override void initialize(GraphicsDevice graphicsDevice, GraphicsDeviceManager graphics, Dictionary<string, ISubsystem> subsystems)
+        public override void initialize(GraphicsDevice graphicsDevice, GraphicsDeviceManager graphics, SubsystemsHolder subsystems)
         {
             //Debug.Print("Now in MainMenuView.initialize()");
 
             base.initialize(graphicsDevice, graphics, subsystems);
 
-            keyboard = subsystems["keyboard"];
-            renderer = subsystems["renderer"];
+            /*keyboard = subsystems["keyboard"];
+            renderer = subsystems["renderer"];*/
         }
 
         public override void loadContent(ContentManager contentManager)

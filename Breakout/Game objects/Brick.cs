@@ -30,7 +30,7 @@ namespace Breakout.Game_elements
         {
         }
 
-        public void Explode(GameTime gameTime, GamePlayView gpv, ISubsystem renderer)
+        public void Explode(GameTime gameTime, GamePlayView gpv, Renderer renderer)
         {
             if (isExploding)
             {

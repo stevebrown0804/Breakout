@@ -6,9 +6,9 @@ using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
 
-namespace Breakout.Subsystems
+namespace Breakout.@Subsystems
 {
-    internal class StringRenderer : ISubsystem
+    public class StringRenderer
     {
         public (float, Vector2) RenderStringHVCentered(string str, SpriteFont font, Rectangle renderSurface)
         {
@@ -29,7 +29,7 @@ namespace Breakout.Subsystems
             return rs.X + rs.Width / 2 - stringSize.X / 2;
         }
 
-        //other interface methods (which throw)
+        /*//other interface methods (which throw)
         public void InitializePreviousState()
         {
             throw new Exception("StringRenderer subsystem does not implement this interface.  BO_Keyboard, perhaps?");
@@ -68,6 +68,6 @@ namespace Breakout.Subsystems
         public void ClearRenderList()
         {
             throw new Exception("StringRenderer subsystem does not implement ClearRenderList().  Renderer, perhaps?");
-        }
+        }*/
     }//END class StringRenderer
 }
