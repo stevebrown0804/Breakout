@@ -10,21 +10,23 @@ namespace Breakout.Subsystems
 {
     internal class StringRenderer : ISubsystem
     {
-        public static Vector2 RenderStringHVCentered(string str, SpriteFont font, Rectangle renderSurface)
+        public (float, Vector2) RenderStringHVCentered(string str, SpriteFont font, Rectangle renderSurface)
         {
             Vector2 stringSize = font.MeasureString(str);
             Rectangle rs = renderSurface;
 
-            return new Vector2(rs.X + rs.Width / 2 - stringSize.X / 2, /*graphics.PreferredBackBufferWidth / 2 - stringSize.X / 2 */ rs.Y + rs.Height / 2 - stringSize.Y / 2 /* graphics.PreferredBackBufferHeight / 2 - stringSize.Y */);
+            float rs_y = rs.Y + rs.Height / 2 - stringSize.Y / 2;
+
+            return (rs_y + stringSize.Y, new Vector2(rs.X + rs.Width / 2 - stringSize.X / 2, rs_y));
         }
 
-        //TODO, if needed (StringRenderer.RenderStringHCentered())
-        public static float RenderStringHCentered(string str, SpriteFont font, Rectangle renderSurface)
+        //IN PROGRESS, if needed (StringRenderer.RenderStringHCentered())  //<--eh?  (j/k)
+        public float RenderStringHCentered(string str, SpriteFont font, Rectangle renderSurface)
         {
-            
+            Vector2 stringSize = font.MeasureString(str);
+            Rectangle rs = renderSurface;
 
-            //TMP
-            return 0f;
+            return rs.X + rs.Width / 2 - stringSize.X / 2;
         }
 
         //other interface methods (which throw)

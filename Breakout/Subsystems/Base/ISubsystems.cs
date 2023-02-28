@@ -1,4 +1,6 @@
 ﻿using Breakout.Game_elements;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
@@ -8,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Breakout.Subsystems.Base
 {
-    public interface ISubsystem
+    public /*class*/ interface ISubsystem
     {
         //Keyboard
         void InitializePreviousState();
@@ -29,6 +31,9 @@ namespace Breakout.Subsystems.Base
         void ClearRenderList();
 
         //StringRenderer
+        (float, Vector2) RenderStringHVCentered(string str, SpriteFont font, Rectangle renderSurface);
+
+        float RenderStringHCentered(string str, SpriteFont font, Rectangle renderSurface);
 
     }
 }

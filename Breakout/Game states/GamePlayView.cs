@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+//using System.Drawing;
 
 /* "When starting the game, provide a 3, 2, 1 count down timer, showing the numbers 3, 2, 1 in the middle of the screen for the count down.  Following the completion of the countdown, the ball starts from the paddle in a nice direction (nice meaning not too steep of an angle and not straight up)." */
 
@@ -34,6 +35,7 @@ namespace Breakout.Game_states
     enum GamePlayState  //public/internal? TBD      //Also, I think this can go inside the class.  TBD
     {
         //unset = 0,
+        OutOfGame,
         Initializing,
         Countdown,
         InGame,
@@ -51,7 +53,8 @@ namespace Breakout.Game_states
         ContentManager contentManager;
         ISubsystem keyboard;
         ISubsystem renderer;
- 
+        ISubsystem stringRenderer;
+
         //Some constants
         const int numRowsOfBricks = 8;
         const int numBricksPerRow = 14;
@@ -60,6 +63,8 @@ namespace Breakout.Game_states
         internal SpriteFont pauseMenuFont;  //Fonts
         private SpriteFont inGameScoreFont;
         private SpriteFont countdownFont;
+        private SpriteFont gameOverFont;
+        private SpriteFont gameOverEscapePromptFont;
         private Texture2D blue1x1;          //Bricks
         private Texture2D limeGreen1x1;
         private Texture2D orange1x1;
@@ -110,20 +115,24 @@ namespace Breakout.Game_states
         //Variables that do NOT need to be reinitialize in Reinitalize()
         bool isContentLoaded = false;
         bool areSubsystemsStashed = false;
-        GamePlayState gamePlayState;
+        internal GamePlayState gamePlayState;
 
-        //unsure about where to reinitialize this! TBD
+        //unsure about where to reinitialize this! TBD  <--it might be taken care of.  we'll see.
         internal bool waitingOnRender = false;
+        internal bool waitingToReinitializeBalls = false;
 
         public GamePlayView()
         {
-            gamePlayState = GamePlayState.Initializing;
+            //nothing to see here, atm
         }
 
         //DONE, I THINK - GamePlayView.initialize()
         public override void initialize(GraphicsDevice graphicsDevice, GraphicsDeviceManager graphics, Dictionary<string, ISubsystem> subsystems)
         {
             //Debug.Print("Now in GamePlayView.initialize");
+
+            Debug.Print($"Setting gamePlayState to: Initializing; current value is: {gamePlayState}");
+            gamePlayState = GamePlayState.Initializing;
 
             //stash these
             if (!areSubsystemsStashed)
@@ -132,6 +141,7 @@ namespace Breakout.Game_states
                 this.graphicsDevice = graphicsDevice;
                 keyboard = subsystems["keyboard"];
                 renderer = subsystems["renderer"];
+                stringRenderer = subsystems["stringRenderer"];
 
                 areSubsystemsStashed = true;
             }
@@ -258,10 +268,10 @@ namespace Breakout.Game_states
             //And the score section
             score = new(new Rectangle(rightHalfOfBottomArea.position.X + spacing.scoreSectionLeftSpacing, rightHalfOfBottomArea.position.Y + spacing.scoreSectionTopSpacing, rightHalfOfBottomArea.position.Width - spacing.scoreSectionLeftSpacing - spacing.scoreSectionRightSpacing, rightHalfOfBottomArea.position.Height - spacing.scoreSectionTopSpacing - spacing.scoreSectionBottomSpacing));
 
-            //And the paddle
+            //and the paddle
             paddle = new(new Rectangle(paddleArea.position.X + paddleArea.position.Width / 2 - spacing.paddleWidth / 2, paddleArea.position.Y, spacing.paddleWidth, spacing.paddleHeight));
 
-            //And ball #1
+            //And add ball #1
             Ball ball = new(new Rectangle(paddle.position.X + paddle.position.Width / 2 - spacing.ballWidth / 2, paddle.position.Y - spacing.ballHeight, spacing.ballWidth, spacing.ballHeight));
             balls.Add(ball);
 
@@ -290,6 +300,8 @@ namespace Breakout.Game_states
                 pauseMenuFont = contentManager.Load<SpriteFont>("Fonts/ingame-menu");      //Fonts
                 inGameScoreFont = contentManager.Load<SpriteFont>("Fonts/ingame-score");
                 countdownFont = contentManager.Load<SpriteFont>("Fonts/ingame-countdown");
+                gameOverFont = contentManager.Load<SpriteFont>("Fonts/game-over");
+                gameOverEscapePromptFont = contentManager.Load<SpriteFont>("Fonts/game-over-prompt"); 
                 blue1x1 = contentManager.Load<Texture2D>("Sprites/blue1x1");                //Bricks
                 limeGreen1x1 = contentManager.Load<Texture2D>("Sprites/limeGreen1x1");
                 orange1x1 = contentManager.Load<Texture2D>("Sprites/orange1x1");
@@ -317,130 +329,135 @@ namespace Breakout.Game_states
             //Controls: Spacebar (to release the ball), left, right...and that's it, right?  TBD
             //Oh, and Enter, to select an option during the pause menu
             //And Escape, to bring up the pause menu
-
-            if (!waitingOnRender)
+            if(gamePlayState != GamePlayState.OutOfGame)
             {
-                //MAYBE: Remove states from this OR as necessary
-                if (/*gamePlayState == GamePlayState.Initializing ||*/ gamePlayState == GamePlayState.Countdown
-                || gamePlayState == GamePlayState.InGame /*|| gamePlayState == GamePlayState.Paused */
-                || gamePlayState == GamePlayState.GameOver || gamePlayState == GamePlayState.ResettingLevel /* || GamePlayState.Cleanup */)
-            {
-                if (keyboard.IsKeyPressed(Keys.S))  //toggle showRegions
+                if (!waitingOnRender)
                 {
-                    if (showRegions)
+                    //MAYBE: Remove states from this OR as necessary
+                    if (/*gamePlayState == GamePlayState.Initializing ||*/ gamePlayState == GamePlayState.Countdown
+                    || gamePlayState == GamePlayState.InGame /*|| gamePlayState == GamePlayState.Paused */
+                    || gamePlayState == GamePlayState.GameOver /*|| gamePlayState == GamePlayState.ResettingLevel*/ /*|| GamePlayState.Cleanup*/)
                     {
-                        showRegions = false;
-                        showCountdownRegion = false;
-                        showPauseMenuRegion = false;
-                        showRowRegions = false;
-                    }
-                    else
-                        showRegions = true;
-                }
-
-                if (keyboard.IsKeyPressed(Keys.A))  //toggle showCountdownRegion
-                {
-                    if (showRegions)
-                    {
-                        if (showCountdownRegion)
+                        if (keyboard.IsKeyPressed(Keys.S))  //toggle showRegions
                         {
-                            showCountdownRegion = false;
-                        }
-                        else
-                        {
-                            showPauseMenuRegion = false;
-                            showCountdownRegion = true;
-                        }
-                    }
-                }
-
-                if (keyboard.IsKeyPressed(Keys.D))  //toggle showPauseMenuRegion
-                {
-                    if (showRegions)
-                    {
-                        if (showPauseMenuRegion)
-                        {
-                            showPauseMenuRegion = false;
-                        }
-                        else
-                        {
-                            showCountdownRegion = false;
-                            showPauseMenuRegion = true;
-                        }
-                    }
-                }
-
-                if (keyboard.IsKeyPressed(Keys.R))
-                {
-                    if (showRegions)
-                    {
-                        if (showRowRegions)
-                            showRowRegions = false;
-                        else
-                        {
-                            showRowRegions = true;
-                        }
-                    }
-                }
-            }   
-           
-
-                if(gamePlayState == GamePlayState.Paused)
-                {
-                    //TODO: Enter/arrow keys during the pause menu
-                }
-
-                //TODO: Change this to have Esc bring up a pause menu
-                // That is...a menu with 'quit' and 'resume' options
-                if (gamePlayState == GamePlayState.InGame || gamePlayState == GamePlayState.Countdown || gamePlayState == GamePlayState.ResettingLevel)
-                {
-                    if (keyboard.IsKeyPressed(Keys.Escape))
-                    {
-                        //For the moment, this just cleans up the game and exits to the menu
-                        gamePlayState = GamePlayState.Cleanup;
-                        //ReinitializeGame(graphicsDevice, graphics);
-                        return GameStateEnum.MainMenu;
-                    }
-                }
-
-                //In GameOver, we'll just have the user press Escape to return to the menu
-                //TODO: Change this to react to "Quit" selected and Enter pressed
-                if (gamePlayState == GamePlayState.GameOver)
-                {
-                    if (keyboard.IsKeyPressed(Keys.Escape))
-                    {
-                        //For the moment, this just cleans up the game and exits to the menu
-                        gamePlayState = GamePlayState.Cleanup;
-                        //ReinitializeGame(graphicsDevice, graphics);
-                        return GameStateEnum.MainMenu;
-                    }
-                }
-
-                //in-game keys
-                if (gamePlayState == GamePlayState.InGame)
-                {
-                    if (keyboard.IsKeyHeld(Keys.Left))
-                    {
-                        paddle.Move(Direction.Left, gameTime, this);
-                    }
-                    if (keyboard.IsKeyHeld(Keys.Right))
-                    {
-                        paddle.Move(Direction.Right, gameTime, this);
-                    }
-                    if (keyboard.IsKeyPressed(Keys.Space))
-                    {
-                        //Find balls that're at rest and give them an initial velocity
-                        for (int i = 0; i < balls.Count; i++)
-                        {
-                            if (balls[i].IsAtRest())
+                            if (showRegions)
                             {
-                                balls[i].GiveVelocity();
+                                showRegions = false;
+                                showCountdownRegion = false;
+                                showPauseMenuRegion = false;
+                                showRowRegions = false;
+                            }
+                            else
+                                showRegions = true;
+                        }
+
+                        if (keyboard.IsKeyPressed(Keys.A))  //toggle showCountdownRegion
+                        {
+                            if (showRegions)
+                            {
+                                if (showCountdownRegion)
+                                {
+                                    showCountdownRegion = false;
+                                }
+                                else
+                                {
+                                    showPauseMenuRegion = false;
+                                    showCountdownRegion = true;
+                                }
+                            }
+                        }
+
+                        if (keyboard.IsKeyPressed(Keys.D))  //toggle showPauseMenuRegion
+                        {
+                            if (showRegions)
+                            {
+                                if (showPauseMenuRegion)
+                                {
+                                    showPauseMenuRegion = false;
+                                }
+                                else
+                                {
+                                    showCountdownRegion = false;
+                                    showPauseMenuRegion = true;
+                                }
+                            }
+                        }
+
+                        if (keyboard.IsKeyPressed(Keys.R))
+                        {
+                            if (showRegions)
+                            {
+                                if (showRowRegions)
+                                    showRowRegions = false;
+                                else
+                                {
+                                    showRowRegions = true;
+                                }
                             }
                         }
                     }
-                }
 
-            }//END if(!waitingOnRender)
+
+                    if (gamePlayState == GamePlayState.Paused)
+                    {
+                        //TODO: Enter/arrow keys during the pause menu
+                    }
+
+                    //TODO: Change this to have Esc bring up a pause menu
+                    // That is...a menu with 'quit' and 'resume' options
+                    if (gamePlayState == GamePlayState.InGame || gamePlayState == GamePlayState.Countdown /*|| gamePlayState == GamePlayState.ResettingLevel*/)
+                    {
+                        if (keyboard.IsKeyPressed(Keys.Escape))
+                        {
+                            //For the moment, this just cleans up the game (note: not really; it just sets the gamePlayState to cleanup) then exits to the menu
+                            Debug.Print($"Setting gamePlayState to: Cleanup; current value is: {gamePlayState}");
+                            gamePlayState = GamePlayState.Cleanup;
+                            //ReinitializeGame(graphicsDevice, graphics);
+                            return GameStateEnum.MainMenu;
+                        }
+                    }
+
+                    //In GameOver, we'll just have the user press Escape to return to the menu
+                    //TODO: Change this to react to "Quit" selected and Enter pressed
+                    if (gamePlayState == GamePlayState.GameOver)
+                    {
+                        if (keyboard.IsKeyPressed(Keys.Escape))
+                        {
+                            //For the moment, this just cleans up the game (again, not really) and exits to the menu
+                            Debug.Print($"Setting gamePlayState to: Cleanup; current value is: {gamePlayState}");
+                            gamePlayState = GamePlayState.Cleanup;
+                            //ReinitializeGame(graphicsDevice, graphics);
+                            return GameStateEnum.MainMenu;
+                        }
+                    }
+
+                    //in-game keys
+                    if (gamePlayState == GamePlayState.InGame)
+                    {
+                        if (keyboard.IsKeyHeld(Keys.Left))
+                        {
+                            paddle.Move(Direction.Left, gameTime, this);
+                        }
+                        if (keyboard.IsKeyHeld(Keys.Right))
+                        {
+                            paddle.Move(Direction.Right, gameTime, this);
+                        }
+                        if (keyboard.IsKeyPressed(Keys.Space))
+                        {
+                            //Find balls that're at rest and give them an initial velocity
+                            for (int i = 0; i < balls.Count; i++)
+                            {
+                                if (balls[i].IsAtRest())
+                                {
+                                    balls[i].GiveVelocity();
+                                }
+                            }
+                        }
+                    }
+
+                }//END if(!waitingOnRender)
+
+            }//END if(gamePlayState != GamePlayState.OutOfGame)
 
             return GameStateEnum.GamePlay;
         }
@@ -467,63 +484,89 @@ namespace Breakout.Game_states
                 || gamePlayState == GamePlayState.ResettingLevel || gamePlayState == GamePlayState.GameOver
                 || gamePlayState != GamePlayState.Cleanup)*/
 
-            GameElement el;
-
-            if(gamePlayState == GamePlayState.Initializing)
+            if (gamePlayState != GamePlayState.OutOfGame)
             {
-                //DrawGame();  //<--let's NOT draw the game state while initializing
-                // What say you!
-                if (isContentLoaded)
+                //GameElement el;
+
+
+                if (gamePlayState == GamePlayState.Initializing)
                 {
-                    gamePlayState = GamePlayState.Countdown;
+                    //DrawGame();  //<--let's NOT draw the game state while initializing
+                    // What say you!
+                    if (isContentLoaded)
+                    {
+                        Debug.Print($"Setting gamePlayState to: Countdown; current value is: {gamePlayState}");
+                        gamePlayState = GamePlayState.Countdown;
+                    }
+                }
+                else if (gamePlayState == GamePlayState.Countdown)
+                {
+                    //FOR NOW: we'll skip the countdown state and go directly to inGame
+                    Debug.Print($"Setting gamePlayState to: InGame; current value is: {gamePlayState}");
+                    gamePlayState = GamePlayState.InGame;
+
+                }
+                else if (gamePlayState == GamePlayState.InGame)
+                {
+                    DrawGame(gameTime);
+                    //do in-game controls; anything else?
+                }
+                else if (gamePlayState == GamePlayState.Paused)
+                {
+                    //TODO: Add an assigmment of gamePlayState to Paused somewhere
+
+                    DrawGame(gameTime);
+                    //don't update the game (which I think means not responding to controls, but we'll see)
+                    //TODO: update timers (so that the ending timer gets pushed forward by a cycle)
+
+                }
+                else if (gamePlayState == GamePlayState.ResettingLevel)
+                {
+                    // Draw the game + update it but don't respond to controls
+                    DrawGame(gameTime);
+
+                    //Call ResetLevel() or some such
+                    ResetLevel(gameTime);
+                }
+                else if (gamePlayState == GamePlayState.GameOver)
+                {
+                    DrawGame(gameTime);
+                    //disable controls, but keep the game updating
+                    //EXCEPT respond to Escape
+                    //and draw "Game Over" on-screen
+                    DrawGameOver(gameTime);
+                }
+                else if (gamePlayState == GamePlayState.Cleanup)
+                {
+                    //DrawGame();  //<--Let's try NOT drawing the game during cleanup
+
+                    ReinitializeGame(graphicsDevice, graphics); //REMINDER: ReinitializeGame() sets gamePlayState to initialize
+
+                    //gamePlayState = GamePlayState.OutOfGame;    //What will this do, I wonder? TBD!
+                    //FOLLOW-UP: As we kinda suspected, this line would prevent re-entering the game from the main menu
+                }
+                else
+                {
+                    throw new System.Exception("GamePlayView.update says: Invalid gamePlayState");
                 }
             }
-            else if (gamePlayState == GamePlayState.Countdown)
-            {
-                //FOR NOW: we'll skip the countdown state and go directly to inGame
-                gamePlayState = GamePlayState.InGame;
 
-            }
-            else if (gamePlayState == GamePlayState.InGame)
-            {
-                DrawGame(gameTime);
-                //do in-game controls; anything else?
-            }
-            else if (gamePlayState == GamePlayState.Paused)
-            {
-                DrawGame(gameTime);  
-                //don't update the game (which I think means not responding to controls, but we'll see)
-                //TODO: update timers (so that the ending timer gets pushed forward by a cycle)
-
-            }
-            else if(gamePlayState == GamePlayState.ResettingLevel)
-            {
-                // Draw the game + update it but don't respond to controls
-                DrawGame(gameTime);
-
-                //Call ResetLevel() or some such
-                ResetLevel(gameTime);
-            }
-            else if(gamePlayState == GamePlayState.GameOver)
-            {
-                DrawGame(gameTime);
-                //disable controls, but keep the game updating
-                //EXCEPT respond to Escape
-                //and draw "Game Over" on-screen
-                DrawGameOver(gameTime);
-            }
-            else if (gamePlayState == GamePlayState.Cleanup)
-            {
-                //DrawGame();  //<--Let's try NOT drawing the game during cleanup
-
-                ReinitializeGame(graphicsDevice, graphics); //REMINDER: ReinitializeGame() sets gamePlayState to initialize
-            }
-            else
-            {
-                throw new System.Exception("GamePlayView.update says: Invalid gamePlayState");
-            }
+            waitingOnRender = true;
 
         }//END update()
+
+        //DONE, I THINK
+        private void ReinitializeBall()
+        {
+            //Reinitialize the list of balls
+            balls = new();
+
+            //And add ball #1
+            Ball ball = new(new Rectangle(paddle.position.X + paddle.position.Width / 2 - spacing.ballWidth / 2, paddle.position.Y - spacing.ballHeight, spacing.ballWidth, spacing.ballHeight));
+            balls.Add(ball);
+
+            waitingToReinitializeBalls = false;
+        }
 
         private void DrawGame(GameTime gameTime)
         {
@@ -685,23 +728,23 @@ namespace Breakout.Game_states
 
         }//END DrawGame()
 
-        //TODO!  (GamePlayView.ResetLevel())
+        //DONE, I THINK  (GamePlayView.ResetLevel())
         private void ResetLevel(GameTime gameTime)
         {
-            //TODO: decrement remainingLives?  TBD if that goes in here
+            //Debug.Print("Inside GamePlayView.ResetLevel()");
 
-            //TODO: reset the ball's position & velocity
+            //reset the ball's (and paddle's) position & velocity
+            ReinitializeBall();
 
             //and then...
+            //Debug.Print($"Setting gamePlayState to: InGame; current value is: {gamePlayState}");
             gamePlayState = GamePlayState.InGame;
         }
 
-        //DONE, I THINK: reinitializing the GamePlayView
+        //DONE, I THINK: reinitializing the GamePlayView (by creating new objects for everything in-game)
         public void ReinitializeGame(GraphicsDevice graphicsDevice, GraphicsDeviceManager graphics)
         {
             //Debug.Print("Now in GamePlayView.ReinitializeGame()");
-
-            gamePlayState = GamePlayState.Initializing;
             initialize(graphicsDevice, graphics, subsystems);
             loadContent(contentManager);
         }
@@ -710,6 +753,30 @@ namespace Breakout.Game_states
         private void DrawGameOver(GameTime gameTime)
         {
             //do we need a new font for this?  TBD
+            string str = "Game Over";
+            string str2 = "Press Escape to return to the main menu";
+
+            //Debug.Print("GamePlayView.DrawGameOver() says: TODO!");
+            (float bottom, Vector2 vec) = stringRenderer.RenderStringHVCentered(str, gameOverFont, interiorToWalls.position);
+            vec.Y -= 150;   //<--manually adding an offset, for the sake of appearance
+            GameElement el = new(RenderType.Text, gameOverFont, str, vec, Color.Red);
+
+            vec = new(stringRenderer.RenderStringHCentered(str2, gameOverEscapePromptFont, interiorToWalls.position), bottom + spacing.gameOverIntraLineSpacing);
+            vec.Y -= 40;  //<--manually adding an offset here too
+            GameElement el2 = new(RenderType.Text, gameOverEscapePromptFont, str2, vec, Color.Red);
+
+            int x, y, h, w;
+            x = windowInterior.position.X + spacing.gameOverSideSpacing;
+            y = windowInterior.position.Y + spacing.gameOverTopSpacing;
+            w = windowInterior.position.X + windowInterior.position.Width - 2 * spacing.gameOverSideSpacing;
+            h = windowInterior.position.Y + windowInterior.position.Height - spacing.gameOverTopSpacing -  spacing.gameOverBottomSpacing;
+            Rectangle r = new(x, y, w, h);
+            GameElement el3 = new(RenderType.UI, CallType.Rectangle, black1x1, r, Color.White);
+ 
+            renderer.AddToRenderList(el3);
+            renderer.AddToRenderList(el);
+            renderer.AddToRenderList(el2);
+
         }
 
     }//END class GamePlayView

@@ -66,5 +66,15 @@ namespace Breakout.Subsystems
         {
             throw new Exception("BO_Keyboard does not implement ClearRenderList(). Renderer, perhaps?");
         }
+
+        public (float, Vector2) RenderStringHVCentered(string str, SpriteFont font, Rectangle renderSurface)
+        {
+            throw new Exception("BO_Keyboard does not implement RenderStringHVCentered(). stringRenderer, perhaps?");
+        }
+
+        public float RenderStringHCentered(string str, SpriteFont font, Rectangle renderSurface)
+        {
+            throw new NotImplementedException();
+        }
     }//END class BO_Keyboard
 }

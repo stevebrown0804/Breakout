@@ -1,5 +1,7 @@
 ﻿using Breakout.Game_elements;
 using Breakout.Subsystems.Base;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
@@ -55,6 +57,16 @@ namespace Breakout.Subsystems
         public bool IsKeyHeld(Keys key)
         {
             throw new Exception("Renderer subsystem does not implement IsKeyHeld().  BO_Keyboard, perhaps?");
+        }
+
+        public (float, Vector2) RenderStringHVCentered(string str, SpriteFont font, Rectangle renderSurface)
+        {
+            throw new Exception("Renderer subsystem does not implement RenderStringHVCentered().  stringRenderer, perhaps?");
+        }
+
+        public float RenderStringHCentered(string str, SpriteFont font, Rectangle renderSurface)
+        {
+            throw new NotImplementedException();
         }
     }//END class Renderer
 }

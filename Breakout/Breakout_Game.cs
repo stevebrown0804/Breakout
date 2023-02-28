@@ -25,11 +25,11 @@ namespace Breakout
     {
         private GraphicsDeviceManager graphics;
         private IGameState currentState;
-        private GameStateEnum gameStateEnum = GameStateEnum.MainMenu;  //we'll start with the main menu
+        private GameStateEnum gameStateEnum = GameStateEnum.MainMenu;  //<--the starting point
         private Dictionary<GameStateEnum, IGameState> states;
 
         //Subsystems
-        Dictionary<string, ISubsystem> subsystems;
+        Dictionary<string, ISubsystem> subsystems;  //Note for next time:  Don't use interfaces when the objects are this different.  Inherit a base class, maybe? TBD
         ISubsystem keyboard;
         ISubsystem renderer;
 

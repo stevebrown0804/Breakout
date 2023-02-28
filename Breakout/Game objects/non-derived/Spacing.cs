@@ -44,6 +44,10 @@ namespace Breakout.Game_objects.non_derived
         public int pauseMenuInternalBottomSpacing;
         public int pauseMenuInternalSideSpacing;
         public int pauseMenuIntraLineSpacing;
+        public int gameOverIntraLineSpacing;
+        public int gameOverSideSpacing;
+        public int gameOverTopSpacing;
+        public int gameOverBottomSpacing;
 
 
         internal Spacing(GraphicsDeviceManager graphics)
@@ -89,6 +93,11 @@ namespace Breakout.Game_objects.non_derived
             pauseMenuInternalBottomSpacing = 10;
             pauseMenuInternalSideSpacing = 10;
             pauseMenuIntraLineSpacing = 5;
+
+            gameOverIntraLineSpacing = 70;
+            gameOverSideSpacing = 120;
+            gameOverTopSpacing = 200;
+            gameOverBottomSpacing = 230;
     }
 
         internal void RecomputeValues(GraphicsDeviceManager graphics, GamePlayView gamePlayView)

@@ -27,6 +27,20 @@
 /processorParam:TextureFormat=Compressed
 /build:Fonts/about-screen.spritefont
 
+#begin Fonts/game-over-prompt.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:Fonts/game-over-prompt.spritefont
+
+#begin Fonts/game-over.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:Fonts/game-over.spritefont
+
 #begin Fonts/high-scores.spritefont
 /importer:FontDescriptionImporter
 /processor:FontDescriptionProcessor

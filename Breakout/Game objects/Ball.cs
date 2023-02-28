@@ -3,6 +3,7 @@ using Breakout.Game_objects.Window_areas;
 using Breakout.Game_states;
 using Breakout.Subsystems.@static;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -176,34 +177,42 @@ namespace Breakout.Game_elements
             position.Y = test_position.Y;
 
             //IN PROGRESS: Then we'll check and see if the ball is out of bounds; if so, remove a life and start over or do game over
-            if(position.Y > gpv.interiorToWalls.position.Y + gpv.interiorToWalls.position.Height)
+
+            //TODO: Check ALL the balls for being out of bounds
+            //If a ball is out of bounds but there's another, just deactivate the ball that's out of bounds
+            // ...whatever 'deactivate' means, in this context.  TBD
+
+            if (!gpv.waitingToReinitializeBalls)
             {
-                Debug.Print("Ball is out of bounds!");
-
-                //Set to a 'BAllOutOfBounds' state? TBD
-
-                if(gpv.remainingLives.remainingLives - 1 > 0)  //off by one?  TBD
+                if (position.Y > gpv.interiorToWalls.position.Y + gpv.interiorToWalls.position.Height)
                 {
-                    //Reset the ball (position, velocity...anything else?)
+                    //Debug.Print("Ball is out of bounds!");
+                
+                    if (gpv.gamePlayState != GamePlayState.ResettingLevel && gpv.gamePlayState != GamePlayState.GameOver)
+                    {
+                        if (gpv.remainingLives.remainingLives - 1 > 0)  //off by one?  TBD  //<--FOLLOW-UP: Nope!
+                        {
+                            //Debug.Print($"Decrementing remainingLives to: {gpv.remainingLives.remainingLives - 1}");
+                            gpv.remainingLives.remainingLives--;
 
-                    //Reset the paddle's position
+                            /*Debug.Print($"Setting gamePlayState to: ResettingLevel; current value is: {gpv.gamePlayState}");*/
+                            gpv.gamePlayState = GamePlayState.ResettingLevel;
 
-                    //Do a new countdown?  TBD
+                            gpv.waitingToReinitializeBalls = true;
+                        }
+                        else
+                        {
+                            /*Debug.Print($"Setting gamePlayState to: GameOver; current value is: {gpv.gamePlayState}");*/
+                            gpv.gamePlayState = GamePlayState.GameOver;
+                        }
 
-                    //Let the player begin
+                    }//END if(gpv.gamePlayState != GamePlayState.ResettingLevel || gpv.gamePlayState != GamePlayState.GameOver)
 
-                }
-                else
-                {
-                    //do game over...whatever that means
-                    // how about: disable controls, show 'game over' text on-screen, wait for Escape
+                }//END if(position.Y > gpv.interiorToWalls.position.Y + gpv.interiorToWalls.position.Height)
 
-                }
+            }//END if (!gpv.waitingToReinitializeBalls)
 
-
-            }
-
-        }
+        }//END Move()
 
         internal void SpeedUp(int bricksDestroyed)
         {
