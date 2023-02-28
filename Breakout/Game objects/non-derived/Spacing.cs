@@ -69,9 +69,9 @@ namespace Breakout.Game_objects.non_derived
 
             remainingLivesLeftSpacing = 20;
             remainingLivesRightSpacing = 60;  //unused? TBD
-            remainingLivesTopSpacing = 10;
+            remainingLivesTopSpacing = 20;
             remainingLivesBottomSpacing = 20;  //? TBD
-            remainingLivesIntraSpriteSpacing = 20;  //initial guess
+            remainingLivesIntraSpriteSpacing = 24;  //initial guess
 
             scoreSectionLeftSpacing = 270;
             scoreSectionRightSpacing = 60;  //?

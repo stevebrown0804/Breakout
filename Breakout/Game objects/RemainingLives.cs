@@ -26,8 +26,8 @@ namespace Breakout.Game_objects
         //SpriteFont inGameScoreFont;  //borrowing this
 
         //other variables
-        string remainingLivesStr = "TODO: Remaining Lives";
-        public int remainingLives = 3;  // 2?  TBD  //<--nah, 3 works
+        //string remainingLivesStr = "TODO: Remaining Lives";
+        public int remainingLives = 3;
 
 
         internal RemainingLives(Rectangle position, SubsystemsHolder subsystems, GamePlayView gpv) : base(position)
@@ -53,11 +53,14 @@ namespace Breakout.Game_objects
             GameElement el;
 
             Vector2 vec = new(position.X + gpv.spacing.remainingLivesLeftSpacing, position.Y + gpv.spacing.remainingLivesTopSpacing);
-
-            //Vector2 spriteSize = gpv.inGameScoreFont.MeasureString(remainingLivesStr);
-            el = new(RenderType.Text, gpv.inGameScoreFont, remainingLivesStr, vec, Color.White);
-
-            renderer.AddToRenderList(el);
+            float initX = vec.X;
+            for (int i = 0; i < remainingLives - 1; i++)
+            {
+                vec.X = initX + i * (remainingLife100x20.Width + gpv.spacing.remainingLivesIntraSpriteSpacing);
+                el = new(RenderType.UI, CallType.Vector2, remainingLife100x20, vec, Color.White);
+                renderer.AddToRenderList(el);                
+            }
         }
-    }
+
+    }//END class RemainingLives
 }
