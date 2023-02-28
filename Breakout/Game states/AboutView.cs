@@ -11,20 +11,14 @@ namespace Breakout.Game_states
 {
     public class AboutView : GameStateView
     {
-        ISubsystem keyboard;
-        ISubsystem renderer;
-
         private SpriteFont m_font;
         private SpriteFont m_font_smaller;
         private const string MESSAGE = "Game by Steve Brown";
         private const string MESSAGE2 = "Press ESC to return to menu";
 
-        public override void initialize(GraphicsDevice graphicsDevice, GraphicsDeviceManager graphics, Dictionary<string, ISubsystem> subsystems)
+        public override void initialize(GraphicsDevice graphicsDevice, GraphicsDeviceManager graphics, SubsystemsHolder subsystems)
         {
             base.initialize(graphicsDevice, graphics, subsystems);
-
-            keyboard = subsystems["keyboard"];
-            renderer = subsystems["renderer"];
         }
 
         public override void loadContent(ContentManager contentManager)

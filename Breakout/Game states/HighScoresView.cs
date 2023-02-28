@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 /* "High Scores are persisted to the browser's local storage; keep and display up to the top 5 scores." */
 //A browser, you say?
@@ -16,10 +17,6 @@ namespace Breakout.Game_states
 {
     public class HighScoresView : GameStateView
     {
-        //Dictionary<string, ISubsystem> subsystems;
-        ISubsystem renderer;
-        ISubsystem keyboard;
-
         private SpriteFont highScoresFont;
         private SpriteFont highScoresHeaderFont;
         private const string MESSAGE = "TODO: High scores";
@@ -27,12 +24,9 @@ namespace Breakout.Game_states
 
         //TODO: Implement high scores
 
-        public override void initialize(GraphicsDevice graphicsDevice, GraphicsDeviceManager graphics, Dictionary<string, ISubsystem> subsystems)
+        public override void initialize(GraphicsDevice graphicsDevice, GraphicsDeviceManager graphics, SubsystemsHolder subsystems)
         {
             base.initialize(graphicsDevice, graphics, subsystems);
-
-            renderer = subsystems["renderer"];
-            keyboard = subsystems["keyboard"];
         }
 
         public override void loadContent(ContentManager contentManager)
@@ -73,18 +67,17 @@ namespace Breakout.Game_states
         
         public override void update(GameTime gameTime)
         {
-            //TODO: Change this to use StringRenderer
-            Vector2 stringSize = highScoresFont.MeasureString(MESSAGE);
-            GameElement el = new(RenderType.Text, highScoresFont, MESSAGE,
-                new Vector2(graphics.PreferredBackBufferWidth / 2 - stringSize.X / 2, graphics.PreferredBackBufferHeight / 2 - stringSize.Y),
-                Color.White);
+            Rectangle r = new(0, 0, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
+            (_, Vector2 vec) = stringRenderer.RenderStringHVCentered(MESSAGE, highScoresFont, r);
+            
+            GameElement el = new(RenderType.Text, highScoresFont, MESSAGE, vec, Color.White);
             renderer.AddToRenderList(el);
         }
 
         //TODO: Reset the high scores (in resetHighScores())
         private void resetHighScores()
         {
-            
+            Debug.Print("TODO: Reset the high scores");
         }
 
     }//END class HighScoresView

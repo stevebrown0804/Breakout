@@ -18,20 +18,8 @@ namespace Breakout.Game_objects
 {
     internal class Score : GameObject
     {
-        //Base class:
-        /*internal Rectangle position;
-        internal Rectangle boundingBox;*/
-
         internal Score(Rectangle position) : base(position)
         {
         }
-
-/*        internal Score(Rectangle position, Rectangle boundingBox) : base(position, boundingBox)
-        {
-        }
-
-        internal Score() : base()
-        {
-        }*/
     }
 }

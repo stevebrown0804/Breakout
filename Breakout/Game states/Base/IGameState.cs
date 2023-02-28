@@ -14,7 +14,7 @@ namespace Breakout.Game_states
 {
     public interface IGameState
     {
-        void initialize(GraphicsDevice graphicsDevice, GraphicsDeviceManager graphics, Dictionary<string, ISubsystem> subsystems);
+        void initialize(GraphicsDevice graphicsDevice, GraphicsDeviceManager graphics, SubsystemsHolder subsystems);
 
         void loadContent(ContentManager contentManager);
         

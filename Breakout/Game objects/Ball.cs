@@ -20,10 +20,6 @@ namespace Breakout.Game_elements
     {
         //DONE, I THINK: Ball class
 
-        //Base class:
-        /*internal Rectangle position;
-        internal Rectangle boundingBox;*/
-
         public Vector2 velocity; // = new();
          Dictionary<int, float> speedupFactor;
 
@@ -31,20 +27,6 @@ namespace Breakout.Game_elements
         {
             Initialize();
         }
-
-        /*internal Ball(Rectangle position, Rectangle boundingBox) : base(position, boundingBox)
-        {
-            Initialize();
-        }*/
-
-        /*internal Ball(Vector2 position) : base(position)      //let's just use a Rectangle  //<---actually...TBD
-        {
-            Initialize();
-        }*/
-
-        /*internal Ball() : base()
-        {
-        }*/
 
         private void Initialize()
         {

@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 
 
-namespace Breakout.Subsystems.@static
+namespace Breakout.@Subsystems.@static
 {
     //DONE, I THINK: CollisionDetection class
 

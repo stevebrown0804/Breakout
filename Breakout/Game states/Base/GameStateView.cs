@@ -16,18 +16,20 @@ namespace Breakout.Game_states
         protected GraphicsDeviceManager graphics;
         protected SpriteBatch spriteBatch;
 
-        protected Dictionary<string, ISubsystem> subsystems;
-        //ISubsystem keyboard;
-        ISubsystem renderer;
+        internal SubsystemsHolder subsystems;
+        internal BO_Keyboard keyboard;
+        internal Renderer renderer;
+        internal StringRenderer stringRenderer;
 
-        public virtual void initialize(GraphicsDevice graphicsDevice, GraphicsDeviceManager graphics, Dictionary<string, ISubsystem> subsystems)
+        public virtual void initialize(GraphicsDevice graphicsDevice, GraphicsDeviceManager graphics, SubsystemsHolder subsystems)
         {
             this.graphics = graphics;
             spriteBatch = new SpriteBatch(graphicsDevice);
             this.subsystems = subsystems;
 
-            //keyboard = subsystems["keyboard"];
-            renderer = subsystems["renderer"];
+            renderer = subsystems.renderer;
+            keyboard = subsystems.keyboard;
+            stringRenderer = subsystems.stringRenderer;
         }
 
         public abstract void loadContent(ContentManager contentManager);

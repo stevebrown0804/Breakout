@@ -14,15 +14,11 @@ namespace Breakout.Game_states
 {
     public class MainMenuView : GameStateView
     {
-        //subsystems
-        ISubsystem keyboard;
-        ISubsystem renderer;
-
         //Fonts
         private SpriteFont m_fontMenu;
         private SpriteFont m_fontMenuSelect;
 
-        //An enum!
+        //I have found an enum!
         private enum MenuState
         {
             NewGame,
@@ -32,14 +28,11 @@ namespace Breakout.Game_states
         }
         private MenuState m_currentSelection = MenuState.NewGame;
 
-        public override void initialize(GraphicsDevice graphicsDevice, GraphicsDeviceManager graphics, Dictionary<string, ISubsystem> subsystems)
+        public override void initialize(GraphicsDevice graphicsDevice, GraphicsDeviceManager graphics, SubsystemsHolder subsystems)
         {
             //Debug.Print("Now in MainMenuView.initialize()");
 
             base.initialize(graphicsDevice, graphics, subsystems);
-
-            keyboard = subsystems["keyboard"];
-            renderer = subsystems["renderer"];
         }
 
         public override void loadContent(ContentManager contentManager)
@@ -97,17 +90,19 @@ namespace Breakout.Game_states
         {
             Vector2 stringSize = font.MeasureString(text);
 
-            //TODO: Change this to use StringRenderer
-            GameElement el = new(RenderType.Text, font, text,
-                                 new Vector2(graphics.PreferredBackBufferWidth / 2 - stringSize.X / 2, y),
-                                 color);
+            Rectangle r = new(0, 0, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
+            float x = stringRenderer.RenderStringHCentered(text, font, r);
+            Vector2 vec = new(x, y);
+            GameElement el = new(RenderType.Text, font, text, vec, color);
 
             return (y + stringSize.Y, el);
         }
 
         public override void update(GameTime gameTime)
         {
-            (float bottom, GameElement el) = drawMenuItem(
+            GameElement el;
+
+            (float bottom, el) = drawMenuItem(
                 m_currentSelection == MenuState.NewGame ? m_fontMenuSelect : m_fontMenu,
                 "New Game",
                 200,

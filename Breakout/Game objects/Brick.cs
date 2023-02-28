@@ -15,10 +15,6 @@ namespace Breakout.Game_elements
     {
         //"Starting from the bottom, two rows of yellow, two rows of orange, two rows of blue, and two rows of green."
 
-        //Base class:
-        /*internal Rectangle position;
-        internal Rectangle boundingBox;*/
-
         public bool hasBeenHit = false;
         public bool isExploding = false;
         private bool timersSet = false;
@@ -30,7 +26,7 @@ namespace Breakout.Game_elements
         {
         }
 
-        public void Explode(GameTime gameTime, GamePlayView gpv, ISubsystem renderer)
+        public void Explode(GameTime gameTime, GamePlayView gpv, Renderer renderer)
         {
             if (isExploding)
             {

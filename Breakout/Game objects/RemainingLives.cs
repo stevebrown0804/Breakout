@@ -15,13 +15,5 @@ namespace Breakout.Game_objects
         internal RemainingLives(Rectangle position) : base(position)
         {
         }
-
-        /*internal RemainingLives(Rectangle position, Rectangle boundingBox) : base(position, boundingBox)
-        {
-        }
-
-        internal RemainingLives() : base()
-        {
-        }*/
     }
 }
