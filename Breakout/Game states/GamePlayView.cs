@@ -94,7 +94,7 @@ namespace Breakout.Game_states
         PauseMenu pauseMenu;
         internal RemainingLives remainingLives;
         RightHalfOfBottomArea rightHalfOfBottomArea;
-        Score score;
+        internal Score score;
         TopAreaOfInteriorToWalls topAreaOfInteriorToWalls;
         //TopAreaOfPlayingField topAreaOfPlayingField;        
         WindowInterior windowInterior;
@@ -443,6 +443,8 @@ namespace Breakout.Game_states
                             {
                                 if (balls[i].IsAtRest())
                                 {
+                                    Debug.Print($"Ball spawned; hitBricksAtSpawnTime set to: {brickGrid.numBricksHit}");
+                                    balls[i].SetHitBricksAtSpawnTime(brickGrid.numBricksHit);
                                     balls[i].GiveVelocity();
                                 }
                             }
@@ -507,8 +509,8 @@ namespace Breakout.Game_states
                     //TODO: Add an assigmment of gamePlayState to Paused somewhere
 
                     DrawGame(gameTime);
-                    //don't update the game (which I think means not responding to controls, but we'll see)
-                    //TODO: update timers (so that the ending timer gets pushed forward by a cycle)
+                    //TODO: extend timers (so that the ending timer gets pushed forward by a cycle)
+                    //      That means: exploding bricks, countdown....what else?
 
                 }
                 else if (gamePlayState == GamePlayState.ResettingLevel)
@@ -523,7 +525,8 @@ namespace Breakout.Game_states
                 }
                 else if (gamePlayState == GamePlayState.Cleanup)
                 {
-                    ReinitializeGame(graphicsDevice, graphics); //REMINDER: ReinitializeGame() sets gamePlayState to initialize (in Initalize())
+                    //REMINDER: ReinitializeGame() sets gamePlayState to initialize (in Initalize())
+                    ReinitializeGame(graphicsDevice, graphics); 
                 }
                 else
                 {
@@ -535,7 +538,7 @@ namespace Breakout.Game_states
 
         }//END update()
 
-        //DONE, I THINK
+        //DONE, I THINK (GamePlayView.ReinitializeBall())
         private void ReinitializeBall()
         {
             //Reinitialize the list of balls
@@ -728,12 +731,15 @@ namespace Breakout.Game_states
             gamePlayState = GamePlayState.InGame;
         }
 
-        //DONE, I THINK: reinitializing the GamePlayView (by creating new objects for everything in-game)
+        //DONE, I THINK: (GamePlayView.ReinitializeGame())
         public void ReinitializeGame(GraphicsDevice graphicsDevice, GraphicsDeviceManager graphics)
         {
             //Debug.Print("Now in GamePlayView.ReinitializeGame()");
             initialize(graphicsDevice, graphics, subsystems);
             loadContent(contentManager);
+
+            remainingLives.loadContent();
+            score.loadContent();
         }
 
         //DONE?: GamePlayView.DrawGameOver()

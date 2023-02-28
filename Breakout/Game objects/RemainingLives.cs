@@ -6,11 +6,6 @@ using Breakout.Subsystems.Base;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Breakout.Game_objects
 {
@@ -21,12 +16,10 @@ namespace Breakout.Game_objects
         Renderer renderer;
         ContentManager contentManager;
 
-        //sprites, fonts
+        //sprite(s)
         private Texture2D remainingLife100x20;  //remaining life icon
-        //SpriteFont inGameScoreFont;  //borrowing this
 
         //other variables
-        //string remainingLivesStr = "TODO: Remaining Lives";
         public int remainingLives = 3;
 
 
@@ -44,8 +37,6 @@ namespace Breakout.Game_objects
 
             //load the sprite
             remainingLife100x20 = contentManager.Load<Texture2D>("Sprites/remainingLife100x20");
-            //and the font
-            //inGameScoreFont = contentManager.Load<SpriteFont>("Fonts/ingame-score");
         }
 
         internal void DrawRemainingLives()

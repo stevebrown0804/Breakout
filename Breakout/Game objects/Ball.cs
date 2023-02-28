@@ -1,4 +1,5 @@
-﻿using Breakout.Game_objects.Base;
+﻿using Breakout.Game_objects;
+using Breakout.Game_objects.Base;
 using Breakout.Game_objects.Window_areas;
 using Breakout.Game_states;
 using Breakout.Subsystems.@static;
@@ -18,20 +19,19 @@ namespace Breakout.Game_elements
 {
     internal class Ball : GameObject
     {
-        //DONE?: Ball class
-
         public Vector2 velocity;
         Dictionary<int, float> speedupFactor;
         bool isActive = true;
+        int hitBricksAtSpawnTime;
 
         internal Ball(Rectangle position) : base(position)
         {
             //MAYBE: Keep messing these values (in Ball.Initialize()) later, as needed
             speedupFactor = new Dictionary<int, float> {
-                {4, 1.2f },
-                {12, 1.3f },
-                {36, 1.4f },
-                {62, 1.5f }
+                {4, 1.15f },
+                {12, 1.25f },
+                {36, 1.35f },
+                {62, 1.45f }
             };
 
             velocity = new Vector2(0, 0);  //Initially at rest -> moving with the paddle
@@ -47,6 +47,12 @@ namespace Breakout.Game_elements
         internal bool IsAtRest()
         {
             return velocity.X == 0 && velocity.Y == 0;  
+        }
+
+        internal void SetHitBricksAtSpawnTime(int hitBricks)
+        {
+            //Debug.Print($"hitBricksAtSpawnTime set to: {hitBricks}");
+            hitBricksAtSpawnTime = hitBricks;
         }
 
         //DONE, I THINK: Ball.Move()
@@ -94,7 +100,7 @@ namespace Breakout.Game_elements
             }
 
             //...and the bricks
-            if(CollisionDetection.DoTheyIntersect(gpv.brickGrid.position, test_position))
+            if (CollisionDetection.DoTheyIntersect(gpv.brickGrid.position, test_position))
             {
                 //do CD with each 'row region'
                 var rr = gpv.rowRegions;
@@ -112,7 +118,7 @@ namespace Breakout.Game_elements
                             if (!bg[i][j].hasBeenHit)
                             {
                                 if (CollisionDetection.DoTheyIntersect(bg[i][j].position, test_position))
-                                {
+                                {                                    
                                     //We seem to have a found a brick that's being collided with!
                                     // From the sides
                                     if (CollisionDetection.FromTheRight(position, deltaX, bg[i][j].position) ||
@@ -134,14 +140,44 @@ namespace Breakout.Game_elements
                                     bg[i][j].hasBeenHit = true;
                                     bg[i][j].isExploding = true;
                                     gpv.brickGrid.numBricksHit++;   //keep a tally of the number of bricks that have been hit
-                                    if(speedupFactor.ContainsKey(gpv.brickGrid.numBricksHit))
+                                    if(speedupFactor.ContainsKey(gpv.brickGrid.numBricksHit - hitBricksAtSpawnTime))
                                     {
-                                        SpeedUp(gpv.brickGrid.numBricksHit);
+                                        SpeedUp(gpv.brickGrid.numBricksHit - hitBricksAtSpawnTime);
                                     }
-                                    
+
+                                    /* "Scoring
+                                        1 point for each yellow brick
+                                        2 points for each orange brick
+                                        3 points for each blue brick
+                                        5 points for each green brick
+                                        25 points when a line is cleared
+                                        Every 100 points the player earns a second ball that automatically starts from the middle of the paddle (no space bar to release it).  This new ball starts at the initial slow speed and increases in speed according to the above pattern.  In other words, each ball has its own speed and own state for speed increases." */
+
+                                    //update the score
+                                    if (i == 0 || i == 1)
+                                        gpv.score.IncreaseScore(5);
+                                    else if (i == 2 || i == 3)
+                                        gpv.score.IncreaseScore(3);
+                                    else if (i == 4 || i == 5)
+                                        gpv.score.IncreaseScore(2);
+                                    else if (i == 6 || i == 7)
+                                        gpv.score.IncreaseScore(1);
+
+                                    //Check to see if this finishes off a row (and award 20pts if it does)
+                                    bool anyUnhitBricks = false;
+                                    for (int k = 0; k < bg[i].Count; k++)
+                                    {
+                                        if (bg[i][k].hasBeenHit == false)
+                                            anyUnhitBricks = true;
+                                    }
+                                    if (!anyUnhitBricks)
+                                    {
+                                        //Debug.Print($"Row {i} clear; increasing score by 25");
+                                        gpv.score.IncreaseScore(25);
+                                    }
 
                                 }//END if (CollisionDetection.DoTheyIntersect(bg[i][j].position, test_position))
-                            
+
                             }//END if (!bg[i][j].hasBeenHit) / else
 
                         }//END for (int j = 0; j < bg[i].Count; j++) 
