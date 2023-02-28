@@ -26,7 +26,7 @@ using System.Diagnostics;
 
 //TODO: Make/find a sprite for the '# paddles remaining' and render it
 
-//TODO: Detect when the ball goes off the screen at the bottom and subtract a life (and start over or do game over)
+//IN PROGRESS: Detect when the ball goes off the screen at the bottom and subtract a life (and start over or do game over)
 
 //TODO: Find some BGM and integrate it
 
@@ -728,7 +728,7 @@ namespace Breakout.Game_states
             loadContent(contentManager);
         }
 
-        //TODO: GamePlayView.DrawGameOver()
+        //DONE?: GamePlayView.DrawGameOver()
         private void DrawGameOver(GameTime gameTime)
         {
             //do we need a new font for this?  TBD

@@ -1,9 +1,11 @@
 ﻿using Breakout.Game_objects.Base;
+using Breakout.Game_objects.non_derived;
 using Breakout.Game_states;
 using Breakout.Subsystems;
 using Breakout.Subsystems.Base;
 using Microsoft.Xna.Framework;
 using System;
+using System.Reflection.Metadata;
 
 /* "Every time a brick is hit, a tasteful explosion of particles occurs.  The explosion happens by having particles take up the same space (surface area) as the brick and then explode out based upon their position relative to the center.  Alternatively, the explosion could be the particles falling down, with a stickiness based upon their relative position on the brick (higher in the brick, the stickier).
 "*/
@@ -50,7 +52,6 @@ namespace Breakout.Game_elements
                     isExploding = false;
                     //Debug.Print("Brick.Explode says: isExploding has been set to false (after 3sec elapsed)");
                 }
-
                 elapsedTime += gameTime.ElapsedGameTime;
 
             }//END if (isExploding)

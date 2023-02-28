@@ -18,17 +18,13 @@ namespace Breakout.Game_elements
 {
     internal class Ball : GameObject
     {
-        //DONE, I THINK: Ball class
+        //DONE?: Ball class
 
-        public Vector2 velocity; // = new();
-         Dictionary<int, float> speedupFactor;
+        public Vector2 velocity;
+        Dictionary<int, float> speedupFactor;
+        bool isActive = true;
 
         internal Ball(Rectangle position) : base(position)
-        {
-            Initialize();
-        }
-
-        private void Initialize()
         {
             //MAYBE: Keep messing these values (in Ball.Initialize()) later, as needed
             speedupFactor = new Dictionary<int, float> {
@@ -39,11 +35,11 @@ namespace Breakout.Game_elements
             };
 
             velocity = new Vector2(0, 0);  //Initially at rest -> moving with the paddle
-         }
+        }
 
+        //MAYBE: keep messing around with these values (in Ball.GiveVelocity()), as needed
         public void GiveVelocity()
-        {
-            //MAYBE: keep messing around with these values (in Ball.GiveVelocity()), as needed
+        {            
             velocity.X = 0.3f; //45 degrees to the right, I think. <--positive is right, negative is left
             velocity.Y = -0.3f; 
         }
@@ -53,10 +49,12 @@ namespace Breakout.Game_elements
             return velocity.X == 0 && velocity.Y == 0;  
         }
 
-        //
         //DONE, I THINK: Ball.Move()
         internal void Move(GameTime gameTime, GamePlayView gpv)
         {
+            if (!isActive)  //we'll bail out quickly if the ball is inactive
+                return;
+
             TimeSpan time = gameTime.ElapsedGameTime;
             float deltaX = velocity.X * (float)time.TotalMilliseconds;
             float deltaY = velocity.Y * (float)time.TotalMilliseconds;
@@ -109,7 +107,7 @@ namespace Breakout.Game_elements
                         //Having found a 'row region' that we collided with...
                         // Do CD with the individual bricks of the row (from aforementioned row region)
                         var bg = gpv.brickGrid.brickGrid;                        
-                        for (int j = 0; j < bg[i].Count; j++)  //rowRegion and brickGrid.brickGrid appear to use the same row indices!  (...I hope)
+                        for (int j = 0; j < bg[i].Count; j++)
                         {
                             if (!bg[i][j].hasBeenHit)
                             {
@@ -158,34 +156,41 @@ namespace Breakout.Game_elements
             position.X = test_position.X;
             position.Y = test_position.Y;
 
-            //IN PROGRESS: Then we'll check and see if the ball is out of bounds; if so, remove a life and start over or do game over
-
-            //TODO: Check ALL the balls for being out of bounds
-            //If a ball is out of bounds but there's another, just deactivate the ball that's out of bounds
-            // ...whatever 'deactivate' means, in this context.  TBD
-
+            //Then we'll check and see if the ball is out of bounds; if so, remove a life and start over or do game over
             if (!gpv.waitingToReinitializeBalls)
             {
                 if (position.Y > gpv.interiorToWalls.position.Y + gpv.interiorToWalls.position.Height)
                 {
                     //Debug.Print("Ball is out of bounds!");
-                
+                    isActive = false;
+
+                    bool isAnotherActiveBall = false;
+                    //Check ALL the balls for being out of bounds
+                    //If a ball is out of bounds but there's another, just set the ball that's out of bounds' isActive to false and continue playing
+                    foreach (Ball ball in gpv.balls)
+                    {
+                        if (ball.isActive)
+                            isAnotherActiveBall = true;
+                    }
+
                     if (gpv.gamePlayState != GamePlayState.ResettingLevel && gpv.gamePlayState != GamePlayState.GameOver)
                     {
-                        if (gpv.remainingLives.remainingLives - 1 > 0)  //off by one?  TBD  //<--FOLLOW-UP: Nope!
+                        if (!isAnotherActiveBall)
                         {
-                            //Debug.Print($"Decrementing remainingLives to: {gpv.remainingLives.remainingLives - 1}");
-                            gpv.remainingLives.remainingLives--;
+                           if (gpv.remainingLives.remainingLives - 1 > 0)
+                            {
+                                //Debug.Print($"Decrementing remainingLives to: {gpv.remainingLives.remainingLives - 1}");
+                                gpv.remainingLives.remainingLives--;
 
-                            /*Debug.Print($"Setting gamePlayState to: ResettingLevel; current value is: {gpv.gamePlayState}");*/
-                            gpv.gamePlayState = GamePlayState.ResettingLevel;
-
-                            gpv.waitingToReinitializeBalls = true;
-                        }
-                        else
-                        {
-                            /*Debug.Print($"Setting gamePlayState to: GameOver; current value is: {gpv.gamePlayState}");*/
-                            gpv.gamePlayState = GamePlayState.GameOver;
+                                /*Debug.Print($"Setting gamePlayState to: ResettingLevel; current value is: {gpv.gamePlayState}");*/
+                                gpv.gamePlayState = GamePlayState.ResettingLevel;
+                                gpv.waitingToReinitializeBalls = true;
+                            }
+                            else  //No lives left -> game over
+                            {
+                                /*Debug.Print($"Setting gamePlayState to: GameOver; current value is: {gpv.gamePlayState}");*/
+                                gpv.gamePlayState = GamePlayState.GameOver;
+                            }
                         }
 
                     }//END if(gpv.gamePlayState != GamePlayState.ResettingLevel || gpv.gamePlayState != GamePlayState.GameOver)
