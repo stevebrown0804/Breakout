@@ -3,8 +3,6 @@
 
 namespace Breakout.@Subsystems.@static
 {
-    //DONE, I THINK: CollisionDetection class
-
     //The "FromThe..." algorithms came from here (after I'd tried unsuccessfully to implement them myself):
     //https://gamedev.stackexchange.com/questions/13774/how-do-i-detect-the-direction-of-2d-rectangular-object-collisions?noredirect=1&lq=1
 

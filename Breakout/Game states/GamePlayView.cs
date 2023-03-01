@@ -23,15 +23,12 @@ using System.Diagnostics;
 
 /* "Background music during the gameplay." */
 
-//TODO: Make/find a sprite for the '# paddles remaining' and render it
-
-//IN PROGRESS: Detect when the ball goes off the screen at the bottom and subtract a life (and start over or do game over)
 
 //TODO: Find some BGM and integrate it
 
 namespace Breakout.Game_states
 {
-    enum GamePlayState  //public/internal? TBD      //Also, I think this can go inside the class.  TBD
+    enum GamePlayState
     {
         //unset = 0,
         OutOfGame,
@@ -122,7 +119,6 @@ namespace Breakout.Game_states
             //nothing to see here, atm
         }
 
-        //DONE, I THINK - GamePlayView.initialize()
         public override void initialize(GraphicsDevice graphicsDevice, GraphicsDeviceManager graphics, SubsystemsHolder subsystems)
         {
             //Debug.Print("Now in GamePlayView.initialize");
@@ -279,7 +275,6 @@ namespace Breakout.Game_states
 
         }
 
-        //DONE, FOR THE MOST PART: Implement GamePlayView.loadContent()
         public override void loadContent(ContentManager contentManager)  
         {
             //Debug.Print("Now in GamePlayView.loadContent");
@@ -459,7 +454,7 @@ namespace Breakout.Game_states
         }
 
         //NOTE: GamePlayView.render() contains a line that skips base.render() on certain states
-        //TODO: Check any new GamePlayStates to see if it should be added to the conditional
+        //ONGOING: Check any new GamePlayStates to see if it should be added to the conditional
         public override void render(GameTime gameTime)
         {
             //Debug.Print("Now in GamePlayView.render()");
@@ -470,7 +465,6 @@ namespace Breakout.Game_states
             waitingOnRender = false;
         }
 
-        //IN PROGRESS: GamePlayview.update() (adding ResettingLevel game state)
         public override void update(GameTime gameTime)
         {
             //Debug.Print("Now in GamePlayView.update()");
@@ -538,7 +532,6 @@ namespace Breakout.Game_states
 
         }//END update()
 
-        //DONE, I THINK (GamePlayView.ReinitializeBall())
         private void ReinitializeBall()
         {
             //Reinitialize the list of balls
@@ -551,7 +544,6 @@ namespace Breakout.Game_states
             waitingToReinitializeBalls = false;
         }
 
-        //MOSTLY DONE (GamePlayView.DrawGame())
         private void DrawGame(GameTime gameTime)
         {
             GameElement el;
@@ -718,7 +710,6 @@ namespace Breakout.Game_states
 
         }//END DrawGame()
 
-        //DONE, I THINK  (GamePlayView.ResetLevel())
         private void ResetLevel(GameTime gameTime)
         {
             //Debug.Print("Inside GamePlayView.ResetLevel()");
@@ -731,7 +722,6 @@ namespace Breakout.Game_states
             gamePlayState = GamePlayState.InGame;
         }
 
-        //DONE, I THINK: (GamePlayView.ReinitializeGame())
         public void ReinitializeGame(GraphicsDevice graphicsDevice, GraphicsDeviceManager graphics)
         {
             //Debug.Print("Now in GamePlayView.ReinitializeGame()");
@@ -742,7 +732,6 @@ namespace Breakout.Game_states
             score.loadContent();
         }
 
-        //DONE?: GamePlayView.DrawGameOver()
         private void DrawGameOver(GameTime gameTime)
         {
             //do we need a new font for this?  TBD

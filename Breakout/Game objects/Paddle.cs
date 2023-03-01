@@ -68,7 +68,7 @@ namespace Breakout.Game_elements
 
         private static float GetPaddleSpeed()
         {
-            //PROBABLY LATER: apply the balls' multiplier to the paddle (or some kind of speedup)
+            //MAYBE: apply the balls' multiplier to the paddle (or some kind of speedup)
 
             //EVENTUALLY: Mess around with this value until we get something that feels right
             return 1.5f;  

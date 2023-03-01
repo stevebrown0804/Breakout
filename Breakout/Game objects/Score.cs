@@ -18,7 +18,7 @@ using System.Diagnostics;
 
 namespace Breakout.Game_objects
 {
-    //IN PROGRESS: Implement class Score
+    //IN PROGRESS: class Score (Remaining: high scores, ...)
     internal class Score : GameObject
     {
         //stuff to stash
