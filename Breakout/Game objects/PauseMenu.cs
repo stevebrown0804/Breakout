@@ -1,10 +1,10 @@
 ﻿using Breakout.Game_elements;
 using Breakout.Game_objects.Base;
-using Breakout.Game_objects.non_derived;
 using Breakout.Game_objects.Window_areas;
 using Breakout.Game_states;
 using Breakout.Subsystems;
 using Breakout.Subsystems.Base;
+using Breakout.Subsystems.misc;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -22,6 +22,7 @@ namespace Breakout.Game_objects
         //BO_Keyboard keyboard;
         Renderer renderer;
         StringRenderer stringRenderer;
+        Spacing spacing;
 
         public bool isPaused = false;
         //public bool wasJustPaused = false;
@@ -46,6 +47,7 @@ namespace Breakout.Game_objects
             //stash stuff
             renderer = subsystems.renderer;
             stringRenderer = subsystems.stringRenderer;
+            spacing = subsystems.spacing;
 
             pauseMenuPrompts["header"] = "Game paused";
             pauseMenuPrompts["resume"] = "Resume";
@@ -56,19 +58,12 @@ namespace Breakout.Game_objects
 
         public void SecondInitialize(GamePlayView gamePlay)
         {
-            //spacing.
-            /*pauseMenuExteriorTopSpacing = 100;
-            pauseMenuInternalTopSpacing = 10;
-            pauseMenuInternalBottomSpacing = 10;
-            pauseMenuInternalSideSpacing = 10;
-            pauseMenuIntraLineSpacing = 5;*/
-
             int pauseMenuWidth;
             int pauseMenuHeight;            
             int pauseMenuX;
             int pauseMenuY;
             InteriorToWalls intr = gamePlay.interiorToWalls;
-            Spacing sp = gamePlay.spacing;
+            Spacing sp = spacing;
 
             float pauseMenuMaxFontWidth = GetStringSizeMaxX(gamePlay.pauseMenuFont);
             pauseMenuWidth = (int)pauseMenuMaxFontWidth + 2 * gamePlay.spacing.pauseMenuInternalSideSpacing;
@@ -128,19 +123,19 @@ namespace Breakout.Game_objects
             el = new(RenderType.UI, CallType.Rectangle, gpv.black1x1, new Rectangle(x,y,w,h), Color.White);
             renderer.AddToRenderList(el);
             
-            y += gpv.spacing.pauseMenuInternalTopSpacing;
+            y += spacing.pauseMenuInternalTopSpacing;
             Vector2 vec = new(stringRenderer.RenderStringHCentered(pauseMenuPrompts["header"], gpv.pauseMenuFont, position), y);
             el = new(RenderType.Text, gpv.pauseMenuFont, pauseMenuPrompts["header"], vec, Color.White);
             renderer.AddToRenderList(el);
 
             Vector2 spriteSize = gpv.pauseMenuFont.MeasureString(pauseMenuPrompts["resume"]);
-            y += (int)spriteSize.Y + gpv.spacing.pauseMenuIntraLineSpacing + gpv.spacing.pauseMenuPostHeaderSpacing;
+            y += (int)spriteSize.Y + spacing.pauseMenuIntraLineSpacing + spacing.pauseMenuPostHeaderSpacing;
             vec = new(stringRenderer.RenderStringHCentered(pauseMenuPrompts["resume"], gpv.pauseMenuFont, position), y);
             el = new(RenderType.Text, gpv.pauseMenuFont, pauseMenuPrompts["resume"], vec, pauseMenuOptions == PauseMenuOptions.resume ? Color.Yellow : Color.White);
             renderer.AddToRenderList(el);
 
             spriteSize = gpv.pauseMenuFont.MeasureString(pauseMenuPrompts["exit"]);
-            y += (int)spriteSize.Y + gpv.spacing.pauseMenuIntraLineSpacing;
+            y += (int)spriteSize.Y + spacing.pauseMenuIntraLineSpacing;
             vec = new(stringRenderer.RenderStringHCentered(pauseMenuPrompts["exit"], gpv.pauseMenuFont, position), y);
             el = new(RenderType.Text, gpv.pauseMenuFont, pauseMenuPrompts["exit"], vec, pauseMenuOptions == PauseMenuOptions.exit ? Color.Yellow : Color.White);
             renderer.AddToRenderList(el);

@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -50,7 +51,7 @@ namespace Breakout.Game_objects.non_derived
 
         internal void SetupHighScores(Renderer renderer, SpriteFont headerFont, SpriteFont font)
         {
-            //TODO: Chance the Vector2s in these to use the StringRenderer class
+            //TODO: Change the Vector2s in these to use the StringRenderer class
             //TODO: Add a 'high scores region' to the high scores view and render within that
 
             GameElement el = new(RenderType.Text, headerFont, "High scores:", new Vector2(100, 100), Color.White);
@@ -64,6 +65,12 @@ namespace Breakout.Game_objects.non_derived
 
             el = new(RenderType.Text, font, "Press Escape to return to menu", new Vector2(100, 500), Color.White);
             renderer.AddToRenderList(el);
+        }
+
+        //TODO: Implement (HighScores.ReinitializeHighScores())
+        internal void ReinitializeHighScores()
+        {
+            Debug.Print("TODO: HighScores.ReinitializeHighScores()");
         }
 
         internal void AddSortChop(HighScore score, int numScores)

@@ -8,6 +8,7 @@ using Breakout.Subsystems;
 using Breakout.Game_elements;
 using System.Diagnostics;
 using Breakout.Subsystems.Base;
+using Breakout.Subsystems.misc;
 
 namespace Breakout.Game_states
 {
@@ -20,6 +21,7 @@ namespace Breakout.Game_states
         internal BO_Keyboard keyboard;
         internal Renderer renderer;
         internal StringRenderer stringRenderer;
+        internal Spacing spacing;
 
         public virtual void initialize(GraphicsDevice graphicsDevice, GraphicsDeviceManager graphics, SubsystemsHolder subsystems)
         {
@@ -30,6 +32,7 @@ namespace Breakout.Game_states
             renderer = subsystems.renderer;
             keyboard = subsystems.keyboard;
             stringRenderer = subsystems.stringRenderer;
+            spacing = subsystems.spacing;
         }
 
         public abstract void loadContent(ContentManager contentManager);

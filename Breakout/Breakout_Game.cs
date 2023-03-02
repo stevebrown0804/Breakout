@@ -2,6 +2,7 @@
 using Breakout.Game_states;
 using Breakout.Subsystems;
 using Breakout.Subsystems.Base;
+using Breakout.Subsystems.misc;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -32,7 +33,7 @@ namespace Breakout
         SubsystemsHolder subsystems;
         BO_Keyboard keyboard;
         Renderer renderer;
-        StringRenderer stringRenderer;
+        //StringRenderer stringRenderer;
 
         public Breakout_Game()
         {
@@ -44,11 +45,11 @@ namespace Breakout
         protected override void Initialize()
         {
             //Initialize subsystems!            
-            subsystems = new();
+            subsystems = new(graphics);
             keyboard = subsystems.keyboard;
             keyboard.InitializePreviousState();
             renderer = subsystems.renderer;
-            stringRenderer = subsystems.stringRenderer;
+            //stringRenderer = subsystems.stringRenderer;
 
             //Then do other stuff
             graphics.PreferredBackBufferWidth = 1920;
@@ -67,7 +68,6 @@ namespace Breakout
             {
                 states[key].initialize(this.GraphicsDevice, graphics, subsystems);
             }
-
             currentState = states[gameStateEnum];
 
             base.Initialize();

@@ -96,9 +96,6 @@ namespace Breakout.Game_states
         //TopAreaOfPlayingField topAreaOfPlayingField;        
         WindowInterior windowInterior;
 
-        //the one that's not derived from GameObject
-        internal Spacing spacing;
-      
         //Misc. variables
         bool showRegions;
         bool showRowRegions;
@@ -146,10 +143,9 @@ namespace Breakout.Game_states
             showPauseMenuRegion = false;
 
             //Set up the game objects
-            spacing = new(graphics);
-                windowInterior = new(new Rectangle(0, 0,
-                                     graphics.PreferredBackBufferWidth,
-                                     graphics.PreferredBackBufferHeight));
+            windowInterior = new(new Rectangle(0, 0,
+                                    graphics.PreferredBackBufferWidth,
+                                    graphics.PreferredBackBufferHeight));
 
             int padding = spacing.playingFieldPaddingOnAllFourSides;
             playingField = new(new Rectangle(padding, padding, graphics.PreferredBackBufferWidth - 2 * padding, graphics.PreferredBackBufferHeight - 2 * padding));

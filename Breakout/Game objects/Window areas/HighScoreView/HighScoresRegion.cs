@@ -1,4 +1,5 @@
 ﻿using Breakout.Game_objects.Base;
+using Breakout.Game_objects.non_derived;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
@@ -10,7 +11,17 @@ namespace Breakout.Game_objects.Window_areas.HighScoreView
 {
     internal class HighScoresRegion : GameObject
     {
-        internal HighScoresRegion(Rectangle position) : base(position) { }
 
+        //HighScores highScores;
+
+        internal HighScoresRegion(Rectangle position) : base(position) 
+        {
+            //highScores = new();
+        }
+
+        /*internal void ResetHighScores()
+        {
+            highScores.ReinitializeHighScores();
+        }*/
     }
 }

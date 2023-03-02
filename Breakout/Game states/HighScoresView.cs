@@ -1,6 +1,9 @@
 ﻿using Breakout.Game_elements;
-using Breakout.Subsystems;
+using Breakout.Game_objects.Base;
+using Breakout.Game_objects.non_derived;
+using Breakout.Game_objects.Window_areas.HighScoreView;
 using Breakout.Subsystems.Base;
+using Breakout.Subsystems.misc;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -17,20 +20,37 @@ namespace Breakout.Game_states
 {
     public class HighScoresView : GameStateView
     {
+        HighScoresRegion highScoresRegion;
+        HighScores highScores;
+
+        private Texture2D white1x1;
         private SpriteFont highScoresFont;
         private SpriteFont highScoresHeaderFont;
-        private const string MESSAGE = "TODO: High scores";
+        private const string MESSAGE = "High scores";
         private const string resetHighScoresMsg = "Press 'r' to reset the high scores";
 
-        //TODO: Implement high scores
+        bool areHighScoresSetUp = false;
+
+        //IN PROGRESS: Implement high scores (class HighScoresView)
 
         public override void initialize(GraphicsDevice graphicsDevice, GraphicsDeviceManager graphics, SubsystemsHolder subsystems)
         {
             base.initialize(graphicsDevice, graphics, subsystems);
+
+            //Then create the highScoresRegion
+            int w, h;  //TODO: fill in w,h (of HighScoresView.initialize()) with non-literals
+            w = 1000; h = 700;  //TMP!
+            highScoresRegion = new(new Rectangle(spacing.highScoresRegionExternalTopSpacing, spacing.highScoresRegionExternalSideSpacing, w, h));
+
+            highScores = new();
+
+            //Let's see if we can put this here:
+            //highScores.SetupHighScores();  //nm!  we put it in update()
         }
 
         public override void loadContent(ContentManager contentManager)
         {
+            white1x1 = contentManager.Load<Texture2D>("Sprites/white1x1");
             highScoresFont = contentManager.Load<SpriteFont>("Fonts/high-scores");
             highScoresHeaderFont = contentManager.Load<SpriteFont>("Fonts/highScoresHeader");
         }
@@ -55,7 +75,7 @@ namespace Breakout.Game_states
             base.render(gameTime);
         }
 
-        //TODO: HighScoresView.update()
+        //IN PROGRESS: HighScoresView.update()
         //Print a message like so:
         //  High Scores
         //  10000
@@ -67,17 +87,28 @@ namespace Breakout.Game_states
         
         public override void update(GameTime gameTime)
         {
-            Rectangle r = new(0, 0, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
-            (_, Vector2 vec) = stringRenderer.RenderStringHVCentered(MESSAGE, highScoresFont, r);
-            
-            GameElement el = new(RenderType.Text, highScoresFont, MESSAGE, vec, Color.White);
+            if (!areHighScoresSetUp)
+            {
+                highScores.SetupHighScores(renderer, highScoresHeaderFont, highScoresFont); //One-time call? TBD!
+                areHighScoresSetUp = true;
+            }
+
+            GameElement el;
+            el = new(RenderType.UI, CallType.Rectangle, white1x1, highScoresRegion.position, Color.White);
+            renderer.AddToRenderList(el);
+
+            //Rectangle r = new(0, 0, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
+            (_, Vector2 vec) = stringRenderer.RenderStringHVCentered(MESSAGE, highScoresHeaderFont, highScoresRegion.position);
+
+            el = new(RenderType.Text, highScoresHeaderFont, MESSAGE, vec, Color.Black);
             renderer.AddToRenderList(el);
         }
 
-        //TODO: Reset the high scores (in resetHighScores())
+        //IN PROGRESS: Reset the high scores (in resetHighScores())
         private void resetHighScores()
         {
-            Debug.Print("TODO: Reset the high scores");
+            //Debug.Print("TODO: Reset the high scores");
+            highScores.ReinitializeHighScores();
         }
 
     }//END class HighScoresView

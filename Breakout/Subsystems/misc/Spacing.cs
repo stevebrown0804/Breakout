@@ -6,9 +6,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Breakout.Game_objects.non_derived
+namespace Breakout.Subsystems.misc
 {
-    internal class Spacing
+    public class Spacing
     {
         //DONE, MOSTLY: Figure out the spacing of the various regions of the game screen
         // ...and give stuff (public) variable names.  *thumbs up*
@@ -50,18 +50,20 @@ namespace Breakout.Game_objects.non_derived
         public int gameOverSideSpacing;
         public int gameOverTopSpacing;
         public int gameOverBottomSpacing;
+        public int highScoresRegionExternalTopSpacing;
+        public int highScoresRegionExternalSideSpacing;
 
 
         internal Spacing(GraphicsDeviceManager graphics)
         {
             //Set various hard-coded values
             playingFieldPaddingOnAllFourSides = 0; // 20; // 30; //50;
-            
+
             wallThickness = 24;
-            
+
             brickGridSpacingOnAllFourSides = 20;
             brickGridBottomSpacing = 220;
-            
+
             intraBrickHorizontalSpacing = 10;
             intraBrickVerticalSpacing = 10;
 
@@ -79,7 +81,7 @@ namespace Breakout.Game_objects.non_derived
             scoreSectionTopSpacing = 10;
             scoreSectionBottomSpacing = 20; //?
             scoreSectionIntraWordSpacing = 30;
-                        
+
             paddleAreaHeight = 40;
             paddleWidth = 300;
             paddleHeight = paddleAreaHeight;
@@ -91,7 +93,7 @@ namespace Breakout.Game_objects.non_derived
             countdownTopSpacing = 100;
             countdownBottomSpacing = 300;
 
-            pauseMenuExteriorTopSpacing = 150;            
+            pauseMenuExteriorTopSpacing = 150;
             pauseMenuInternalTopSpacing = 30;
             pauseMenuInternalBottomSpacing = 40;
             pauseMenuInternalSideSpacing = 60;
@@ -102,7 +104,10 @@ namespace Breakout.Game_objects.non_derived
             gameOverSideSpacing = 120;
             gameOverTopSpacing = 200;
             gameOverBottomSpacing = 230;
-    }
+
+            highScoresRegionExternalTopSpacing = 100;  //IN PROGRESS
+            highScoresRegionExternalSideSpacing = 100;
+        }
 
         internal void RecomputeValues(GraphicsDeviceManager graphics, GamePlayView gamePlayView)
         {
