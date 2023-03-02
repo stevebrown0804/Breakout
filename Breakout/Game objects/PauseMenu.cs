@@ -24,7 +24,7 @@ namespace Breakout.Game_objects
         StringRenderer stringRenderer;
 
         public bool isPaused = false;
-        public bool wasJustPaused = false;
+        //public bool wasJustPaused = false;
         public GamePlayState prevStateBeforePaused;
         public Dictionary<string, string> pauseMenuPrompts = new();
 

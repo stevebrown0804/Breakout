@@ -10,8 +10,8 @@ namespace Breakout.Game_objects
 {
     internal class Countdown : GameObject
     {
-        public bool showCountdown = false;   //we COULD set this to true here.  maybe.  TBD
-                                            // assuming we even us it, that is.  TBD
+        //public bool showCountdown = false;   //we COULD set this to true here.  maybe.  TBD
+                                            // assuming we even use it, that is.  TBD
 
         private bool timersSet = false;
         private TimeSpan startTimer;
