@@ -100,11 +100,16 @@ namespace Breakout
 
         protected override void Draw(GameTime gameTime)
         {
-            //GraphicsDevice.Clear(Color.CornflowerBlue);
-            //GraphicsDevice.Clear(new Color(64, 64, 64));  //dark-ish gray...which I couldn't find a name for
-                                                            //  Although I didn't look super-hard *thumbs up*
-            GraphicsDevice.Clear(Color.Black);
-            //GraphicsDevice.Clear(Color.White);
+            if(gameStateEnum == GameStateEnum.GamePlay)
+                GraphicsDevice.Clear(Color.Black);
+            else if(gameStateEnum == GameStateEnum.MainMenu)
+                GraphicsDevice.Clear(Color.Black);
+            else if(gameStateEnum == GameStateEnum.HighScores)
+                GraphicsDevice.Clear(Color.Purple);     //MAYBE: Pick another color (or stick with this one, *shrug*)
+            else if(gameStateEnum == GameStateEnum.About)
+                GraphicsDevice.Clear(new Color(64, 64, 64));  //Dark-ish gray
+            else //for states yet to be defined (or used, *cough*Options*cough*)
+                GraphicsDevice.Clear(Color.CornflowerBlue);
 
             //Do some drawing
             currentState.render(gameTime);
