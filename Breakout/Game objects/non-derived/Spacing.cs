@@ -40,11 +40,12 @@ namespace Breakout.Game_objects.non_derived
         public int countdownSideSpacing;
         public int countdownTopSpacing;
         public int countdownBottomSpacing;
-        public int pauseMenuTopSpacing;
+        public int pauseMenuExteriorTopSpacing;
         public int pauseMenuInternalTopSpacing;
         public int pauseMenuInternalBottomSpacing;
         public int pauseMenuInternalSideSpacing;
         public int pauseMenuIntraLineSpacing;
+        public int pauseMenuPostHeaderSpacing;
         public int gameOverIntraLineSpacing;
         public int gameOverSideSpacing;
         public int gameOverTopSpacing;
@@ -90,11 +91,12 @@ namespace Breakout.Game_objects.non_derived
             countdownTopSpacing = 100;
             countdownBottomSpacing = 300;
 
-            pauseMenuTopSpacing = 100;            
-            pauseMenuInternalTopSpacing = 10;
-            pauseMenuInternalBottomSpacing = 10;
-            pauseMenuInternalSideSpacing = 10;
-            pauseMenuIntraLineSpacing = 5;
+            pauseMenuExteriorTopSpacing = 150;            
+            pauseMenuInternalTopSpacing = 30;
+            pauseMenuInternalBottomSpacing = 40;
+            pauseMenuInternalSideSpacing = 60;
+            pauseMenuIntraLineSpacing = 20;
+            pauseMenuPostHeaderSpacing = 40;
 
             gameOverIntraLineSpacing = 70;
             gameOverSideSpacing = 120;

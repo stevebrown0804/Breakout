@@ -27,6 +27,13 @@
 /processorParam:TextureFormat=Compressed
 /build:Fonts/about-screen.spritefont
 
+#begin Fonts/countdown.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:Fonts/countdown.spritefont
+
 #begin Fonts/game-over-prompt.spritefont
 /importer:FontDescriptionImporter
 /processor:FontDescriptionProcessor

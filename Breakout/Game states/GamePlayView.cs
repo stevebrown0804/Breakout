@@ -68,7 +68,7 @@ namespace Breakout.Game_states
         private Texture2D galaxy;           //BG Image
         private Texture2D purple1x1;        //misc.  //MAYBE: Remove, once we're done with it.
         internal Texture2D white1x1;
-        private Texture2D black1x1;
+        internal Texture2D black1x1;
 
         //Game Objects -- Everything below here (I think) is initialized in initialize()
         // Lists
@@ -88,7 +88,7 @@ namespace Breakout.Game_states
         internal Paddle paddle;
         internal PaddleArea paddleArea;
         internal PlayingField playingField;
-        PauseMenu pauseMenu;
+        internal PauseMenu pauseMenu;
         internal RemainingLives remainingLives;
         RightHalfOfBottomArea rightHalfOfBottomArea;
         internal Score score;
@@ -273,6 +273,9 @@ namespace Breakout.Game_states
             //and the pause menu            
             pauseMenu = new(new Rectangle(0, 0, 0, 0));  //so we can access pauseMenu's helper functions
 
+            //and the..pause menu?
+            pauseMenu.Initialize(subsystems);
+
         }
 
         public override void loadContent(ContentManager contentManager)  
@@ -288,7 +291,8 @@ namespace Breakout.Game_states
                 inGameScoreFont = contentManager.Load<SpriteFont>("Fonts/ingame-score");
                 countdownFont = contentManager.Load<SpriteFont>("Fonts/ingame-countdown");
                 gameOverFont = contentManager.Load<SpriteFont>("Fonts/game-over");
-                gameOverEscapePromptFont = contentManager.Load<SpriteFont>("Fonts/game-over-prompt"); 
+                gameOverEscapePromptFont = contentManager.Load<SpriteFont>("Fonts/game-over-prompt");
+                countdownFont = contentManager.Load<SpriteFont>("Fonts/countdown");
                 blue1x1 = contentManager.Load<Texture2D>("Sprites/blue1x1");                //Bricks
                 limeGreen1x1 = contentManager.Load<Texture2D>("Sprites/limeGreen1x1");
                 orange1x1 = contentManager.Load<Texture2D>("Sprites/orange1x1");
@@ -386,63 +390,89 @@ namespace Breakout.Game_states
                         }
                     }
 
-
-                    if (gamePlayState == GamePlayState.Paused)
-                    {
-                        //TODO: Enter/arrow keys during the pause menu
-                    }
-
-                    //TODO: Change this to have Esc bring up a pause menu
-                    // That is...a menu with 'quit' and 'resume' options
                     if (gamePlayState == GamePlayState.InGame || gamePlayState == GamePlayState.Countdown /*|| gamePlayState == GamePlayState.ResettingLevel*/)
                     {
+                        if (gamePlayState == GamePlayState.InGame)
+                        {
+                            //in-game keys
+                            if (keyboard.IsKeyHeld(Keys.Left))
+                            {
+                                paddle.Move(Direction.Left, gameTime, this);
+                            }
+                            if (keyboard.IsKeyHeld(Keys.Right))
+                            {
+                                paddle.Move(Direction.Right, gameTime, this);
+                            }
+                            if (keyboard.IsKeyPressed(Keys.Space))
+                            {
+                                //Find balls that're at rest and give them an initial velocity
+                                for (int i = 0; i < balls.Count; i++)
+                                {
+                                    if (balls[i].IsAtRest())
+                                    {
+                                        //Debug.Print($"Ball spawned; hitBricksAtSpawnTime set to: {brickGrid.numBricksHit}");
+                                        balls[i].SetHitBricksAtSpawnTime(brickGrid.numBricksHit);
+                                        balls[i].GiveVelocity();
+                                    }
+                                }
+                            }
+                        }
+
                         if (keyboard.IsKeyPressed(Keys.Escape))
                         {
                             //For the moment, this just cleans up the game (note: not really; it just sets the gamePlayState to cleanup) then exits to the menu
-                            Debug.Print($"Setting gamePlayState to: Cleanup; current value is: {gamePlayState}");
-                            gamePlayState = GamePlayState.Cleanup;
+                            //  The game seems to start over successfully, though.  I guess we're done!
+                            
+                            pauseMenu.prevStateBeforePaused = gamePlayState;
+                            gamePlayState = GamePlayState.Paused;
+                            pauseMenu.isPaused = true;
+
+                            /*Debug.Print($"Setting gamePlayState to: Cleanup; current value is: {gamePlayState}");
+                            gamePlayState = GamePlayState.Cleanup;*/
                             //ReinitializeGame(graphicsDevice, graphics);
-                            return GameStateEnum.MainMenu;
+                            //return GameStateEnum.MainMenu;
                         }
                     }
-
-                    //In GameOver, we'll just have the user press Escape to return to the menu
-                    //TODO: Change this to react to "Quit" selected and Enter pressed
-                    if (gamePlayState == GamePlayState.GameOver)
-                    {
-                        if (keyboard.IsKeyPressed(Keys.Escape))
+                    else if (gamePlayState == GamePlayState.Paused)
+                    {   
+                        if(keyboard.IsKeyPressed(Keys.Up))
                         {
-                            //For the moment, this just cleans up the game (again, not really) and exits to the menu
-                            Debug.Print($"Setting gamePlayState to: Cleanup; current value is: {gamePlayState}");
-                            gamePlayState = GamePlayState.Cleanup;
-                            //ReinitializeGame(graphicsDevice, graphics);
-                            return GameStateEnum.MainMenu;
+                            if (pauseMenu.pauseMenuOptions != PauseMenu.PauseMenuOptions.resume)
+                                pauseMenu.pauseMenuOptions--;
                         }
-                    }
-
-                    //in-game keys
-                    if (gamePlayState == GamePlayState.InGame)
-                    {
-                        if (keyboard.IsKeyHeld(Keys.Left))
+                        else if (keyboard.IsKeyPressed(Keys.Down))
                         {
-                            paddle.Move(Direction.Left, gameTime, this);
+                            if (pauseMenu.pauseMenuOptions != PauseMenu.PauseMenuOptions.exit)
+                                pauseMenu.pauseMenuOptions++;
                         }
-                        if (keyboard.IsKeyHeld(Keys.Right))
+                        else if (keyboard.IsKeyPressed(Keys.Enter))
                         {
-                            paddle.Move(Direction.Right, gameTime, this);
-                        }
-                        if (keyboard.IsKeyPressed(Keys.Space))
-                        {
-                            //Find balls that're at rest and give them an initial velocity
-                            for (int i = 0; i < balls.Count; i++)
+                            if (pauseMenu.pauseMenuOptions == PauseMenu.PauseMenuOptions.resume)
                             {
-                                if (balls[i].IsAtRest())
-                                {
-                                    //Debug.Print($"Ball spawned; hitBricksAtSpawnTime set to: {brickGrid.numBricksHit}");
-                                    balls[i].SetHitBricksAtSpawnTime(brickGrid.numBricksHit);
-                                    balls[i].GiveVelocity();
-                                }
+                                gamePlayState = pauseMenu.prevStateBeforePaused;
+                                pauseMenu.isPaused = false;
                             }
+                            else if (pauseMenu.pauseMenuOptions == PauseMenu.PauseMenuOptions.exit)
+                            {
+                                gamePlayState = GamePlayState.Cleanup;
+                                //ReinitializeGame(graphicsDevice, graphics);
+                                return GameStateEnum.MainMenu;
+                            }
+                        }
+                        else if (keyboard.IsKeyPressed(Keys.Escape))
+                        {
+                            gamePlayState = pauseMenu.prevStateBeforePaused;
+                            pauseMenu.isPaused = false;
+                        }
+                    }
+                    else if (gamePlayState == GamePlayState.GameOver)
+                    {  
+                        if (keyboard.IsKeyPressed(Keys.Escape))
+                        {   
+                            //Debug.Print($"Setting gamePlayState to: Cleanup; current value is: {gamePlayState}");
+                            gamePlayState = GamePlayState.Cleanup;
+                            //ReinitializeGame(graphicsDevice, graphics);
+                            return GameStateEnum.MainMenu;
                         }
                     }
 
@@ -500,11 +530,13 @@ namespace Breakout.Game_states
                 }
                 else if (gamePlayState == GamePlayState.Paused)
                 {
-                    //TODO: Add an assigmment of gamePlayState to Paused somewhere
-
                     DrawGame(gameTime);
                     //TODO: extend timers (so that the ending timer gets pushed forward by a cycle)
                     //      That means: exploding bricks, countdown....what else?
+
+                    // Or we could simply not call the methods that add to elapsedTime; TBD
+
+                    pauseMenu.DrawPauseMenu(this);
 
                 }
                 else if (gamePlayState == GamePlayState.ResettingLevel)
@@ -635,9 +667,11 @@ namespace Breakout.Game_states
                     }
                     else
                     { //if the brick has been hit
-                        if (bg[i][j].isExploding) //check to see if it's still exploding
+                        if (bg[i][j].isExploding && !pauseMenu.isPaused) //check to see if it's still exploding
+                                                                            // and that the game's not paused
                         {
                             bg[i][j].Explode(gameTime, this, renderer); //the 2nd/3rd argument(s) is/are temporary
+                                                                        // ...maybe.  TBD
                         }
                     }
                 }
@@ -679,7 +713,10 @@ namespace Breakout.Game_states
             //ball
             for (int i = 0; i < balls.Count; i++)
             {
-                balls[i].Move(gameTime, this);
+                if (!pauseMenu.isPaused)
+                {
+                    balls[i].Move(gameTime, this);
+                }                
                 el = new GameElement(RenderType.UI, CallType.Rectangle, ball50x50, balls[i].position, Color.White);
                 renderer.AddToRenderList(el);
             }
