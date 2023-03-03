@@ -2,6 +2,8 @@
 using Breakout.Game_objects.Base;
 using Breakout.Game_objects.Window_areas;
 using Breakout.Game_states;
+using Breakout.Subsystems;
+using Breakout.Subsystems.Base;
 using Breakout.Subsystems.@static;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
@@ -22,7 +24,10 @@ namespace Breakout.Game_elements
         public Vector2 velocity;
         Dictionary<int, float> speedupFactor;
         bool isActive = true;
+        bool hasHighScoresBeenStashed = false;
         int hitBricksAtSpawnTime;
+
+        HighScores highScores;
 
         internal Ball(Rectangle position) : base(position)
         {
@@ -39,10 +44,10 @@ namespace Breakout.Game_elements
 
         //MAYBE: keep messing around with these values (in Ball.GiveVelocity()), as needed
         public void GiveVelocity()
-        {            
-            velocity.X = 0.3f; //45 degrees to the right, I think. <--positive is right, negative is left
-            velocity.Y = -0.3f; 
-        }
+                {            
+                    velocity.X = 0.3f; //45 degrees to the right, I think. <--positive is right, negative is left
+                    velocity.Y = -0.3f; 
+                }
 
         internal bool IsAtRest()
         {
@@ -60,6 +65,9 @@ namespace Breakout.Game_elements
         {
             if (!isActive)  //we'll bail out quickly if the ball is inactive
                 return;
+
+            if(!hasHighScoresBeenStashed)
+                highScores = gpv.subsystems.highScores;
 
             TimeSpan time = gameTime.ElapsedGameTime;
             float deltaX = velocity.X * (float)time.TotalMilliseconds;
@@ -217,7 +225,7 @@ namespace Breakout.Game_elements
                     {
                         if (!isAnotherActiveBall)
                         {
-                           if (gpv.remainingLives.remainingLives - 1 > 0)
+                            if (gpv.remainingLives.remainingLives - 1 > 0)
                             {
                                 //Debug.Print($"Decrementing remainingLives to: {gpv.remainingLives.remainingLives - 1}");
                                 gpv.remainingLives.remainingLives--;
@@ -229,6 +237,15 @@ namespace Breakout.Game_elements
                             else  //No lives left -> game over
                             {
                                 /*Debug.Print($"Setting gamePlayState to: GameOver; current value is: {gpv.gamePlayState}");*/
+                                
+                                //First we'll save the high scores, if necessary
+                                if (highScores.AddSortChop(new HighScore(gpv.score.score), 5))
+                                {
+                                    HighScoresIOManager hsiom = new();
+                                    hsiom.SaveHighScores(gpv.highScores);
+                                }
+
+                                //Then we'll change the gamePlayState
                                 gpv.gamePlayState = GamePlayState.GameOver;
                             }
                         }

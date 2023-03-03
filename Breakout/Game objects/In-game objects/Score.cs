@@ -1,6 +1,6 @@
 ﻿using Breakout.Game_elements;
 using Breakout.Game_objects.Base;
-using Breakout.Game_objects.non_derived;
+//using Breakout.Game_objects.non_derived;
 using Breakout.Game_states;
 using Breakout.Subsystems;
 using Breakout.Subsystems.Base;
@@ -30,7 +30,7 @@ namespace Breakout.Game_objects
         //SpriteFont inGameScoreFont;
 
         string scoreStr = "Score: ";
-        int score = 0;
+        internal int score = 0;
         int blockOf100 = 0;
 
         internal Score(Rectangle position, SubsystemsHolder subsystems, GamePlayView gpv) : base(position)

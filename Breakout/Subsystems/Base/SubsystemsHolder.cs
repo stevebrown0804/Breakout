@@ -18,6 +18,9 @@ namespace Breakout.@Subsystems.Base
         public StringRenderer stringRenderer;
         public BoxRenderer boxRenderer;
 
+        //is this a subsystem?  *shrug* I suppose if we say that it is, then it is  *thumbs up*
+        public HighScores highScores;
+
         //can this go in here?  TBD!  //Follow-up: yep!
         public Spacing spacing;
 
@@ -27,6 +30,7 @@ namespace Breakout.@Subsystems.Base
             renderer = new();
             stringRenderer = new();
             boxRenderer = new();
+            highScores = new();  //TODO: Load highscores from file (if it exists)  or new()
             spacing = new(graphics);
         }
 

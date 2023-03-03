@@ -35,6 +35,9 @@ namespace Breakout
         Renderer renderer;
         //StringRenderer stringRenderer;
 
+        //is this a subsystem?  *shrug*
+        HighScores highScores; //TODO: migrate highScores to here
+
         public Breakout_Game()
         {
             graphics = new GraphicsDeviceManager(this);

@@ -1,6 +1,5 @@
 ﻿using Breakout.Game_elements;
 using Breakout.Game_objects.Base;
-using Breakout.Game_objects.non_derived;
 using Breakout.Game_objects.Window_areas.HighScoreView;
 using Breakout.Subsystems;
 using Breakout.Subsystems.Base;
@@ -24,7 +23,9 @@ namespace Breakout.Game_states
         BoxRenderer boxRenderer;
 
         HighScoresRegion highScoresRegion;
-        HighScores highScores;
+        internal HighScores highScores;
+
+        HighScoresIOManager hsiom;
 
         //private Texture2D white1x1;
         private SpriteFont highScoresFont;
@@ -33,13 +34,14 @@ namespace Breakout.Game_states
         private const string highScoresResetMsg = "Press 'r' to reset the high scores";
         private const string highScoresEscapeMsg = "Press Escape to return to the main menu";
 
-        bool areHighScoresSetUp = false;
+        bool areHighScoresSetUp = false;  //are we using this atm?  TBD
+        bool areHighScoresLoaded = false;
 
         //IN PROGRESS: Implement high scores (class HighScoresView) (Remaining: update the list, reset the list, persist the list)
 
         public HighScoresView()
         {
-            //TODO: Something here? not sure atm (HighScoresView constructor)
+            hsiom = new();
         }
 
         public override void initialize(GraphicsDevice graphicsDevice, GraphicsDeviceManager graphics, SubsystemsHolder subsystems)
@@ -49,10 +51,14 @@ namespace Breakout.Game_states
             //stash stuff
             boxRenderer = subsystems.boxRenderer;
 
-            //Create highScores -- which I THINK will initialize its list (and populate it).  TBD!
-            highScores = new();
+            //Read in highScores or create it            
+            hsiom.ReadInHighScores();
+            highScores = hsiom.GetHighScores();
+            if (highScores == null)
+                highScores = new();
+
             // ...and highScoresRegion, which I'm not sure if this step is necessary
-            highScoresRegion = new(new Rectangle(0, 0, 0, 0));  //dare we create this here? TBD!
+            highScoresRegion = new(new Rectangle(0, 0, 0, 0));  //dare we create this here? TBD!  <--seems fine
         }
 
         public override void loadContent(ContentManager contentManager)
@@ -71,6 +77,7 @@ namespace Breakout.Game_states
 
             if (keyboard.IsKeyPressed(Keys.Escape))
             {
+                areHighScoresLoaded = false;    //reset this to false when we leave the high scores view
                 return GameStateEnum.MainMenu;
             }
 
@@ -89,6 +96,13 @@ namespace Breakout.Game_states
                 DetermineHighScoresRegionPosition();
                 //highScores.SetupHighScores(renderer, highScoresHeaderFont, highScoresFont); //One-time call? TBD!
                 areHighScoresSetUp = true;
+            }
+
+            if (!areHighScoresLoaded)
+            {
+                hsiom.ReadInHighScores();
+                highScores = hsiom.GetHighScores();
+                areHighScoresLoaded = true;
             }
 
             float x, y;

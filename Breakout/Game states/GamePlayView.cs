@@ -1,6 +1,5 @@
 ﻿using Breakout.Game_elements;
 using Breakout.Game_objects;
-using Breakout.Game_objects.non_derived;
 using Breakout.Game_objects.Window_areas;
 using Breakout.Subsystems;
 using Breakout.Subsystems.Base;
@@ -47,6 +46,7 @@ namespace Breakout.Game_states
         //Some stuff to stash
         GraphicsDevice graphicsDevice;
         internal ContentManager contentManager;
+        internal HighScores highScores;
         
         //Some constants
         const int numRowsOfBricks = 8;
@@ -127,6 +127,7 @@ namespace Breakout.Game_states
             {
                 base.initialize(graphicsDevice, graphics, subsystems);
                 this.graphicsDevice = graphicsDevice;
+                highScores = subsystems.highScores;
 
                 areSubsystemsStashed = true;
             }
@@ -271,7 +272,6 @@ namespace Breakout.Game_states
 
             //and the..pause menu?
             pauseMenu.Initialize(subsystems);
-
         }
 
         public override void loadContent(ContentManager contentManager)  
