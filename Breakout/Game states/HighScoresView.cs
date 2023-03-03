@@ -141,14 +141,7 @@ namespace Breakout.Game_states
             y = boxRenderer.DrawRectangleVCentered(highScoresRegion.position, new Rectangle(0, 0, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight));
             y -= spacing.highScoresRegionExternalBottomSpacing;
 
-
             highScoresRegion.UpdatePosition(new Rectangle((int) x, (int) y, highScoresRegion.position.Width, highScoresRegion.position.Height));
-
-
-
-
-            //2nd: draw the region centered (+ spacing) on the screen
-            //highScoresRegion = new(new Rectangle((int) x, (int) y, (int) w, (int) h));
         }
 
         private void ResizeHighScoresRegion(Rectangle pos)
