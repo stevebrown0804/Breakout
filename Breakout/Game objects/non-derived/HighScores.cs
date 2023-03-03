@@ -49,7 +49,7 @@ namespace Breakout.Game_objects.non_derived
             }
         }
 
-        internal void SetupHighScores(Renderer renderer, SpriteFont headerFont, SpriteFont font)
+        /*internal void SetupHighScores(Renderer renderer, SpriteFont headerFont, SpriteFont font)
         {
             //TODO: Change the Vector2s in these to use the StringRenderer class
             //TODO: Add a 'high scores region' to the high scores view and render within that
@@ -65,7 +65,7 @@ namespace Breakout.Game_objects.non_derived
 
             el = new(RenderType.Text, font, "Press Escape to return to menu", new Vector2(100, 500), Color.White);
             renderer.AddToRenderList(el);
-        }
+        }*/
 
         //TODO: Implement (HighScores.ReinitializeHighScores())
         internal void ReinitializeHighScores()

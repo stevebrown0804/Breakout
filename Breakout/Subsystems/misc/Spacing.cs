@@ -54,6 +54,10 @@ namespace Breakout.Subsystems.misc
         //public int highScoresRegionExternalSideSpacing;
         public int highScoresRegionExternalBottomSpacing;
         public int highScoresRegionInternalSideSpacing;
+        public int highScoresRegionIntraLineSpacing;
+        public int highScoresRegionInternalTopSpacing;
+        //public int highScoresRegionInternalBottomSpacing;
+        public int highScoresRegionSubHeaderSpacing;
 
 
         internal Spacing(GraphicsDeviceManager graphics)
@@ -107,11 +111,15 @@ namespace Breakout.Subsystems.misc
             gameOverTopSpacing = 200;
             gameOverBottomSpacing = 230;
 
-            highScoresRegionExternalTopSpacing = 100;  //IN PROGRESS
+            highScoresRegionExternalTopSpacing = 50;  //IN PROGRESS
             //highScoresRegionExternalSideSpacing = 0;
             highScoresRegionExternalBottomSpacing = 100;
             highScoresRegionInternalSideSpacing = 100; //TEMP-ish
-        }
+            highScoresRegionInternalTopSpacing = 0; //TODO  (or ignore)
+            //highScoresRegionInternalBottomSpacing = 50;
+            highScoresRegionIntraLineSpacing = 30;
+            highScoresRegionSubHeaderSpacing = 10;
+    }
 
         internal void RecomputeValues(GraphicsDeviceManager graphics, GamePlayView gamePlayView)
         {

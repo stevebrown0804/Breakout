@@ -26,15 +26,16 @@ namespace Breakout.Game_states
         HighScoresRegion highScoresRegion;
         HighScores highScores;
 
-        private Texture2D white1x1;
+        //private Texture2D white1x1;
         private SpriteFont highScoresFont;
         private SpriteFont highScoresHeaderFont;
         private const string highScoresHeaderMsg = "High scores";
         private const string highScoresResetMsg = "Press 'r' to reset the high scores";
+        private const string highScoresEscapeMsg = "Press Escape to return to the main menu";
 
         bool areHighScoresSetUp = false;
 
-        //IN PROGRESS: Implement high scores (class HighScoresView)
+        //IN PROGRESS: Implement high scores (class HighScoresView) (Remaining: update the list, reset the list, persist the list)
 
         public HighScoresView()
         {
@@ -56,7 +57,7 @@ namespace Breakout.Game_states
 
         public override void loadContent(ContentManager contentManager)
         {
-            white1x1 = contentManager.Load<Texture2D>("Sprites/white1x1");
+            //white1x1 = contentManager.Load<Texture2D>("Sprites/white1x1");
             highScoresFont = contentManager.Load<SpriteFont>("Fonts/high-scores");
             highScoresHeaderFont = contentManager.Load<SpriteFont>("Fonts/highScoresHeader");
         }
@@ -81,47 +82,76 @@ namespace Breakout.Game_states
             base.render(gameTime);
         }
 
-        //IN PROGRESS: HighScoresView.update()
-        //Print a message like so:
-        //  High Scores
-        //  10000
-        //  9000
-        //  (etc.)
-        //
-        //  Press 'r' to reset the high scores
-        //  Press Escape to return to the main menu
-        
         public override void update(GameTime gameTime)
         {
             if (!areHighScoresSetUp)
             {
                 DetermineHighScoresRegionPosition();
-                highScores.SetupHighScores(renderer, highScoresHeaderFont, highScoresFont); //One-time call? TBD!
+                //highScores.SetupHighScores(renderer, highScoresHeaderFont, highScoresFont); //One-time call? TBD!
                 areHighScoresSetUp = true;
             }
 
+            float x, y;
             GameElement el;
-            el = new(RenderType.UI, CallType.Rectangle, white1x1, highScoresRegion.position, Color.White);
+            List<string> list;
+            Vector2 vec;
+
+            //First, render the background  //<--possibly optional; TBD
+            /*el = new(RenderType.UI, CallType.Rectangle, white1x1, highScoresRegion.position, Color.White);
+            renderer.AddToRenderList(el);*/
+
+            //Find the position of the header message and queue it for rendering
+            (_, vec) = stringRenderer.RenderStringHVCentered(highScoresHeaderMsg, highScoresHeaderFont, highScoresRegion.position);
+            x = vec.X;
+            y = highScoresRegion.position.Y + spacing.highScoresRegionInternalTopSpacing;
+            el = new(RenderType.Text, highScoresHeaderFont, highScoresHeaderMsg, new Vector2(x,y), Color.White);
             renderer.AddToRenderList(el);
 
-            (_, Vector2 vec) = stringRenderer.RenderStringHVCentered(highScoresHeaderMsg, highScoresHeaderFont, highScoresRegion.position);
-            el = new(RenderType.Text, highScoresHeaderFont, highScoresHeaderMsg, vec, Color.Black);
+            //Next up, find the positions of the list of high scores and queue them for rendering
+            vec = highScoresHeaderFont.MeasureString(highScoresHeaderMsg);
+            y += vec.Y + spacing.highScoresRegionSubHeaderSpacing;
+            list = highScores.GetHighScoresListOfStrings();
+            list.Reverse();
+            for(int i = 0; i < list.Count; i++)
+            {
+                x = stringRenderer.RenderStringHCentered(list[i], highScoresFont, highScoresRegion.position);
+
+                y += spacing.highScoresRegionIntraLineSpacing;
+                el = new(RenderType.Text, highScoresFont, list[i], new Vector2(x, y), Color.White);
+                renderer.AddToRenderList(el);
+                vec = highScoresFont.MeasureString(list[i]);
+                y += vec.Y;
+            }
+
+            //find the positions of the reset message and queue it for rendering
+            vec = highScoresFont.MeasureString(highScoresResetMsg);
+            x = stringRenderer.RenderStringHCentered(highScoresResetMsg, highScoresFont, highScoresRegion.position);
+            y += 2 * spacing.highScoresRegionIntraLineSpacing;
+            el = new(RenderType.Text, highScoresFont, highScoresResetMsg, new Vector2(x, y), Color.White);
+            renderer.AddToRenderList(el);
+
+            //and then the escape message
+            x = stringRenderer.RenderStringHCentered(highScoresEscapeMsg, highScoresFont, highScoresRegion.position);
+            y += vec.Y;
+            y += spacing.highScoresRegionIntraLineSpacing;
+            el = new(RenderType.Text, highScoresFont, highScoresEscapeMsg, new Vector2(x, y), Color.White);
             renderer.AddToRenderList(el);
         }
 
-        //TODO: Reset the high scores (in resetHighScores())
         private void resetHighScores()
         {
-            //Debug.Print("TODO: Reset the high scores");
             highScores.ReinitializeHighScores();
         }
 
-        //IN PROGRESS! (HighScoresView.DetermineHighScoresRegionPosition())
         private void DetermineHighScoresRegionPosition()
         {
-            float x, y, w, h;  //TODO: fill in w,h (of HighScoresView.initialize()) with non-literals
+            float x, y, w, h;
+
+            //A THOUGHT: x positions don't need to be centered within highScoresRegion; they can simply be H-centered on the screen
+            Rectangle theScreen = new(0, 0, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
   
             //determine the region's width & height
+            //First w...
             Vector2 vec = highScoresHeaderFont.MeasureString(highScoresHeaderMsg);
             float possibleMaxX = vec.X;
             List<string> list = highScores.GetHighScoresListOfStrings();
@@ -130,11 +160,11 @@ namespace Breakout.Game_states
             w = MathHelper.Max(possibleMaxX, possibleMaxX_2);
             w += 2 * spacing.highScoresRegionInternalSideSpacing;
 
-            //...and h
-            h = 500;  //TMP
+            //...and then h
+            h = vec.Y;
+            h += spacing.highScoresRegionIntraLineSpacing;
+            h += FindTotalHeight(highScoresFont, list, spacing.highScoresRegionIntraLineSpacing);
             highScoresRegion.UpdatePosition(new Rectangle(0, 0, (int)w, (int)h));
-
-
 
             //figure out the region's (x,y)            
             x = boxRenderer.DrawRectangleHCentered(highScoresRegion.position, new Rectangle(0, 0, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight));            
@@ -144,10 +174,23 @@ namespace Breakout.Game_states
             highScoresRegion.UpdatePosition(new Rectangle((int) x, (int) y, highScoresRegion.position.Width, highScoresRegion.position.Height));
         }
 
-        private void ResizeHighScoresRegion(Rectangle pos)
+        /*private void ResizeHighScoresRegion(Rectangle pos)
         {
             //TODO! (HighScoresView.ResizeHighScoresRegion())
-            throw new System.Exception("What this HighScoresView.ResizeHighScoresRegion() function all about yo");
+            throw new System.Exception("What's this HighScoresView.ResizeHighScoresRegion() function all about yo");
+        }*/
+
+        //Necessary? TBD
+        private float FindTotalHeight(SpriteFont font, List<string> list, int intraLineSpacing)
+        {
+            Vector2 vec;
+            float h = 0f;
+            for (int i = 0; i < list.Count; i++)
+            {
+                vec = font.MeasureString(list[i]);
+                h += vec.Y + intraLineSpacing;
+            }
+            return h;
         }
 
     }//END class HighScoresView
