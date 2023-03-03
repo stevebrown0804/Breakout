@@ -16,8 +16,9 @@ namespace Breakout.@Subsystems.Base
         public BO_Keyboard keyboard;
         public Renderer renderer;
         public StringRenderer stringRenderer;
+        public BoxRenderer boxRenderer;
 
-        //can this go in here?  TBD!
+        //can this go in here?  TBD!  //Follow-up: yep!
         public Spacing spacing;
 
         public SubsystemsHolder(GraphicsDeviceManager graphics) 
@@ -25,13 +26,9 @@ namespace Breakout.@Subsystems.Base
             keyboard = new();
             renderer = new();
             stringRenderer = new();
+            boxRenderer = new();
             spacing = new(graphics);
         }
 
-        /*public void InitializeSpacing(GraphicsDeviceManager graphics)
-        {
-            spacing = new(graphics);
-        }*/
-
-    }
+    }//END class SubsystemsHolder
 }

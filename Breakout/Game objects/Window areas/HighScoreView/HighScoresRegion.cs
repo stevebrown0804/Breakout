@@ -12,16 +12,11 @@ namespace Breakout.Game_objects.Window_areas.HighScoreView
     internal class HighScoresRegion : GameObject
     {
 
-        //HighScores highScores;
+        internal HighScoresRegion(Rectangle position) : base(position) { }
 
-        internal HighScoresRegion(Rectangle position) : base(position) 
+        internal void UpdatePosition(Rectangle position)
         {
-            //highScores = new();
+            this.position = position;
         }
-
-        /*internal void ResetHighScores()
-        {
-            highScores.ReinitializeHighScores();
-        }*/
     }
 }

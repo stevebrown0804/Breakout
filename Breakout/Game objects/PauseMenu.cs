@@ -56,20 +56,20 @@ namespace Breakout.Game_objects
             pauseMenuOptions = PauseMenuOptions.resume;
         }
 
-        public void SecondInitialize(GamePlayView gamePlay)
+        public void SecondInitialize(GamePlayView gpv)
         {
             int pauseMenuWidth;
             int pauseMenuHeight;            
             int pauseMenuX;
             int pauseMenuY;
-            InteriorToWalls intr = gamePlay.interiorToWalls;
+            InteriorToWalls intr = gpv.interiorToWalls;
             Spacing sp = spacing;
 
-            float pauseMenuMaxFontWidth = GetStringSizeMaxX(gamePlay.pauseMenuFont);
-            pauseMenuWidth = (int)pauseMenuMaxFontWidth + 2 * gamePlay.spacing.pauseMenuInternalSideSpacing;
+            float pauseMenuMaxFontWidth = stringRenderer.GetStringSizeMaxX(gpv.pauseMenuFont, pauseMenuPrompts);
+            pauseMenuWidth = (int)pauseMenuMaxFontWidth + 2 * gpv.spacing.pauseMenuInternalSideSpacing;
             pauseMenuX = intr.position.X + intr.position.Width / 2 - pauseMenuWidth / 2;
             pauseMenuY = intr.position.Y + sp.pauseMenuExteriorTopSpacing;
-            pauseMenuHeight = ComputeTotalHeight(sp.pauseMenuInternalTopSpacing, sp.pauseMenuInternalBottomSpacing, sp.pauseMenuPostHeaderSpacing, sp.pauseMenuIntraLineSpacing, gamePlay.pauseMenuFont);
+            pauseMenuHeight = ComputeTotalHeight(sp.pauseMenuInternalTopSpacing, sp.pauseMenuInternalBottomSpacing, sp.pauseMenuPostHeaderSpacing, sp.pauseMenuIntraLineSpacing, gpv.pauseMenuFont);
 
             UpdatePosition(new Rectangle(pauseMenuX, pauseMenuY, pauseMenuWidth,
                 pauseMenuHeight));
@@ -94,21 +94,6 @@ namespace Breakout.Game_objects
         {
             position = rect;
             boundingBox = rect; //let's do this too...just in case? *shrug*
-        }
-
-        private float GetStringSizeMaxX(SpriteFont font)
-        {
-            float maxSizeX = 0f;
-            Vector2 stringSize;
-            foreach (string k in pauseMenuPrompts.Keys)
-            {
-                stringSize = font.MeasureString(pauseMenuPrompts[k]);
-                if(stringSize.X > maxSizeX)
-                {
-                    maxSizeX = stringSize.X;
-                }
-            }
-            return maxSizeX; 
         }
 
         internal void DrawPauseMenu(GamePlayView gpv)

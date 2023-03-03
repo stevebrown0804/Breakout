@@ -29,5 +29,38 @@ namespace Breakout.@Subsystems
             return rs.X + rs.Width / 2 - stringSize.X / 2;
         }
 
+        //Dictionary<string, string> version
+        public float GetStringSizeMaxX(SpriteFont font, Dictionary<string, string> dict)
+        {
+            float maxSizeX = 0f;
+            Vector2 stringSize;
+            foreach (string k in dict.Keys)
+            {
+                stringSize = font.MeasureString(dict[k]);
+                if (stringSize.X > maxSizeX)
+                {
+                    maxSizeX = stringSize.X;
+                }
+            }
+            return maxSizeX;
+        }
+
+        //List version
+        public float GetStringSizeMaxX(SpriteFont font, List<string> list)
+        {
+            float maxSizeX = 0f;
+            Vector2 stringSize;
+
+            for(int i = 0; i < list.Count; i++)
+            {
+                stringSize = font.MeasureString(list[i]);
+                if (stringSize.X > maxSizeX)
+                {
+                    maxSizeX = stringSize.X;
+                }
+            }
+            return maxSizeX;
+        }
+
     }//END class StringRenderer
 }

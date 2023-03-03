@@ -579,9 +579,9 @@ namespace Breakout.Game_states
             /*if (!waitingOnRender)
                 {*/
 
-            //Vector2 stringSize = pauseMenuFont.MeasureString(MESSAGE);
+            //Vector2 stringSize = pauseMenuFont.MeasureString(highScoresHeaderMsg);
 
-            /*el = new GameElement(RenderType.Text, pauseMenuFont, MESSAGE, 
+            /*el = new GameElement(RenderType.Text, pauseMenuFont, highScoresHeaderMsg, 
                                     new Vector2(graphics.PreferredBackBufferWidth / 2 - stringSize.X / 2,                                 graphics.PreferredBackBufferHeight / 2 - stringSize.Y), Color.Yellow);
             renderer.AddToRenderList(el);*/
 

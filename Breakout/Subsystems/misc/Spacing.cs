@@ -10,7 +10,7 @@ namespace Breakout.Subsystems.misc
 {
     public class Spacing
     {
-        //DONE, MOSTLY: Figure out the spacing of the various regions of the game screen
+        //ONGOING: Figure out the spacing of the various regions of the game screen
         // ...and give stuff (public) variable names.  *thumbs up*
 
         public int topAreaHeight;
@@ -51,7 +51,9 @@ namespace Breakout.Subsystems.misc
         public int gameOverTopSpacing;
         public int gameOverBottomSpacing;
         public int highScoresRegionExternalTopSpacing;
-        public int highScoresRegionExternalSideSpacing;
+        //public int highScoresRegionExternalSideSpacing;
+        public int highScoresRegionExternalBottomSpacing;
+        public int highScoresRegionInternalSideSpacing;
 
 
         internal Spacing(GraphicsDeviceManager graphics)
@@ -106,7 +108,9 @@ namespace Breakout.Subsystems.misc
             gameOverBottomSpacing = 230;
 
             highScoresRegionExternalTopSpacing = 100;  //IN PROGRESS
-            highScoresRegionExternalSideSpacing = 100;
+            //highScoresRegionExternalSideSpacing = 0;
+            highScoresRegionExternalBottomSpacing = 100;
+            highScoresRegionInternalSideSpacing = 100; //TEMP-ish
         }
 
         internal void RecomputeValues(GraphicsDeviceManager graphics, GamePlayView gamePlayView)

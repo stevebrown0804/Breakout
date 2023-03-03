@@ -55,7 +55,7 @@ namespace Breakout.Game_elements
             hitBricksAtSpawnTime = hitBricks;
         }
 
-        //DONE, I THINK: Ball.Move()
+        //IN PROGRESS: Ball.Move() (Remaining: 'you win' screen)
         internal void Move(GameTime gameTime, GamePlayView gpv)
         {
             if (!isActive)  //we'll bail out quickly if the ball is inactive
@@ -99,6 +99,9 @@ namespace Breakout.Game_elements
                     velocity.Y = -(velocity.Y);
             }
 
+            //TODO: Add a 'you win' screen when the last brick has been destroyed
+            //MAYBE: Adapt the game over screen to this
+
             //...and the bricks
             if (CollisionDetection.DoTheyIntersect(gpv.brickGrid.position, test_position))
             {
@@ -115,7 +118,7 @@ namespace Breakout.Game_elements
                         var bg = gpv.brickGrid.brickGrid;                        
                         for (int j = 0; j < bg[i].Count; j++)
                         {
-                            if (!bg[i][j].hasBeenHit)
+                            if (!bg[i][j].hasBeenHit)  //skip CD on bricks that have already been hit
                             {
                                 if (CollisionDetection.DoTheyIntersect(bg[i][j].position, test_position))
                                 {                                    
@@ -192,13 +195,14 @@ namespace Breakout.Game_elements
             position.X = test_position.X;
             position.Y = test_position.Y;
 
-            //Then we'll check and see if the ball is out of bounds; if so, remove a life and start over or do game over
+            //Then we'll check and see if the ball is out of bounds; if so, remove a life and either start over or do game over
             if (!gpv.waitingToReinitializeBalls)
             {
                 if (position.Y > gpv.interiorToWalls.position.Y + gpv.interiorToWalls.position.Height)
                 {
                     //Debug.Print("Ball is out of bounds!");
                     isActive = false;
+                    //TODO: Don't render balls that are !isActive
 
                     bool isAnotherActiveBall = false;
                     //Check ALL the balls for being out of bounds

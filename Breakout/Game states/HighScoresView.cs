@@ -2,6 +2,7 @@
 using Breakout.Game_objects.Base;
 using Breakout.Game_objects.non_derived;
 using Breakout.Game_objects.Window_areas.HighScoreView;
+using Breakout.Subsystems;
 using Breakout.Subsystems.Base;
 using Breakout.Subsystems.misc;
 using Microsoft.Xna.Framework;
@@ -20,32 +21,37 @@ namespace Breakout.Game_states
 {
     public class HighScoresView : GameStateView
     {
+        BoxRenderer boxRenderer;
+
         HighScoresRegion highScoresRegion;
         HighScores highScores;
 
         private Texture2D white1x1;
         private SpriteFont highScoresFont;
         private SpriteFont highScoresHeaderFont;
-        private const string MESSAGE = "High scores";
-        private const string resetHighScoresMsg = "Press 'r' to reset the high scores";
+        private const string highScoresHeaderMsg = "High scores";
+        private const string highScoresResetMsg = "Press 'r' to reset the high scores";
 
         bool areHighScoresSetUp = false;
 
         //IN PROGRESS: Implement high scores (class HighScoresView)
 
+        public HighScoresView()
+        {
+            //TODO: Something here? not sure atm (HighScoresView constructor)
+        }
+
         public override void initialize(GraphicsDevice graphicsDevice, GraphicsDeviceManager graphics, SubsystemsHolder subsystems)
         {
             base.initialize(graphicsDevice, graphics, subsystems);
 
-            //Then create the highScoresRegion
-            int w, h;  //TODO: fill in w,h (of HighScoresView.initialize()) with non-literals
-            w = 1000; h = 700;  //TMP!
-            highScoresRegion = new(new Rectangle(spacing.highScoresRegionExternalTopSpacing, spacing.highScoresRegionExternalSideSpacing, w, h));
+            //stash stuff
+            boxRenderer = subsystems.boxRenderer;
 
+            //Create highScores -- which I THINK will initialize its list (and populate it).  TBD!
             highScores = new();
-
-            //Let's see if we can put this here:
-            //highScores.SetupHighScores();  //nm!  we put it in update()
+            // ...and highScoresRegion, which I'm not sure if this step is necessary
+            highScoresRegion = new(new Rectangle(0, 0, 0, 0));  //dare we create this here? TBD!
         }
 
         public override void loadContent(ContentManager contentManager)
@@ -89,6 +95,7 @@ namespace Breakout.Game_states
         {
             if (!areHighScoresSetUp)
             {
+                DetermineHighScoresRegionPosition();
                 highScores.SetupHighScores(renderer, highScoresHeaderFont, highScoresFont); //One-time call? TBD!
                 areHighScoresSetUp = true;
             }
@@ -97,18 +104,57 @@ namespace Breakout.Game_states
             el = new(RenderType.UI, CallType.Rectangle, white1x1, highScoresRegion.position, Color.White);
             renderer.AddToRenderList(el);
 
-            //Rectangle r = new(0, 0, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
-            (_, Vector2 vec) = stringRenderer.RenderStringHVCentered(MESSAGE, highScoresHeaderFont, highScoresRegion.position);
-
-            el = new(RenderType.Text, highScoresHeaderFont, MESSAGE, vec, Color.Black);
+            (_, Vector2 vec) = stringRenderer.RenderStringHVCentered(highScoresHeaderMsg, highScoresHeaderFont, highScoresRegion.position);
+            el = new(RenderType.Text, highScoresHeaderFont, highScoresHeaderMsg, vec, Color.Black);
             renderer.AddToRenderList(el);
         }
 
-        //IN PROGRESS: Reset the high scores (in resetHighScores())
+        //TODO: Reset the high scores (in resetHighScores())
         private void resetHighScores()
         {
             //Debug.Print("TODO: Reset the high scores");
             highScores.ReinitializeHighScores();
+        }
+
+        //IN PROGRESS! (HighScoresView.DetermineHighScoresRegionPosition())
+        private void DetermineHighScoresRegionPosition()
+        {
+            float x, y, w, h;  //TODO: fill in w,h (of HighScoresView.initialize()) with non-literals
+  
+            //determine the region's width & height
+            Vector2 vec = highScoresHeaderFont.MeasureString(highScoresHeaderMsg);
+            float possibleMaxX = vec.X;
+            List<string> list = highScores.GetHighScoresListOfStrings();
+            list.Add(highScoresResetMsg);
+            float possibleMaxX_2 = stringRenderer.GetStringSizeMaxX(highScoresFont, list);
+            w = MathHelper.Max(possibleMaxX, possibleMaxX_2);
+            w += 2 * spacing.highScoresRegionInternalSideSpacing;
+
+            //...and h
+            h = 500;  //TMP
+            highScoresRegion.UpdatePosition(new Rectangle(0, 0, (int)w, (int)h));
+
+
+
+            //figure out the region's (x,y)            
+            x = boxRenderer.DrawRectangleHCentered(highScoresRegion.position, new Rectangle(0, 0, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight));            
+            y = boxRenderer.DrawRectangleVCentered(highScoresRegion.position, new Rectangle(0, 0, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight));
+            y -= spacing.highScoresRegionExternalBottomSpacing;
+
+
+            highScoresRegion.UpdatePosition(new Rectangle((int) x, (int) y, highScoresRegion.position.Width, highScoresRegion.position.Height));
+
+
+
+
+            //2nd: draw the region centered (+ spacing) on the screen
+            //highScoresRegion = new(new Rectangle((int) x, (int) y, (int) w, (int) h));
+        }
+
+        private void ResizeHighScoresRegion(Rectangle pos)
+        {
+            //TODO! (HighScoresView.ResizeHighScoresRegion())
+            throw new System.Exception("What this HighScoresView.ResizeHighScoresRegion() function all about yo");
         }
 
     }//END class HighScoresView

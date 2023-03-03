@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Breakout.Game_objects.non_derived
 {
-    //First, a 'HighScore' class to hold an individual score (and to sort the list of these objecest)
+    //First, a 'HighScore' class to hold an individual score (and to sort the list of these objects)
     internal class HighScore : IComparable<HighScore>
     {
         internal int score;
@@ -79,6 +79,21 @@ namespace Breakout.Game_objects.non_derived
             highScores.Sort();
             while (highScores.Count > numScores)
                 highScores.RemoveAt(numScores);
+        }
+
+        internal List<HighScore> GetHighScoresList()
+        {
+            return highScores;
+        }
+
+        internal List<string> GetHighScoresListOfStrings()
+        {
+            List<string> list = new();
+            for (int i = 0; i < highScores.Count; i++)
+            {
+                list.Add($"{highScores[i].score}");
+            }
+            return list;
         }
 
     }//END class HighScores
