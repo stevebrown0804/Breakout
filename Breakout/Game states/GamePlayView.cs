@@ -52,7 +52,7 @@ namespace Breakout.Game_states
         //Sprites & fonts
         internal SpriteFont pauseMenuFont;  //Fonts
         internal SpriteFont inGameScoreFont;
-        private SpriteFont countdownFont;
+        internal SpriteFont countdownFont;
         private SpriteFont gameOverFont;
         private SpriteFont gameOverEscapePromptFont;
         private Texture2D blue1x1;          //Bricks
@@ -102,12 +102,13 @@ namespace Breakout.Game_states
         //Variables that do NOT need to be reinitialize in Reinitalize()
         bool isContentLoaded = false;
         bool areSubsystemsStashed = false;
+        bool isBGMPlaying = false;
         internal GamePlayState gamePlayState;
 
         //and then..other stuff?  *shrug*
         internal bool waitingOnRender = false;
         internal bool waitingToReinitializeBalls = false;
-        bool isBGMPlaying = false;
+        
 
         public GamePlayView() { }
 
@@ -260,7 +261,7 @@ namespace Breakout.Game_states
             int countdownYCoord = interiorToWalls.position.Y + spacing.countdownTopSpacing;
             countdown = new(new Rectangle(countdownXCoord, countdownYCoord,
                 interiorToWalls.position.X + interiorToWalls.position.Width - countdownXCoord - spacing.countdownSideSpacing,
-                interiorToWalls.position.Y + interiorToWalls.position.Height - countdownYCoord - spacing.countdownBottomSpacing));
+                interiorToWalls.position.Y + interiorToWalls.position.Height - countdownYCoord - spacing.countdownBottomSpacing), subsystems);
 
             //and the pause menu            
             pauseMenu = new(new Rectangle(0, 0, 0, 0));  //so we can access pauseMenu's helper functions
@@ -408,6 +409,7 @@ namespace Breakout.Game_states
                             }
                         }
 
+                        //With either state...
                         if (keyboard.IsKeyPressed(Keys.Escape))
                         {
                             pauseMenu.prevStateBeforePaused = gamePlayState;
@@ -514,9 +516,11 @@ namespace Breakout.Game_states
                 }
                 else if (gamePlayState == GamePlayState.Countdown)
                 {
-                    //FOR NOW: we'll skip the countdown state and go directly to inGame
-                    //Debug.Print($"Setting gamePlayState to: InGame; current value is: {gamePlayState}");
-                    gamePlayState = GamePlayState.InGame;
+                    DrawGame(gameTime);
+
+                    //is the if() necessary?  Not sure; TBD
+                    if (!pauseMenu.isPaused)
+                        countdown.DoCountdown(1000, gameTime, this);
 
                 }
                 else if (gamePlayState == GamePlayState.InGame)
@@ -532,7 +536,6 @@ namespace Breakout.Game_states
                     // Or we could simply not call the methods that add to elapsedTime; TBD
 
                     pauseMenu.DrawPauseMenu(this);
-
                 }
                 else if (gamePlayState == GamePlayState.ResettingLevel)
                 {
@@ -549,7 +552,7 @@ namespace Breakout.Game_states
                     //REMINDER: ReinitializeGame() sets gamePlayState to initialize (in Initalize())
                     ReinitializeGame(graphicsDevice, graphics); 
                 }
-                else
+                else  //unrecognized state
                 {
                     throw new Exception("GamePlayView.update says: Invalid gamePlayState");
                 }
@@ -748,12 +751,11 @@ namespace Breakout.Game_states
         {
             //Debug.Print("Inside GamePlayView.ResetLevel()");
 
-            //reset the ball's (and paddle's) position & velocity
+            //reset the ball's (and paddle's) position & velocity  //<--paddle?  hmmm
             ReinitializeBall();
 
-            //and then...
-            //Debug.Print($"Setting gamePlayState to: InGame; current value is: {gamePlayState}");
-            gamePlayState = GamePlayState.InGame;
+            countdown.ResetCountdown();            
+            gamePlayState = GamePlayState.Countdown;
         }
 
         public void ReinitializeGame(GraphicsDevice graphicsDevice, GraphicsDeviceManager graphics)
