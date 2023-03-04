@@ -23,9 +23,9 @@ namespace Breakout.Game_states
         BoxRenderer boxRenderer;
 
         HighScoresRegion highScoresRegion;
-        internal HighScores highScores;
 
-        HighScoresIOManager hsiom;
+        //internal HighScores highScores;
+        //HighScoresIOManager hsiom;
 
         //private Texture2D white1x1;
         private SpriteFont highScoresFont;
@@ -35,30 +35,27 @@ namespace Breakout.Game_states
         private const string highScoresEscapeMsg = "Press Escape to return to the main menu";
 
         bool areHighScoresSetUp = false;  //are we using this atm?  TBD
-        bool areHighScoresLoaded = false;
+        //bool areHighScoresLoaded = false;  //true;
 
         //IN PROGRESS: Implement high scores (class HighScoresView) (Remaining: update the list, reset the list, persist the list)
 
         public HighScoresView()
         {
-            hsiom = new();
         }
 
         public override void initialize(GraphicsDevice graphicsDevice, GraphicsDeviceManager graphics, SubsystemsHolder subsystems)
         {
+            Debug.Print("In HighScoresView.initialize()");
+
             base.initialize(graphicsDevice, graphics, subsystems);
 
             //stash stuff
             boxRenderer = subsystems.boxRenderer;
+            highScores = subsystems.highScores;
+            hsiom = subsystems.hsiom;
 
-            //Read in highScores or create it            
-            hsiom.ReadInHighScores();
-            highScores = hsiom.GetHighScores();
-            if (highScores == null)
-                highScores = new();
-
-            // ...and highScoresRegion, which I'm not sure if this step is necessary
-            highScoresRegion = new(new Rectangle(0, 0, 0, 0));  //dare we create this here? TBD!  <--seems fine
+            // ...and highScoresRegion, which I'm not sure if this step is necessary  //<--yep, still necessary
+            highScoresRegion = new(new Rectangle(0, 0, 0, 0));
         }
 
         public override void loadContent(ContentManager contentManager)
@@ -77,7 +74,7 @@ namespace Breakout.Game_states
 
             if (keyboard.IsKeyPressed(Keys.Escape))
             {
-                areHighScoresLoaded = false;    //reset this to false when we leave the high scores view
+                //areHighScoresLoaded = false;    //reset this to false when we leave the high scores view
                 return GameStateEnum.MainMenu;
             }
 
@@ -93,16 +90,8 @@ namespace Breakout.Game_states
         {
             if (!areHighScoresSetUp)
             {
-                DetermineHighScoresRegionPosition();
-                //highScores.SetupHighScores(renderer, highScoresHeaderFont, highScoresFont); //One-time call? TBD!
+                DetermineHighScoresRegionPosition();                
                 areHighScoresSetUp = true;
-            }
-
-            if (!areHighScoresLoaded)
-            {
-                hsiom.ReadInHighScores();
-                highScores = hsiom.GetHighScores();
-                areHighScoresLoaded = true;
             }
 
             float x, y;
@@ -125,7 +114,7 @@ namespace Breakout.Game_states
             vec = highScoresHeaderFont.MeasureString(highScoresHeaderMsg);
             y += vec.Y + spacing.highScoresRegionSubHeaderSpacing;
             list = highScores.GetHighScoresListOfStrings();
-            list.Reverse();
+
             for(int i = 0; i < list.Count; i++)
             {
                 x = stringRenderer.RenderStringHCentered(list[i], highScoresFont, highScoresRegion.position);
@@ -155,6 +144,8 @@ namespace Breakout.Game_states
         private void resetHighScores()
         {
             highScores.ReinitializeHighScores();
+            hsiom.SaveHighScores(highScores);
+            hsiom.WaitToFinish();
         }
 
         private void DetermineHighScoresRegionPosition()
@@ -187,12 +178,6 @@ namespace Breakout.Game_states
 
             highScoresRegion.UpdatePosition(new Rectangle((int) x, (int) y, highScoresRegion.position.Width, highScoresRegion.position.Height));
         }
-
-        /*private void ResizeHighScoresRegion(Rectangle pos)
-        {
-            //TODO! (HighScoresView.ResizeHighScoresRegion())
-            throw new System.Exception("What's this HighScoresView.ResizeHighScoresRegion() function all about yo");
-        }*/
 
         //Necessary? TBD
         private float FindTotalHeight(SpriteFont font, List<string> list, int intraLineSpacing)

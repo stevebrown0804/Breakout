@@ -15,9 +15,11 @@ using System.Xml.Serialization;
 namespace Breakout.Subsystems
 {
     //First, a 'HighScore' class to hold an individual score (and to sort the list of these objects)
-    class HighScore : IComparable<HighScore>
+    public class HighScore : IComparable<HighScore>
     {
-        internal int score;
+        public int score;
+
+        internal HighScore() { }    //Necessary for serialization
 
         internal HighScore(int score)
         {
@@ -38,34 +40,46 @@ namespace Breakout.Subsystems
 
 
     //Then, a 'HighScore' class to hold a list of HighScore objects
+    //[Serializable]
     public class HighScores
     {
-        List<HighScore> highScores;
+        public List<HighScore> highScoresList;
 
         internal HighScores()
         {
-            highScores = new();
-            for (int i = 0; i < 5; i++)
+            highScoresList = new();
+            /*for (int i = 0; i < 5; i++)
             {
-                HighScore aScore = new((i + 1) * 10);  //100, 200, ..., 500  (ish)
-                highScores.Add(aScore);
+                HighScore aScore = new(i + 1);  //100, 200, ..., 500  (ish)
+                highScoresList.Add(aScore);
             }
+            highScoresList.Reverse();*/
         }
 
-         //TODO: Implement (HighScores.ReinitializeHighScores())
         internal void ReinitializeHighScores()
         {
-            Debug.Print("TODO: HighScores.ReinitializeHighScores()");
+            highScoresList.Clear();
+            for (int i = 0; i < 5; i++)
+            {
+                HighScore aScore = new(0); //new(i + 1);  //100, 200, ..., 500  (ish)
+                highScoresList.Add(aScore);
+            }
+            highScoresList.Reverse();
+
+            AddSortChop(new HighScore(0), 5);       //just to try stuff
+
         }
 
+        //returns true is score is in the list after chopping
+        //note: doesn't care if score was already there (eg. you just duplicated an existing high score)
         internal bool AddSortChop(HighScore score, int numScores)
         {
-            highScores.Add(score);
-            highScores.Sort();
-            while (highScores.Count > numScores)
-                highScores.RemoveAt(numScores);
+            highScoresList.Add(score);
+            highScoresList.Sort();
+            while (highScoresList.Count > numScores)
+                highScoresList.RemoveAt(numScores);
 
-            if (highScores.Contains(score))
+            if (highScoresList.Contains(score))
                 return true;
 
             return false;
@@ -73,17 +87,22 @@ namespace Breakout.Subsystems
 
         internal List<HighScore> GetHighScoresList()
         {
-            return highScores;
+            return highScoresList;
         }
 
         internal List<string> GetHighScoresListOfStrings()
         {
             List<string> list = new();
-            for (int i = 0; i < highScores.Count; i++)
+            for (int i = 0; i < highScoresList.Count; i++)
             {
-                list.Add($"{highScores[i].score}");
+                list.Add($"{highScoresList[i].score}");
             }
             return list;
+        }
+
+        internal void EmptyHighScoresList()
+        {
+            highScoresList.Clear();
         }
 
     }//END class HighScores

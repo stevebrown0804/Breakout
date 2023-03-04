@@ -11,14 +11,14 @@ using System.Diagnostics;
 
 namespace Breakout.Subsystems
 {
-    internal class HighScoresIOManager
+    public class HighScoresIOManager
     {
         bool saving = false;
         bool loading = false;
 
         private HighScores m_loadedState = null;
 
-
+        internal HighScoresIOManager() { }
 
         internal HighScores GetHighScores()
         {
@@ -32,7 +32,6 @@ namespace Breakout.Subsystems
                 if (!saving)
                 {
                     saving = true;
-                    //HighScores hs = highScores;
                     finalizeSaveAsync(highScores);
                 }
             }
@@ -50,6 +49,30 @@ namespace Breakout.Subsystems
             }
         }
 
+        internal bool FileExists()
+        {
+            IsolatedStorageFile storage = IsolatedStorageFile.GetUserStoreForApplication();
+            if (storage.FileExists("HighScores.xml"))
+                return true;
+
+            return false;
+        }
+
+        internal bool IsBusy()
+        {
+            return saving || loading;
+        }
+
+        internal void WaitToFinish()
+        {
+            bool isDone = false;
+            while (!isDone)
+            {
+                if (!IsBusy())
+                    isDone = true;
+            }
+        }
+
         private async void finalizeSaveAsync(HighScores state)
         {
             await Task.Run(() =>
@@ -64,12 +87,14 @@ namespace Breakout.Subsystems
                             {
                                 XmlSerializer mySerializer = new XmlSerializer(typeof(HighScores));
                                 mySerializer.Serialize(fs, state);
+
+                                //Debug.Print($"HSIOM.finalizeSaveAsync() says: ({fs}, {state}) has been serializaed");
                             }
                         }
                     }
-                    catch (IsolatedStorageException)
+                    catch (IsolatedStorageException e)
                     {
-                        // Ideally show something to the user, but this is demo code :)
+                        Debug.Print($"HighScoresIOManager.finalizeSaveAsync() says: {e.Message}");
                     }
                 }
 
@@ -87,19 +112,30 @@ namespace Breakout.Subsystems
                     {
                         if (storage.FileExists("HighScores.xml"))
                         {
+                            //Debug.Print("storage.FileExists(\"HighScores.xml\") is TRUE");
                             using (IsolatedStorageFileStream fs = storage.OpenFile("HighScores.xml", FileMode.Open))
                             {
                                 if (fs != null)
                                 {
+                                    //Debug.Print("hsiom.finalizeLoadAsync says: fs is non-null");
                                     XmlSerializer mySerializer = new XmlSerializer(typeof(HighScores));
                                     m_loadedState = (HighScores)mySerializer.Deserialize(fs);
+                                    //Debug.Print($"({fs}, {m_loadedState}) has been deserialized");
+                                }
+                                else
+                                {
+                                    //Debug.Print("hsiom.finalizeLoadAsync says: fs is null! Problem?");
                                 }
                             }
+                        }
+                        else
+                        {
+                            //Debug.Print("storage.FileExists(\"HighScores.xml\") is FALSE! Problem?");
                         }
                     }
                     catch (IsolatedStorageException e)
                     {
-                        Debug.Print($"HighScoresIOManager says: {e.Message}");
+                        Debug.Print($"HighScoresIOManager.finalizeLoadAsync() says: {e.Message}");
                     }
                 }
 

@@ -34,9 +34,7 @@ namespace Breakout
         BO_Keyboard keyboard;
         Renderer renderer;
         //StringRenderer stringRenderer;
-
-        //is this a subsystem?  *shrug*
-        HighScores highScores; //TODO: migrate highScores to here
+        //HighScores highScores;
 
         public Breakout_Game()
         {
@@ -53,6 +51,7 @@ namespace Breakout
             keyboard.InitializePreviousState();
             renderer = subsystems.renderer;
             //stringRenderer = subsystems.stringRenderer;
+            //highScores = subsystems.highScores;
 
             //Then do other stuff
             graphics.PreferredBackBufferWidth = 1920;

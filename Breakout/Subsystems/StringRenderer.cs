@@ -17,7 +17,7 @@ namespace Breakout.@Subsystems
 
             float rs_y = rs.Y + rs.Height / 2 - stringSize.Y / 2;
 
-            //Note: The first value of the tuple is a float containing the bottom coordinate of the text
+            //NOTE: The first value of the tuple is a float containing the bottom coordinate of the text
             return (rs_y + stringSize.Y, new Vector2(rs.X + rs.Width / 2 - stringSize.X / 2, rs_y));
         }
 

@@ -27,10 +27,14 @@ namespace Breakout.Game_elements
         bool hasHighScoresBeenStashed = false;
         int hitBricksAtSpawnTime;
 
+        HighScoresIOManager hsiom;
         HighScores highScores;
 
         internal Ball(Rectangle position) : base(position)
         {
+            /*hsiom = subsystems.hsiom;
+            highScores = subsystems.highScores;*/
+
             //MAYBE: Keep messing these values (in Ball.Initialize()) later, as needed
             speedupFactor = new Dictionary<int, float> {
                 {4, 1.15f },
@@ -66,8 +70,12 @@ namespace Breakout.Game_elements
             if (!isActive)  //we'll bail out quickly if the ball is inactive
                 return;
 
-            if(!hasHighScoresBeenStashed)
+            if (!hasHighScoresBeenStashed)
+            {
                 highScores = gpv.subsystems.highScores;
+                hsiom = gpv.subsystems.hsiom;
+            }
+
 
             TimeSpan time = gameTime.ElapsedGameTime;
             float deltaX = velocity.X * (float)time.TotalMilliseconds;
@@ -241,8 +249,15 @@ namespace Breakout.Game_elements
                                 //First we'll save the high scores, if necessary
                                 if (highScores.AddSortChop(new HighScore(gpv.score.score), 5))
                                 {
-                                    HighScoresIOManager hsiom = new();
+                                    //HighScoresIOManager hsiom = new();
                                     hsiom.SaveHighScores(gpv.highScores);
+                                    hsiom.WaitToFinish();
+                                    /*bool isDone = false;
+                                    while (!isDone)
+                                    {
+                                        if (!hsiom.IsBusy())
+                                            isDone = true;
+                                    }*/                                  
                                 }
 
                                 //Then we'll change the gamePlayState

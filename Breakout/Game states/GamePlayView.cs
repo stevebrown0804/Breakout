@@ -46,7 +46,7 @@ namespace Breakout.Game_states
         //Some stuff to stash
         GraphicsDevice graphicsDevice;
         internal ContentManager contentManager;
-        internal HighScores highScores;
+        //internal HighScores highScores;
         
         //Some constants
         const int numRowsOfBricks = 8;

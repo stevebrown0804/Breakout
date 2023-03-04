@@ -22,6 +22,8 @@ namespace Breakout.Game_states
         internal Renderer renderer;
         internal StringRenderer stringRenderer;
         internal Spacing spacing;
+        internal HighScoresIOManager hsiom;
+        internal HighScores highScores;
 
         public virtual void initialize(GraphicsDevice graphicsDevice, GraphicsDeviceManager graphics, SubsystemsHolder subsystems)
         {
@@ -33,6 +35,8 @@ namespace Breakout.Game_states
             keyboard = subsystems.keyboard;
             stringRenderer = subsystems.stringRenderer;
             spacing = subsystems.spacing;
+            hsiom = subsystems.hsiom;
+            highScores = subsystems.highScores;
         }
 
         public abstract void loadContent(ContentManager contentManager);
