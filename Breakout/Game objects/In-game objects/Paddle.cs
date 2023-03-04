@@ -70,7 +70,7 @@ namespace Breakout.Game_elements
         {
             //MAYBE: apply the balls' multiplier to the paddle (or some kind of speedup)
 
-            //EVENTUALLY: Mess around with this value until we get something that feels right
+            //LATER: Mess around with this value until we get something that feels right
             return 1.5f;  
         }
 

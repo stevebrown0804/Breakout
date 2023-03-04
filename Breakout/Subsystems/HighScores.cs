@@ -48,12 +48,6 @@ namespace Breakout.Subsystems
         internal HighScores()
         {
             highScoresList = new();
-            /*for (int i = 0; i < 5; i++)
-            {
-                HighScore aScore = new(i + 1);  //100, 200, ..., 500  (ish)
-                highScoresList.Add(aScore);
-            }
-            highScoresList.Reverse();*/
         }
 
         internal void ReinitializeHighScores()
@@ -61,17 +55,14 @@ namespace Breakout.Subsystems
             highScoresList.Clear();
             for (int i = 0; i < 5; i++)
             {
-                HighScore aScore = new(0); //new(i + 1);  //100, 200, ..., 500  (ish)
+                HighScore aScore = new((i + 1) * 5); //new(0);
                 highScoresList.Add(aScore);
             }
             highScoresList.Reverse();
-
-            AddSortChop(new HighScore(0), 5);       //just to try stuff
-
         }
 
-        //returns true is score is in the list after chopping
-        //note: doesn't care if score was already there (eg. you just duplicated an existing high score)
+        //returns true if score is in the list after chopping
+        //NOTE: doesn't care if score was already there (eg. you just duplicated an existing high score)
         internal bool AddSortChop(HighScore score, int numScores)
         {
             highScoresList.Add(score);

@@ -23,7 +23,7 @@ namespace Breakout.Game_elements
     {
         public Vector2 velocity;
         Dictionary<int, float> speedupFactor;
-        bool isActive = true;
+        internal bool isActive = true;
         bool hasHighScoresBeenStashed = false;
         int hitBricksAtSpawnTime;
 
@@ -32,10 +32,7 @@ namespace Breakout.Game_elements
 
         internal Ball(Rectangle position) : base(position)
         {
-            /*hsiom = subsystems.hsiom;
-            highScores = subsystems.highScores;*/
-
-            //MAYBE: Keep messing these values (in Ball.Initialize()) later, as needed
+            //LATER: Keep messing with these values (in Ball.Initialize()) later, as needed
             speedupFactor = new Dictionary<int, float> {
                 {4, 1.15f },
                 {12, 1.25f },
@@ -46,7 +43,7 @@ namespace Breakout.Game_elements
             velocity = new Vector2(0, 0);  //Initially at rest -> moving with the paddle
         }
 
-        //MAYBE: keep messing around with these values (in Ball.GiveVelocity()), as needed
+        //LATER: keep messing around with these values (in Ball.GiveVelocity()), as needed
         public void GiveVelocity()
                 {            
                     velocity.X = 0.3f; //45 degrees to the right, I think. <--positive is right, negative is left
@@ -218,8 +215,7 @@ namespace Breakout.Game_elements
                 {
                     //Debug.Print("Ball is out of bounds!");
                     isActive = false;
-                    //TODO: Don't render balls that are !isActive
-
+                    
                     bool isAnotherActiveBall = false;
                     //Check ALL the balls for being out of bounds
                     //If a ball is out of bounds but there's another, just set the ball that's out of bounds' isActive to false and continue playing
@@ -249,15 +245,8 @@ namespace Breakout.Game_elements
                                 //First we'll save the high scores, if necessary
                                 if (highScores.AddSortChop(new HighScore(gpv.score.score), 5))
                                 {
-                                    //HighScoresIOManager hsiom = new();
                                     hsiom.SaveHighScores(gpv.highScores);
                                     hsiom.WaitToFinish();
-                                    /*bool isDone = false;
-                                    while (!isDone)
-                                    {
-                                        if (!hsiom.IsBusy())
-                                            isDone = true;
-                                    }*/                                  
                                 }
 
                                 //Then we'll change the gamePlayState

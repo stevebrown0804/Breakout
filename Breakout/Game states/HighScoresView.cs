@@ -37,8 +37,6 @@ namespace Breakout.Game_states
         bool areHighScoresSetUp = false;  //are we using this atm?  TBD
         //bool areHighScoresLoaded = false;  //true;
 
-        //IN PROGRESS: Implement high scores (class HighScoresView) (Remaining: update the list, reset the list, persist the list)
-
         public HighScoresView()
         {
         }

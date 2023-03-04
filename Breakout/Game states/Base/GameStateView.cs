@@ -24,6 +24,7 @@ namespace Breakout.Game_states
         internal Spacing spacing;
         internal HighScoresIOManager hsiom;
         internal HighScores highScores;
+        internal AudioPlayer audioPlayer;
 
         public virtual void initialize(GraphicsDevice graphicsDevice, GraphicsDeviceManager graphics, SubsystemsHolder subsystems)
         {
@@ -37,6 +38,7 @@ namespace Breakout.Game_states
             spacing = subsystems.spacing;
             hsiom = subsystems.hsiom;
             highScores = subsystems.highScores;
+            audioPlayer = subsystems.audioPlayer;
         }
 
         public abstract void loadContent(ContentManager contentManager);

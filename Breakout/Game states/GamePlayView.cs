@@ -23,8 +23,6 @@ using System.Diagnostics;
 /* "Background music during the gameplay." */
 
 
-//TODO: Find some BGM and integrate it
-
 namespace Breakout.Game_states
 {
     enum GamePlayState
@@ -46,7 +44,6 @@ namespace Breakout.Game_states
         //Some stuff to stash
         GraphicsDevice graphicsDevice;
         internal ContentManager contentManager;
-        //internal HighScores highScores;
         
         //Some constants
         const int numRowsOfBricks = 8;
@@ -110,11 +107,9 @@ namespace Breakout.Game_states
         //and then..other stuff?  *shrug*
         internal bool waitingOnRender = false;
         internal bool waitingToReinitializeBalls = false;
+        bool isBGMPlaying = false;
 
-        public GamePlayView()
-        {
-            //nothing to see here, atm
-        }
+        public GamePlayView() { }
 
         public override void initialize(GraphicsDevice graphicsDevice, GraphicsDeviceManager graphics, SubsystemsHolder subsystems)
         {
@@ -310,7 +305,6 @@ namespace Breakout.Game_states
                                               //so we'll do it here
         }
 
-        //IN PROGRESS: Implement GamePlayView.processInput()
         public override GameStateEnum processInput(GameTime gameTime)   
         {
             //Debug.Print("Now in GamePlayView.processInput");
@@ -416,17 +410,13 @@ namespace Breakout.Game_states
 
                         if (keyboard.IsKeyPressed(Keys.Escape))
                         {
-                            //For the moment, this just cleans up the game (note: not really; it just sets the gamePlayState to cleanup) then exits to the menu
-                            //  The game seems to start over successfully, though.  I guess we're done!
-                            
                             pauseMenu.prevStateBeforePaused = gamePlayState;
                             gamePlayState = GamePlayState.Paused;
+                            audioPlayer.PauseBGM();
                             pauseMenu.isPaused = true;
 
                             /*Debug.Print($"Setting gamePlayState to: Cleanup; current value is: {gamePlayState}");
                             gamePlayState = GamePlayState.Cleanup;*/
-                            //ReinitializeGame(graphicsDevice, graphics);
-                            //return GameStateEnum.MainMenu;
                         }
                     }
                     else if (gamePlayState == GamePlayState.Paused)
@@ -446,18 +436,22 @@ namespace Breakout.Game_states
                             if (pauseMenu.pauseMenuOptions == PauseMenu.PauseMenuOptions.resume)
                             {
                                 gamePlayState = pauseMenu.prevStateBeforePaused;
+                                audioPlayer.ResumeBGM();
                                 pauseMenu.isPaused = false;
                             }
                             else if (pauseMenu.pauseMenuOptions == PauseMenu.PauseMenuOptions.exit)
                             {
                                 gamePlayState = GamePlayState.Cleanup;
                                 //ReinitializeGame(graphicsDevice, graphics);
+                                audioPlayer.StopBGM();
+                                isBGMPlaying = false;
                                 return GameStateEnum.MainMenu;
                             }
                         }
                         else if (keyboard.IsKeyPressed(Keys.Escape))
                         {
                             gamePlayState = pauseMenu.prevStateBeforePaused;
+                            audioPlayer.ResumeBGM();
                             pauseMenu.isPaused = false;
                         }
                     }
@@ -467,7 +461,8 @@ namespace Breakout.Game_states
                         {   
                             //Debug.Print($"Setting gamePlayState to: Cleanup; current value is: {gamePlayState}");
                             gamePlayState = GamePlayState.Cleanup;
-                            //ReinitializeGame(graphicsDevice, graphics);
+                            audioPlayer.StopBGM();
+                            isBGMPlaying = false;
                             return GameStateEnum.MainMenu;
                         }
                     }
@@ -495,6 +490,13 @@ namespace Breakout.Game_states
         {
             //Debug.Print("Now in GamePlayView.update()");
 
+            if (!isBGMPlaying && gamePlayState != GamePlayState.Cleanup)
+            {
+                //TODO: uncomment this before submitting
+                //audioPlayer.PlayBGM();        
+                isBGMPlaying = true;
+            } 
+
             /*if (gamePlayState == GamePlayState.Initializing || gamePlayState == GamePlayState.Countdown
                 || gamePlayState == GamePlayState.InGame || gamePlayState == GamePlayState.Paused
                 || gamePlayState == GamePlayState.ResettingLevel || gamePlayState == GamePlayState.GameOver
@@ -502,21 +504,18 @@ namespace Breakout.Game_states
 
             if (gamePlayState != GamePlayState.OutOfGame)
             {
-                //GameElement el;
-
-
                 if (gamePlayState == GamePlayState.Initializing)
                 {
                     if (isContentLoaded)
                     {
-                        Debug.Print($"Setting gamePlayState to: Countdown; current value is: {gamePlayState}");
+                        //Debug.Print($"Setting gamePlayState to: Countdown; current value is: {gamePlayState}");
                         gamePlayState = GamePlayState.Countdown;
                     }
                 }
                 else if (gamePlayState == GamePlayState.Countdown)
                 {
                     //FOR NOW: we'll skip the countdown state and go directly to inGame
-                    Debug.Print($"Setting gamePlayState to: InGame; current value is: {gamePlayState}");
+                    //Debug.Print($"Setting gamePlayState to: InGame; current value is: {gamePlayState}");
                     gamePlayState = GamePlayState.InGame;
 
                 }
@@ -661,8 +660,8 @@ namespace Breakout.Game_states
                         el = new GameElement(RenderType.UI, CallType.Rectangle, tx, bg[i][j].position, Color.White);
                         renderer.AddToRenderList(el);
                     }
-                    else
-                    { //if the brick has been hit
+                    else  //if the brick has been hit
+                    { 
                         if (bg[i][j].isExploding && !pauseMenu.isPaused) //check to see if it's still exploding
                                                                             // and that the game's not paused
                         {
@@ -710,11 +709,13 @@ namespace Breakout.Game_states
             for (int i = 0; i < balls.Count; i++)
             {
                 if (!pauseMenu.isPaused)
-                {
                     balls[i].Move(gameTime, this);
-                }                
-                el = new GameElement(RenderType.UI, CallType.Rectangle, ball50x50, balls[i].position, Color.White);
-                renderer.AddToRenderList(el);
+
+                if (balls[i].isActive)
+                {
+                    el = new GameElement(RenderType.UI, CallType.Rectangle, ball50x50, balls[i].position, Color.White);
+                    renderer.AddToRenderList(el);
+                }
             }
 
             //countdown
@@ -767,7 +768,6 @@ namespace Breakout.Game_states
 
         private void DrawGameOver(GameTime gameTime)
         {
-            //do we need a new font for this?  TBD
             string str = "Game Over";
             string str2 = "Press Escape to return to the main menu";
 

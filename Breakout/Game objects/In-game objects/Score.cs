@@ -1,6 +1,5 @@
 ﻿using Breakout.Game_elements;
 using Breakout.Game_objects.Base;
-//using Breakout.Game_objects.non_derived;
 using Breakout.Game_states;
 using Breakout.Subsystems;
 using Breakout.Subsystems.Base;
@@ -18,7 +17,6 @@ using System.Diagnostics;
 
 namespace Breakout.Game_objects
 {
-    //IN PROGRESS: class Score (Remaining: high scores, ...)
     internal class Score : GameObject
     {
         //stuff to stash
@@ -57,19 +55,13 @@ namespace Breakout.Game_objects
                 //Debug.Print($"Another 100pts has been reached ({score}pts, {newScoreDiv100}); releasing a ball");
                 //Release a ball
                 Ball ball = new(new Rectangle(gpv.paddle.position.X + gpv.paddle.position.Width / 2 - gpv.spacing.ballWidth / 2, gpv.paddle.position.Y - gpv.spacing.ballHeight, gpv.spacing.ballWidth, gpv.spacing.ballHeight));
-                Debug.Print($"Ball spawned; hitBricksAtSpawnTime set to: {gpv.brickGrid.numBricksHit}");
+                //Debug.Print($"Ball spawned; hitBricksAtSpawnTime set to: {gpv.brickGrid.numBricksHit}");
                 ball.SetHitBricksAtSpawnTime(gpv.brickGrid.numBricksHit);
                 ball.GiveVelocity();
                 gpv.balls.Add(ball);
                 blockOf100 = newScoreDiv100;
             }
         }
-
-        //NOTE: not sure we'll need this
-        /*internal void ResetScore()
-        {
-            score = 0;
-        }*/
 
         internal void DrawScore()
         {

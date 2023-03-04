@@ -35,6 +35,7 @@ namespace Breakout
         Renderer renderer;
         //StringRenderer stringRenderer;
         //HighScores highScores;
+        AudioPlayer audioPlayer;
 
         public Breakout_Game()
         {
@@ -52,6 +53,7 @@ namespace Breakout
             renderer = subsystems.renderer;
             //stringRenderer = subsystems.stringRenderer;
             //highScores = subsystems.highScores;
+            audioPlayer = subsystems.audioPlayer;
 
             //Then do other stuff
             graphics.PreferredBackBufferWidth = 1920;
@@ -81,6 +83,8 @@ namespace Breakout
             {
                 states[key].loadContent(this.Content);
             }
+
+            audioPlayer.loadContent(this.Content);
         }
 
         protected override void Update(GameTime gameTime)
@@ -107,7 +111,7 @@ namespace Breakout
             else if(gameStateEnum == GameStateEnum.MainMenu)
                 GraphicsDevice.Clear(Color.Black);
             else if(gameStateEnum == GameStateEnum.HighScores)
-                GraphicsDevice.Clear(Color.Purple);     //MAYBE: Pick another color (or stick with this one, *shrug*)
+                GraphicsDevice.Clear(Color.Purple);
             else if(gameStateEnum == GameStateEnum.About)
                 GraphicsDevice.Clear(new Color(64, 64, 64));  //Dark-ish gray
             else //for states yet to be defined (or used, *cough*Options*cough*)
