@@ -4,12 +4,8 @@ using Breakout.Game_states;
 using Breakout.Subsystems;
 using Breakout.Subsystems.Base;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Input;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace Breakout.Game_objects
 {
@@ -19,9 +15,11 @@ namespace Breakout.Game_objects
         Renderer renderer;
         StringRenderer stringRenderer;
 
+        //flags
         private bool areInitialTimersSet = false;
         private bool doneWithCountdown = false;
 
+        //timer stuff
         private TimeSpan startTimer;
         private TimeSpan numberEndsAt;
         private int numbersRemaining = 3;  //as in "3..2...1...Go!"
@@ -33,33 +31,31 @@ namespace Breakout.Game_objects
             stringRenderer = subsystems.stringRenderer;
         }
 
-        //IN PROGRESS: Countdown.DoCountdown()
         internal void DoCountdown(int durationInMS, GameTime gameTime, GamePlayView gpv)
         {
-            int numberDurationInMS = durationInMS; //500;  //0.5 per number?  TBD  //<--also, superfluous
-
             if (!doneWithCountdown)
             {
                 if (!areInitialTimersSet)
                 {
                     startTimer = gameTime.TotalGameTime;
-                    numberEndsAt = gameTime.TotalGameTime + new System.TimeSpan(0, 0, 0, 0, numberDurationInMS);  
+                    numberEndsAt = gameTime.TotalGameTime + new System.TimeSpan(0, 0, 0, 0, durationInMS);  
                     areInitialTimersSet = true;
                 }
 
+                string str = numbersRemaining > 0 ? $"{numbersRemaining}" : "Go!";
                 if (numbersRemaining >= 0)
                 {
                     if (startTimer + elapsedTime < numberEndsAt)
                     {
-                        int x = (int) stringRenderer.RenderStringHCentered($"{numbersRemaining}", gpv.countdownFont, position);
+                        int x = (int) stringRenderer.RenderStringHCentered(str, gpv.countdownFont, position);
                         int y = position.Y; 
-                        renderer.AddToRenderList(new(RenderType.Text, gpv.countdownFont, $"{numbersRemaining}", new(x, y), Color.Red));
+                        renderer.AddToRenderList(new(RenderType.Text, gpv.countdownFont, str, new(x, y), Color.Red));
                     }
                     else
                     {
                         elapsedTime = TimeSpan.Zero;
                         startTimer = gameTime.TotalGameTime;
-                        numberEndsAt = gameTime.TotalGameTime + new System.TimeSpan(0, 0, 0, 0, numberDurationInMS);
+                        numberEndsAt = gameTime.TotalGameTime + new System.TimeSpan(0, 0, 0, 0, durationInMS);
                         numbersRemaining--;
                     }
                 }
@@ -76,7 +72,6 @@ namespace Breakout.Game_objects
             }
         }
 
-        //IN PROGRESS: Countdown.ResetCountdown()
         internal void ResetCountdown()
         {
             areInitialTimersSet = false;
@@ -87,10 +82,5 @@ namespace Breakout.Game_objects
             numberEndsAt = TimeSpan.Zero;
         }
 
-        //TODO (POSSIBLY; TBD): Countdown.ExtendTimers()
-        internal void ExtendTimers(TimeSpan timeSpan)
-        {
-            //Hey, couldn't we just NOT add to the elapsed time while paused?  TBD
-        }
-    }
+    }//END class Countdown
 }
