@@ -7,14 +7,6 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using System.Diagnostics;
 
-/* "Scoring
-    1 point for each yellow brick
-    2 points for each orange brick
-    3 points for each blue brick
-    5 points for each green brick
-    25 points when a line is cleared
-    Every 100 points the player earns a second ball that automatically starts from the middle of the paddle (no space bar to release it).  This new ball starts at the initial slow speed and increases in speed according to the above pattern.  In other words, each ball has its own speed and own state for speed increases." */
-
 namespace Breakout.Game_objects
 {
     internal class Score : GameObject
@@ -22,7 +14,7 @@ namespace Breakout.Game_objects
         //stuff to stash
         GamePlayView gpv;
         Renderer renderer;
-        ContentManager contentManager;
+        //ContentManager contentManager;
 
         //sprites, fonts
         //SpriteFont inGameScoreFont;
@@ -40,7 +32,7 @@ namespace Breakout.Game_objects
         internal void loadContent()
         {
             //stash this
-            this.contentManager = gpv.contentManager;
+            //this.contentManager = gpv.contentManager;
 
             //inGameScoreFont = contentManager.Load<SpriteFont>("Fonts/ingame-score");
         }

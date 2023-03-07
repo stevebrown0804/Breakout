@@ -44,6 +44,7 @@ namespace Breakout.Game_states
             base.render(gameTime);
         }
 
+        //MAYBE: Change the contents to use StringRenderer
         public override void update(GameTime gameTime)
         {
             GameElement el;

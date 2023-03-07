@@ -9,10 +9,6 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.Design;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Breakout.Game_objects
 {
@@ -87,7 +83,7 @@ namespace Breakout.Game_objects
             height -= intraLineSpacing; //subtract out the last one
             height += bottomSpacing + postHeaderSpacing;
 
-            return height; // 100; //TMP
+            return height;
         }
 
         private void UpdatePosition(Rectangle rect)

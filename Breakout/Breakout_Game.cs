@@ -114,7 +114,7 @@ namespace Breakout
                 GraphicsDevice.Clear(Color.Purple);
             else if(gameStateEnum == GameStateEnum.About)
                 GraphicsDevice.Clear(new Color(64, 64, 64));  //Dark-ish gray
-            else //for states yet to be defined (or used, *cough*Options*cough*)
+            else //for states yet to be defined
                 GraphicsDevice.Clear(Color.CornflowerBlue);
 
             //Do some drawing

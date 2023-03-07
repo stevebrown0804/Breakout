@@ -24,18 +24,17 @@ namespace Breakout.Game_elements
 
     internal enum ElementType
     {
-        unset = 0,   //UNUSED: fill this in with the game's...what we we using this for, again? ElementType?
+        //unset = 0,   //UNUSED: fill this in with the game's...what we we using this for, again? ElementType?
         Wall,
         Brick,
         Paddle,
         Ball,
-        Score   //What else goes in this list?  TBD
+        Score
     }
 
 
     public class GameElement      //All the stuff necessary to make a single Draw() or DrawString() call
     {
-        //Member variables
         internal Vector2 vec;
         internal Texture2D texture;
         internal Rectangle rect;
@@ -45,11 +44,7 @@ namespace Breakout.Game_elements
 
         internal RenderType renderType;
         internal CallType callType;
-        //END Member variables
-
-        //
-        //Constructors
-        //
+ 
         //NOTE TO SELF: For next time, let's have GameElement base class then inherit a UIElement and a TextElement.
         // Then each class can have its own constructor(s).
         // UIElement could then be split up into UIElement_Rect and UIElement_Vector2, if we want.  (Which...maybe.)
@@ -95,11 +90,5 @@ namespace Breakout.Game_elements
             this.color = color;
         }
 
-        //END Constructors
-
-        
-        //Methods
-        // Any methods to write here?  TBD
-        //END Methods
-    }
+    }//END class GameElement
 }

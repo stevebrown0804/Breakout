@@ -1,13 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Breakout.Game_elements;
-using Breakout.Subsystems.Base;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
-
-/* "Player movement is controlled by using the arrow keys." */
+﻿using Microsoft.Xna.Framework.Input;
 
 namespace Breakout.@Subsystems
 {

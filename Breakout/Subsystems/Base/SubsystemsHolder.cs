@@ -22,7 +22,7 @@ namespace Breakout.@Subsystems.Base
         public HighScoresIOManager hsiom;
         public AudioPlayer audioPlayer;
 
-        //can this go in here?  TBD!  //Follow-up: yep!
+        //can this go in here?  //Follow-up: yep!
         public Spacing spacing;
 
         public SubsystemsHolder(GraphicsDeviceManager graphics) 

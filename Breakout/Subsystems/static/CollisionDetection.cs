@@ -43,7 +43,6 @@ namespace Breakout.@Subsystems.@static
 
         public static bool FromTheTop(Rectangle spriteRect, float deltaY, Rectangle objRect)
         {
-            //oldBoxBottom < otherObj.Top && boxBottom >= otherObj.Top;
             if (spriteRect.Y + spriteRect.Height < objRect.Y && spriteRect.Y + deltaY + spriteRect.Height >= objRect.Y)
                 return true;
 

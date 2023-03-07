@@ -11,11 +11,6 @@ using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
 using System.Diagnostics;
 
-/* "High Scores are persisted to the browser's local storage; keep and display up to the top 5 scores." */
-//A browser, you say?
-
-/* "Provide an option in the High Score display to reset the scores; this is for grading purposes." */
-
 namespace Breakout.Game_states
 {
     public class HighScoresView : GameStateView
@@ -34,12 +29,10 @@ namespace Breakout.Game_states
         private const string highScoresResetMsg = "Press 'r' to reset the high scores";
         private const string highScoresEscapeMsg = "Press Escape to return to the main menu";
 
-        bool areHighScoresSetUp = false;  //are we using this atm?  TBD
+        bool areHighScoresSetUp = false;
         //bool areHighScoresLoaded = false;  //true;
 
-        public HighScoresView()
-        {
-        }
+        public HighScoresView() { }
 
         public override void initialize(GraphicsDevice graphicsDevice, GraphicsDeviceManager graphics, SubsystemsHolder subsystems)
         {

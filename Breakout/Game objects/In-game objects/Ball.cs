@@ -145,14 +145,12 @@ namespace Breakout.Game_elements
                                         velocity.Y = -(velocity.Y);
                                     }
 
-                                    
-                                                                                                        //IN PROGRESS!
                                     //Was the brick the first one in the top row this life? Let's find out!
                                     if (i == 0)
                                     {
                                         if (!gpv.paddle.hasOneTopRowBrickBeenHitThisLife)
                                         {
-                                            Debug.Print("Ball.Move says: top row has NOT been hit yet this life. setting accordingly!");
+                                            //Debug.Print("Ball.Move says: top row has NOT been hit yet this life. setting accordingly!");
                                             gpv.paddle.hasOneTopRowBrickBeenHitThisLife = true;
                                             gpv.paddle.isShrinkingToHalf = true;
                                         }

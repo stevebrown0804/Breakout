@@ -12,8 +12,6 @@ namespace Breakout.Game_elements
     //IN PROGRESS: Brick class (Remaining: exploding bricks, ..?)
     internal class Brick : GameObject
     {
-        //"Starting from the bottom, two rows of yellow, two rows of orange, two rows of blue, and two rows of green."
-
         public bool hasBeenHit = false;
         public bool isExploding = false;
         private bool timersSet = false;
