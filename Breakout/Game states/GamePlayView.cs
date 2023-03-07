@@ -209,6 +209,7 @@ namespace Breakout.Game_states
                         //Create a brick and add it
                         brick = new(new Rectangle(x, y, w, h));
                         bg[i].Add(brick);
+                        //brick.initialize(graphicsDevice);                                       //JUST ADDED THIS <--only to delete it.  :(
                         //Then compute the new x (within brickGrid)
                         x += w + spacing.intraBrickVerticalSpacing;
                     }
@@ -217,7 +218,10 @@ namespace Breakout.Game_states
                     y += h + spacing.intraBrickHorizontalSpacing;
             }
 
+
+
             //TEMPORARY!!!!!                            <--EVENTUALLY: Delete this
+            //Marking all bricks except the top row as hasBeenHit
             /*for(int i = 1; i < numRowsOfBricks; i++)
             {
                 for (int j = 0; j < numBricksPerRow; j++)
@@ -664,7 +668,8 @@ namespace Breakout.Game_states
                         if (bg[i][j].isExploding && !pauseMenu.isPaused) //check to see if it's still exploding
                                                                             // and that the game's not paused
                         {
-                            bg[i][j].Explode(gameTime, this, subsystems); 
+                            bg[i][j].Explode(gameTime, this, subsystems);
+                            bg[i][j].DrawExplosion();
                         }
                     }
                 }

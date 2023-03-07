@@ -9,13 +9,14 @@ using Breakout.Game_elements;
 using System.Diagnostics;
 using Breakout.Subsystems.Base;
 using Breakout.Subsystems.misc;
+using System.Drawing;
 
 namespace Breakout.Game_states
 {
     public abstract class GameStateView : IGameState
     {
         protected GraphicsDeviceManager graphics;
-        protected SpriteBatch spriteBatch;
+        internal SpriteBatch spriteBatch;
 
         internal SubsystemsHolder subsystems;
         internal BO_Keyboard keyboard;
@@ -56,12 +57,20 @@ namespace Breakout.Game_states
                 GameElement el = renderList[i];
                 if (el.renderType == RenderType.Text)
                     spriteBatch.DrawString(el.font, el.text, el.vec, el.color);
-                else //el.renderType == UI
+                else if (el.renderType == RenderType.UI)
                 {
                     if (el.callType == CallType.Vector2)
                         spriteBatch.Draw(el.texture, el.vec, el.color);
-                    else //el.callType == Rectangle
+                    else if (el.callType == CallType.Rectangle)
                         spriteBatch.Draw(el.texture, el.rect, el.color);
+                    else if (el.callType == CallType.mixed)
+                        spriteBatch.Draw(el.texture, el.destRect, el.sourceRect, el.color, el.rotation, el.origin, el.effects, el.layerDepth);
+                    else
+                        throw new Exception($"GameStateView.render() says: Unrecognized CallType: {el.callType}");
+                }
+                else
+                {
+                    throw new Exception($"GameStateView.render() says: Unrecognized RenderType: {el.renderType}");
                 }
             }
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Breakout.Game_elements;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -107,7 +108,7 @@ namespace Breakout.Subsystems
         /// <summary>
         /// Renders the active particles
         /// </summary>
-        public void draw(SpriteBatch spriteBatch)
+        public void draw(SpriteBatch spriteBatch, Renderer renderer)
         {
             Rectangle r = new Rectangle(0, 0, m_sarticleSize, m_sarticleSize);
             foreach (Particle p in m_particles.Values)
@@ -124,7 +125,8 @@ namespace Breakout.Subsystems
 
                 r.X = (int)p.position.X;
                 r.Y = (int)p.position.Y;
-                spriteBatch.Draw(
+                //TODO: Migrate this to the renderer systems
+                /*spriteBatch.Draw(
                     texDraw,
                     r,
                     null,
@@ -132,7 +134,10 @@ namespace Breakout.Subsystems
                     p.rotation,
                     new Vector2(texDraw.Width / 2, texDraw.Height / 2),
                     SpriteEffects.None,
-                    0);
+                    0);*/
+
+                GameElement el = new(RenderType.UI, CallType.mixed, texDraw, r, null, Color.White, p.rotation, new Vector2(texDraw.Width / 2, texDraw.Height / 2), SpriteEffects.None, 0);
+                renderer.AddToRenderList(el);
             }
         }
     }

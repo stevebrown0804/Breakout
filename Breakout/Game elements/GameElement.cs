@@ -19,7 +19,8 @@ namespace Breakout.Game_elements
     {
         //unset = 0,
         Vector2,
-        Rectangle
+        Rectangle,
+        mixed
     }
 
     internal enum ElementType
@@ -40,7 +41,15 @@ namespace Breakout.Game_elements
         internal Rectangle rect;
         internal Color color;
         internal SpriteFont font;
-        internal string text = "";        
+        internal string text = "";
+
+        //stuff for the fancy 'mixed' calls:
+        internal Rectangle destRect;
+        internal Rectangle? sourceRect;
+        internal float rotation;
+        internal Vector2 origin;
+        internal SpriteEffects effects;
+        internal float layerDepth;
 
         internal RenderType renderType;
         internal CallType callType;
@@ -64,9 +73,10 @@ namespace Breakout.Game_elements
         {
             if (renderType == RenderType.Text)
                 throw new Exception("RenderType.Text needs to be accompanied by a font, a string, a Vector2 and color");
-
             if (callType == CallType.Rectangle)
                 throw new Exception("CallType.Rectangle needs to be accompanied by a Rectangle parameter (rather than a Vector2).");
+            if (callType == CallType.mixed)
+                throw new Exception("CallType.mixed in a CallType.Vector2 call, yo");
 
             this.renderType = renderType;
             this.callType = callType;
@@ -79,15 +89,37 @@ namespace Breakout.Game_elements
         {
             if (renderType == RenderType.Text)
                 throw new Exception("RenderType.Text needs to be accompanied by a font, a string, a Vector2 and color");
-
             if (callType == CallType.Vector2)
                 throw new Exception("CallType.Vector2 needs to be accompanied by a Vector2 parameter (rather than a Rectangle).");
+            if (callType == CallType.mixed)
+                throw new Exception("CallType.mixed in a CallType.Rectangle call, yo");
 
             this.renderType = renderType;
             this.callType = callType;
             this.texture = texture;
             this.rect = rect;
             this.color = color;
+        }
+
+        internal GameElement(RenderType renderType, CallType callType, Texture2D texture, Rectangle destRect, Rectangle? sourceRect, Color color, float rotation, Vector2 origin, SpriteEffects effects, float layerDepth)
+        {
+            if (renderType == RenderType.Text)
+                throw new Exception("RenderType.Text needs to be accompanied by a font, a string, a Vector2 and color");
+            if (callType == CallType.Vector2)
+                throw new Exception("CallType.Vector2 needs to be accompanied by a Vector2 parameter (rather than a Rectangle).");
+            if (callType == CallType.Rectangle)
+                throw new Exception("CallType.Rectangle needs to be accompanied by a Rectangle parameter (rather than a Vector2).");
+
+            this.renderType = renderType;
+            this.callType = callType;
+            this.texture = texture;
+            this.destRect = destRect;
+            this.sourceRect = sourceRect;
+            this.color = color;
+            this.rotation = rotation;
+            this.origin = origin;
+            this.effects = effects;
+            this.layerDepth = layerDepth;
         }
 
     }//END class GameElement
