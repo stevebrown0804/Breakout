@@ -664,8 +664,7 @@ namespace Breakout.Game_states
                         if (bg[i][j].isExploding && !pauseMenu.isPaused) //check to see if it's still exploding
                                                                             // and that the game's not paused
                         {
-                            bg[i][j].Explode(gameTime, this, renderer); //the 2nd/3rd argument(s) is/are temporary
-                                                                        // ...maybe.  TBD
+                            bg[i][j].Explode(gameTime, this, subsystems); 
                         }
                     }
                 }

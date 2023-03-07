@@ -21,6 +21,7 @@ namespace Breakout.@Subsystems.Base
         public HighScores highScores;
         public HighScoresIOManager hsiom;
         public AudioPlayer audioPlayer;
+        public ProfsRandom profsRandom;
 
         //can this go in here?  //Follow-up: yep!
         public Spacing spacing;
@@ -68,6 +69,7 @@ namespace Breakout.@Subsystems.Base
             //moving on...            
             spacing = new(graphics);
             audioPlayer = new();
+            profsRandom = new();
         }
 
     }//END class SubsystemsHolder

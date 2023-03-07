@@ -1,6 +1,7 @@
 ﻿using Breakout.Game_objects.Base;
 using Breakout.Game_states;
 using Breakout.Subsystems;
+using Breakout.Subsystems.Base;
 using Microsoft.Xna.Framework;
 using System;
 
@@ -12,6 +13,10 @@ namespace Breakout.Game_elements
     //IN PROGRESS: Brick class (Remaining: exploding bricks, ..?)
     internal class Brick : GameObject
     {
+        bool areSubsystemsStashed = false;
+        Renderer renderer;
+        ProfsRandom profsRandom;
+
         public bool hasBeenHit = false;
         public bool isExploding = false;
         private bool timersSet = false;
@@ -21,8 +26,15 @@ namespace Breakout.Game_elements
 
         internal Brick(Rectangle position) : base(position) { }
 
-        public void Explode(GameTime gameTime, GamePlayView gpv, Renderer renderer)
+        public void Explode(GameTime gameTime, GamePlayView gpv, SubsystemsHolder subsystems)
         {
+            if (!areSubsystemsStashed)
+            {
+                renderer = subsystems.renderer;
+                profsRandom = subsystems.profsRandom;
+                areSubsystemsStashed = true;
+            }
+
             if (isExploding)
             {
                 if(!timersSet)
