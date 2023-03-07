@@ -10,7 +10,6 @@ using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-//using System.Drawing;
 
 namespace Breakout.Game_states
 {
@@ -270,7 +269,8 @@ namespace Breakout.Game_states
 
             //and the..pause menu?
             pauseMenu.Initialize(subsystems);
-        }
+
+        }//END initialize()
 
         public override void loadContent(ContentManager contentManager)  
         {
@@ -581,12 +581,6 @@ namespace Breakout.Game_states
 
             /*if (!waitingOnRender)
                 {*/
-
-            //Vector2 stringSize = pauseMenuFont.MeasureString(highScoresHeaderMsg);
-
-            /*el = new GameElement(RenderType.Text, pauseMenuFont, highScoresHeaderMsg, 
-                                    new Vector2(graphics.PreferredBackBufferWidth / 2 - stringSize.X / 2,                                 graphics.PreferredBackBufferHeight / 2 - stringSize.Y), Color.Yellow);
-            renderer.AddToRenderList(el);*/
 
             //Draw each region of the screen as a solid color
             // We'll make sure we get the render-order right, plus it'll be fun to see.  *thumbs up*

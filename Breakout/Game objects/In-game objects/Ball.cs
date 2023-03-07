@@ -165,14 +165,6 @@ namespace Breakout.Game_elements
                                         SpeedUp(gpv.brickGrid.numBricksHit - hitBricksAtSpawnTime);
                                     }
 
-                                    /* "Scoring
-                                        1 point for each yellow brick
-                                        2 points for each orange brick
-                                        3 points for each blue brick
-                                        5 points for each green brick
-                                        25 points when a line is cleared
-                                        Every 100 points the player earns a second ball that automatically starts from the middle of the paddle (no space bar to release it).  This new ball starts at the initial slow speed and increases in speed according to the above pattern.  In other words, each ball has its own speed and own state for speed increases." */
-
                                     //update the score
                                     if (i == 0 || i == 1)
                                         gpv.score.IncreaseScore(5);
@@ -184,13 +176,13 @@ namespace Breakout.Game_elements
                                         gpv.score.IncreaseScore(1);
 
                                     //Check to see if this finishes off a row (and award 20pts if it does)
-                                    bool anyUnhitBricks = false;
+                                    bool anyUnhitBricksInTheRow = false;
                                     for (int k = 0; k < bg[i].Count; k++)
                                     {
                                         if (bg[i][k].hasBeenHit == false)
-                                            anyUnhitBricks = true;
+                                            anyUnhitBricksInTheRow = true;
                                     }
-                                    if (!anyUnhitBricks)
+                                    if (!anyUnhitBricksInTheRow)
                                     {
                                         //Debug.Print($"Row {i} clear; increasing score by 25");
                                         gpv.score.IncreaseScore(25);
