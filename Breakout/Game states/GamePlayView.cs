@@ -12,17 +12,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 //using System.Drawing;
 
-/* "When starting the game, provide a 3, 2, 1 count down timer, showing the numbers 3, 2, 1 in the middle of the screen for the count down.  Following the completion of the countdown, the ball starts from the paddle in a nice direction (nice meaning not too steep of an angle and not straight up)." */
-
-/* "Player starts with three paddles; no way to earn any more.
-    When the player doesn't hit the ball, subtract a paddle from the remaining paddles (or end the game if none left) and provide a 3, 2, 1 count down timer before starting with the new paddle.  Ball starts in the same way as the start of the game." */
-
-/* "Show current score; place at bottom of the gameplay screen.
-    Graphically (not text) show number of paddles left; place in the upper right or lower left of the gameplay screen." */
-
-/* "Background music during the gameplay." */
-
-
 namespace Breakout.Game_states
 {
     enum GamePlayState
@@ -33,6 +22,7 @@ namespace Breakout.Game_states
         Countdown,
         InGame,
         Paused,
+        PaddleShrinkingToNothing,
         ResettingLevel,
         GameOver,
         Cleanup //what else?  TBD
@@ -213,19 +203,30 @@ namespace Breakout.Game_states
             for (int i = 0; i < numRowsOfBricks; i++)
             {
                 //Reset x
-                x = brickGrid.position.X + spacing.intraBrickHorizontalSpacing;
+                    x = brickGrid.position.X + spacing.intraBrickHorizontalSpacing;
 
+                    for (int j = 0; j < numBricksPerRow; j++)
+                    {
+                        //Create a brick and add it
+                        brick = new(new Rectangle(x, y, w, h));
+                        bg[i].Add(brick);
+                        //Then compute the new x (within brickGrid)
+                        x += w + spacing.intraBrickVerticalSpacing;
+                    }
+                
+                    //After each internal for loop, compute the new y (for the next row)
+                    y += h + spacing.intraBrickHorizontalSpacing;
+            }
+
+            //TEMPORARY!!!!!                            <--EVENTUALLY: Delete this
+            /*for(int i = 1; i < numRowsOfBricks; i++)
+            {
                 for (int j = 0; j < numBricksPerRow; j++)
                 {
-                    //Create a brick and add it
-                    brick = new(new Rectangle(x, y, w, h));
-                    bg[i].Add(brick);
-                    //Then compute the new x (within brickGrid)
-                    x += w + spacing.intraBrickVerticalSpacing;
+                    bg[i][j].hasBeenHit = true;
                 }
-                //After each internal for loop, compute the new y (for the next row)
-                y += h + spacing.intraBrickHorizontalSpacing;
-            }
+            }*/
+            //END TEMPORARY!!!
 
             //the 'row regions'
             // NOTE: we'll reuse x,y,w,h.  (h, in particular.  don't change h from line 179!)
@@ -251,6 +252,7 @@ namespace Breakout.Game_states
 
             //and the paddle
             paddle = new(new Rectangle(paddleArea.position.X + paddleArea.position.Width / 2 - spacing.paddleWidth / 2, paddleArea.position.Y, spacing.paddleWidth, spacing.paddleHeight));
+            paddle.originalWidth = spacing.paddleWidth;
 
             //And add ball #1
             Ball ball = new(new Rectangle(paddle.position.X + paddle.position.Width / 2 - spacing.ballWidth / 2, paddle.position.Y - spacing.ballHeight, spacing.ballWidth, spacing.ballHeight));
@@ -530,12 +532,11 @@ namespace Breakout.Game_states
                 else if (gamePlayState == GamePlayState.Paused)
                 {
                     DrawGame(gameTime);
-                    //TODO: extend timers (so that the ending timer gets pushed forward by a cycle)
-                    //      That means: exploding bricks, countdown....what else?
-
-                    // Or we could simply not call the methods that add to elapsedTime; TBD
-
                     pauseMenu.DrawPauseMenu(this);
+                }
+                else if (gamePlayState == GamePlayState.PaddleShrinkingToNothing)
+                {
+                    DrawGame(gameTime);
                 }
                 else if (gamePlayState == GamePlayState.ResettingLevel)
                 {
@@ -598,6 +599,7 @@ namespace Breakout.Game_states
                 renderer.AddToRenderList(el);
             }
 
+            //the walls
             foreach (Wall wall in walls)
             {
                 el = new GameElement(RenderType.UI, CallType.Rectangle, darkgray1x1, wall.position, Color.White);
@@ -705,6 +707,16 @@ namespace Breakout.Game_states
             }//END if(showRegions)
 
             //paddle
+            if (paddle.isShrinkingToNothing)
+            {
+                //Debug.Print("GPV.Update says: paddle isShrinkingToNothing!");                    
+                gamePlayState = paddle.ShrinkToNothing(gameTime);
+            }
+            else if (paddle.isShrinkingToHalf)
+            {
+                //Debug.Print("GPV.Update says: paddle isShrinkingToHalf!");
+                paddle.ShrinkToHalfSize(gameTime);                             
+            }
             el = new GameElement(RenderType.UI, CallType.Rectangle, bluegray1x1, paddle.position, Color.White);
             renderer.AddToRenderList(el);
 
@@ -750,8 +762,10 @@ namespace Breakout.Game_states
         private void ResetLevel(GameTime gameTime)
         {
             //Debug.Print("Inside GamePlayView.ResetLevel()");
+         
+            paddle.ResetPaddle(this);
 
-            //reset the ball's (and paddle's) position & velocity  //<--paddle?  hmmm
+            //reset the ball's position & velocity
             ReinitializeBall();
 
             countdown.ResetCountdown();            

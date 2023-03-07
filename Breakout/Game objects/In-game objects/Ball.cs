@@ -11,12 +11,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 
-/* "The ball speed increases (you can choose the rate) at the following intervals; start over when starting a new paddle:
-    4 bricks removed
-    12 bricks removed
-    36 bricks removed
-    62 bricks removed" */
-
 namespace Breakout.Game_elements
 {
     internal class Ball : GameObject
@@ -72,7 +66,6 @@ namespace Breakout.Game_elements
                 highScores = gpv.subsystems.highScores;
                 hsiom = gpv.subsystems.hsiom;
             }
-
 
             TimeSpan time = gameTime.ElapsedGameTime;
             float deltaX = velocity.X * (float)time.TotalMilliseconds;
@@ -150,7 +143,20 @@ namespace Breakout.Game_elements
                                     {
                                         //Debug.Print($"Collision from the top/bottom: test_position:{test_position}, bg[{i}][{j}] position: {bg[i][j].position}");
                                         velocity.Y = -(velocity.Y);
-                                    }                                   
+                                    }
+
+                                    
+                                                                                                        //IN PROGRESS!
+                                    //Was the brick the first one in the top row this life? Let's find out!
+                                    if (i == 0)
+                                    {
+                                        if (!gpv.paddle.hasOneTopRowBrickBeenHitThisLife)
+                                        {
+                                            Debug.Print("Ball.Move says: top row has NOT been hit yet this life. setting accordingly!");
+                                            gpv.paddle.hasOneTopRowBrickBeenHitThisLife = true;
+                                            gpv.paddle.isShrinkingToHalf = true;
+                                        }
+                                    }
 
                                     //Hide the brick and trigger the explosion animation
                                     bg[i][j].hasBeenHit = true;
@@ -215,10 +221,10 @@ namespace Breakout.Game_elements
                 {
                     //Debug.Print("Ball is out of bounds!");
                     isActive = false;
-                    
-                    bool isAnotherActiveBall = false;
-                    //Check ALL the balls for being out of bounds
+
+                    //Check all the balls for being out of bounds
                     //If a ball is out of bounds but there's another, just set the ball that's out of bounds' isActive to false and continue playing
+                    bool isAnotherActiveBall = false;
                     foreach (Ball ball in gpv.balls)
                     {
                         if (ball.isActive)
@@ -235,7 +241,10 @@ namespace Breakout.Game_elements
                                 gpv.remainingLives.remainingLives--;
 
                                 /*Debug.Print($"Setting gamePlayState to: ResettingLevel; current value is: {gpv.gamePlayState}");*/
-                                gpv.gamePlayState = GamePlayState.ResettingLevel;
+
+                                gpv.paddle.nextState = GamePlayState.ResettingLevel;
+                                gpv.gamePlayState = GamePlayState.PaddleShrinkingToNothing;
+                                gpv.paddle.isShrinkingToNothing = true;
                                 gpv.waitingToReinitializeBalls = true;
                             }
                             else  //No lives left -> game over
@@ -250,7 +259,9 @@ namespace Breakout.Game_elements
                                 }
 
                                 //Then we'll change the gamePlayState
-                                gpv.gamePlayState = GamePlayState.GameOver;
+                                gpv.paddle.nextState = GamePlayState.GameOver;
+                                gpv.paddle.isShrinkingToNothing = true;
+                                gpv.gamePlayState = GamePlayState.PaddleShrinkingToNothing;
                             }
                         }
 
