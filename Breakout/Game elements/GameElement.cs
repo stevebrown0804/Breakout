@@ -1,10 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Breakout.Game_elements
 {
@@ -60,7 +56,7 @@ namespace Breakout.Game_elements
         internal GameElement(RenderType renderType, SpriteFont font, string text, Vector2 vec, Color color)
         {
             if (renderType == RenderType.UI)
-                throw new Exception("RenderType.UI needs to be accompanied by a CallType, a [Vector2/Rectangle] and a Color");
+                throw new Exception("RenderType doesn't match the signature, yo");
 
             this.renderType= renderType;
             this.font = font;
@@ -73,10 +69,8 @@ namespace Breakout.Game_elements
         {
             if (renderType == RenderType.Text)
                 throw new Exception("RenderType.Text needs to be accompanied by a font, a string, a Vector2 and color");
-            if (callType == CallType.Rectangle)
-                throw new Exception("CallType.Rectangle needs to be accompanied by a Rectangle parameter (rather than a Vector2).");
-            if (callType == CallType.mixed)
-                throw new Exception("CallType.mixed in a CallType.Vector2 call, yo");
+            if (callType == CallType.Rectangle || callType == CallType.mixed)
+                throw new Exception("CallType doesn't match the signature, yo");
 
             this.renderType = renderType;
             this.callType = callType;
@@ -89,10 +83,8 @@ namespace Breakout.Game_elements
         {
             if (renderType == RenderType.Text)
                 throw new Exception("RenderType.Text needs to be accompanied by a font, a string, a Vector2 and color");
-            if (callType == CallType.Vector2)
-                throw new Exception("CallType.Vector2 needs to be accompanied by a Vector2 parameter (rather than a Rectangle).");
-            if (callType == CallType.mixed)
-                throw new Exception("CallType.mixed in a CallType.Rectangle call, yo");
+            if (callType == CallType.Vector2 || callType == CallType.mixed)
+                throw new Exception("CallType doesn't match the signature, yo");
 
             this.renderType = renderType;
             this.callType = callType;
@@ -105,10 +97,8 @@ namespace Breakout.Game_elements
         {
             if (renderType == RenderType.Text)
                 throw new Exception("RenderType.Text needs to be accompanied by a font, a string, a Vector2 and color");
-            if (callType == CallType.Vector2)
-                throw new Exception("CallType.Vector2 needs to be accompanied by a Vector2 parameter (rather than a Rectangle).");
-            if (callType == CallType.Rectangle)
-                throw new Exception("CallType.Rectangle needs to be accompanied by a Rectangle parameter (rather than a Vector2).");
+            if (callType == CallType.Vector2 || callType == CallType.Rectangle)
+                throw new Exception("CallType doesn't match the signature, yo");
 
             this.renderType = renderType;
             this.callType = callType;

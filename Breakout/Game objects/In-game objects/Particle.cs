@@ -6,6 +6,13 @@ namespace Breakout.Subsystems
 {
     public class Particle
     {
+        public int name;
+        public Vector2 position;
+        public float rotation;
+        public Vector2 direction;
+        public float speed;
+        public TimeSpan lifetime;
+
         public Particle(int name, Vector2 position, Vector2 direction, float speed, TimeSpan lifetime)
         {
             this.name = name;
@@ -16,12 +23,6 @@ namespace Breakout.Subsystems
 
             this.rotation = 0;
         }
-
-        public int name;
-        public Vector2 position;
-        public float rotation;
-        public Vector2 direction;
-        public float speed;
-        public TimeSpan lifetime;
-    }
+                
+    }//END class Particle
 }

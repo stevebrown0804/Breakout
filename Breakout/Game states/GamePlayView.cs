@@ -202,25 +202,23 @@ namespace Breakout.Game_states
             for (int i = 0; i < numRowsOfBricks; i++)
             {
                 //Reset x
-                    x = brickGrid.position.X + spacing.intraBrickHorizontalSpacing;
+                x = brickGrid.position.X + spacing.intraBrickHorizontalSpacing;
 
-                    for (int j = 0; j < numBricksPerRow; j++)
-                    {
-                        //Create a brick and add it
-                        brick = new(new Rectangle(x, y, w, h));
-                        bg[i].Add(brick);
-                        //brick.initialize(graphicsDevice);                                       //JUST ADDED THIS <--only to delete it.  :(
-                        //Then compute the new x (within brickGrid)
-                        x += w + spacing.intraBrickVerticalSpacing;
-                    }
+                for (int j = 0; j < numBricksPerRow; j++)
+                {
+                    //Create a brick and add it
+                    brick = new(new Rectangle(x, y, w, h));
+                    bg[i].Add(brick);
+                       
+                    //Then compute the new x (within brickGrid)
+                    x += w + spacing.intraBrickVerticalSpacing;
+                }
                 
-                    //After each internal for loop, compute the new y (for the next row)
-                    y += h + spacing.intraBrickHorizontalSpacing;
+                //After each internal for loop, compute the new y (for the next row)
+                y += h + spacing.intraBrickHorizontalSpacing;
             }
 
-
-
-            //TEMPORARY!!!!!                            <--EVENTUALLY: Delete this
+            //TEMPORARY!!!!!                                                            <--EVENTUALLY: Delete this
             //Marking all bricks except the top row as hasBeenHit
             /*for(int i = 1; i < numRowsOfBricks; i++)
             {
@@ -629,6 +627,34 @@ namespace Breakout.Game_states
                 renderer.AddToRenderList(el);
             }//END if(showRegions)
 
+            //TRYING SOMETHING: Moving the paddle/lball render to before the bricks (so it's before the particle effects)
+            //paddle
+            if (paddle.isShrinkingToNothing)
+            {
+                //Debug.Print("GPV.Update says: paddle isShrinkingToNothing!");                    
+                gamePlayState = paddle.ShrinkToNothing(gameTime);
+            }
+            else if (paddle.isShrinkingToHalf)
+            {
+                //Debug.Print("GPV.Update says: paddle isShrinkingToHalf!");
+                paddle.ShrinkToHalfSize(gameTime);
+            }
+            el = new GameElement(RenderType.UI, CallType.Rectangle, bluegray1x1, paddle.position, Color.White);
+            renderer.AddToRenderList(el);
+
+            //ball
+            for (int i = 0; i < balls.Count; i++)
+            {
+                if (!pauseMenu.isPaused)
+                    balls[i].Move(gameTime, this);
+
+                if (balls[i].isActive)
+                {
+                    el = new GameElement(RenderType.UI, CallType.Rectangle, ball50x50, balls[i].position, Color.White);
+                    renderer.AddToRenderList(el);
+                }
+            }
+
             //Add the bricks from brickGrid
             var bg = brickGrid.brickGrid;
             for (int i = 0; i < numRowsOfBricks; i++)
@@ -703,33 +729,6 @@ namespace Breakout.Game_states
                 renderer.AddToRenderList(el);
 
             }//END if(showRegions)
-
-            //paddle
-            if (paddle.isShrinkingToNothing)
-            {
-                //Debug.Print("GPV.Update says: paddle isShrinkingToNothing!");                    
-                gamePlayState = paddle.ShrinkToNothing(gameTime);
-            }
-            else if (paddle.isShrinkingToHalf)
-            {
-                //Debug.Print("GPV.Update says: paddle isShrinkingToHalf!");
-                paddle.ShrinkToHalfSize(gameTime);                             
-            }
-            el = new GameElement(RenderType.UI, CallType.Rectangle, bluegray1x1, paddle.position, Color.White);
-            renderer.AddToRenderList(el);
-
-            //ball
-            for (int i = 0; i < balls.Count; i++)
-            {
-                if (!pauseMenu.isPaused)
-                    balls[i].Move(gameTime, this);
-
-                if (balls[i].isActive)
-                {
-                    el = new GameElement(RenderType.UI, CallType.Rectangle, ball50x50, balls[i].position, Color.White);
-                    renderer.AddToRenderList(el);
-                }
-            }
 
             //countdown
             if (showRegions && showCountdownRegion)

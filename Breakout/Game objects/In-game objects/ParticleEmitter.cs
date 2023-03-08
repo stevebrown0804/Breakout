@@ -13,12 +13,13 @@ namespace Breakout.Subsystems
         private Dictionary<int, Particle> m_particles = new Dictionary<int, Particle>();
         private Texture2D m_texSmoke;
         private Texture2D m_texFire;
+        private Texture2D texDirt01;
         private ProfsRandom m_random = new ProfsRandom();
 
         private TimeSpan m_rate;
         private int m_sourceX;
         private int m_sourceY;
-        private int m_sarticleSize;
+        private int m_particleSize;
         private int m_speed;
         private TimeSpan m_lifetime;
         private TimeSpan m_switchover;
@@ -30,15 +31,16 @@ namespace Breakout.Subsystems
             m_rate = rate;
             m_sourceX = sourceX;
             m_sourceY = sourceY;
-            m_sarticleSize = size;
+            m_particleSize = size;
             m_speed = speed;
             m_lifetime = lifetime;
             m_switchover = wwitchover;
 
             m_texSmoke = content.Load<Texture2D>("Images/smoke");
-            m_texFire = content.Load<Texture2D>("Images/fire");
+            m_texFire = content.Load<Texture2D>("Images/fire"); 
+            texDirt01 = content.Load<Texture2D>("Images/dirt_01");
 
-            this.Gravity = new Vector2(0, 0);
+            this.Gravity = new Vector2(0, 0.075f); //0.1f);   //ONGOING: Let's try screwing around with this (ParticleEmitter's Gravity property)
         }
         public int ParticleCount
         {
@@ -82,7 +84,6 @@ namespace Breakout.Subsystems
                 p.lifetime -= gameTime.ElapsedGameTime;
                 if (p.lifetime < TimeSpan.Zero)
                 {
-                    //
                     // Add to the remove list
                     removeMe.Add(p.name);
                 }
@@ -91,7 +92,7 @@ namespace Breakout.Subsystems
                 p.position += (p.direction * p.speed);
                 //
                 // Have it rotate proportional to its speed
-                p.rotation += p.speed / 50.0f;
+                p.rotation += p.speed / 1000f; //0.5f; //50.0f;                      //Let's try changing this value *shrug*
                 //
                 // Apply some gravity
                 p.direction += this.Gravity;
@@ -103,14 +104,16 @@ namespace Breakout.Subsystems
             {
                 m_particles.Remove(Key);
             }
-        }
+
+        }//END update()
 
         /// <summary>
         /// Renders the active particles
         /// </summary>
         public void draw(SpriteBatch spriteBatch, Renderer renderer)
         {
-            Rectangle r = new Rectangle(0, 0, m_sarticleSize, m_sarticleSize);
+            GameElement el;
+            Rectangle r = new Rectangle(0, 0, m_particleSize, m_particleSize);
             foreach (Particle p in m_particles.Values)
             {
                 Texture2D texDraw;
@@ -125,20 +128,13 @@ namespace Breakout.Subsystems
 
                 r.X = (int)p.position.X;
                 r.Y = (int)p.position.Y;
-                //TODO: Migrate this to the renderer systems
-                /*spriteBatch.Draw(
-                    texDraw,
-                    r,
-                    null,
-                    Color.White,
-                    p.rotation,
-                    new Vector2(texDraw.Width / 2, texDraw.Height / 2),
-                    SpriteEffects.None,
-                    0);*/
 
-                GameElement el = new(RenderType.UI, CallType.mixed, texDraw, r, null, Color.White, p.rotation, new Vector2(texDraw.Width / 2, texDraw.Height / 2), SpriteEffects.None, 0);
+                //Queue it up for rendering
+                el = new(RenderType.UI, CallType.mixed, texDraw, r, null, Color.White, p.rotation, new Vector2(texDraw.Width / 2, texDraw.Height / 2), SpriteEffects.None, 0);
                 renderer.AddToRenderList(el);
             }
-        }
-    }
+
+        }//END draw()
+
+    }//END class ParticleEmitter
 }

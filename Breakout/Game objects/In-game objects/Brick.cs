@@ -34,7 +34,7 @@ namespace Breakout.Game_elements
         private bool timersSet = false;
         private TimeSpan explosionEndsAt;
         private TimeSpan startTimer;
-        private TimeSpan elapsedTime = TimeSpan.FromSeconds(0);
+        private TimeSpan elapsedTime = TimeSpan.Zero;
 
         internal Brick(Rectangle position) : base(position) { }
 
@@ -56,29 +56,29 @@ namespace Breakout.Game_elements
             {
                 int middleX = position.X + position.Width / 2;
                 int middleY = position.Y + position.Height / 2;
-                particleEmitter1 = new ParticleEmitter(
-                    gpv.contentManager,
-                    new TimeSpan(0, 0, 0, 0, 5),
-                    middleX, middleY,
-                    20,
-                    2,
-                    new TimeSpan(0, 0, 4),
-                    new TimeSpan(0, 0, 0, 0, 3000));
-                particleEmitter2 = new ParticleEmitter(
-                    gpv.contentManager,
-                    new TimeSpan(0, 0, 0, 0, 25),
-                    middleX, middleY,
-                    40,
-                    1,
-                    new TimeSpan(0, 0, 6),
-                    new TimeSpan(0, 0, 0, 0, 5000));
                 particleEmitter3 = new ParticleEmitter(
                     gpv.contentManager,
-                    new TimeSpan(0, 0, 0, 0, 10),
+                    new TimeSpan(0, 0, 0, 0, 35), //new TimeSpan(0, 0, 0, 0, 5),                //rate
+                    middleX, middleY,
+                    2 * position.Height, //10, //position.Width / 8, //20,                      //size
+                    1, //2,                                                                     //speed
+                    new TimeSpan(0, 0, 0, 0, 450), //new TimeSpan(0, 0, 4),                     //lifetime
+                    new TimeSpan(0, 0, 0, 0, 425)); //new TimeSpan(0, 0, 0, 0, 3000));          //switchover
+                particleEmitter2 = new ParticleEmitter(
+                    gpv.contentManager,
+                    new TimeSpan(0, 0, 0, 0, 10), // new TimeSpan(0, 0, 0, 0, 25),
+                    middleX, middleY,
+                    100,
+                    3,
+                    new TimeSpan(0, 0, 0, 0, 100),
+                    new TimeSpan(0, 0, 0, 0, 50)); //new TimeSpan(0, 0, 0, 0, 5000));
+                particleEmitter1 = new ParticleEmitter(
+                    gpv.contentManager,
+                    new TimeSpan(0, 0, 0, 0, 1),
                     middleX, middleY,
                     8,
-                    4,
-                    new TimeSpan(0, 0, 4),
+                    10,
+                    new TimeSpan(0, 0, 10),
                     new TimeSpan(0, 0, 0));
                 isParticleEmitterCreated = true;
             }
@@ -88,22 +88,15 @@ namespace Breakout.Game_elements
                 if(!timersSet)
                 {
                     startTimer = gameTime.TotalGameTime;
-                    explosionEndsAt = gameTime.TotalGameTime + new System.TimeSpan(0, 0, 3);  //3 second explosion
+                    explosionEndsAt = gameTime.TotalGameTime + new System.TimeSpan(0, 0, 0, 0, 750);  //explosion duration
                     timersSet = true;
                 }
 
                 if(startTimer + elapsedTime < explosionEndsAt)
                 {
-                    //TODO: do the particle animation for an exploding brick
                     particleEmitter1.update(gameTime);
                     particleEmitter2.update(gameTime);
                     particleEmitter3.update(gameTime);
-
-                    //DrawExplosion(/*spriteBatch*/);     //IN PROGRESS
-                    
-                    //TMP (Adding a white brick to the render list for 3sec)
-                    //renderer.AddToRenderList(new(RenderType.UI, CallType.Rectangle, gpv.white1x1, position, Color.White));
-                    //END TMP
                 }
                 else
                 {
@@ -117,12 +110,10 @@ namespace Breakout.Game_elements
         }//END Explode()
 
         public void DrawExplosion(/*SpriteBatch spriteBatch*/)
-        {
-            spriteBatch.Begin();                    //NECESSARY? TBD!
+        {            
             particleEmitter1.draw(spriteBatch, renderer);
             particleEmitter2.draw(spriteBatch, renderer);
             particleEmitter3.draw(spriteBatch, renderer);
-            spriteBatch.End();
         }
 
     }//END class Brick
