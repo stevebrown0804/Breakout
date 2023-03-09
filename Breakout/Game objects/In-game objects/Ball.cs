@@ -28,10 +28,10 @@ namespace Breakout.Game_elements
         {
             //LATER: Keep messing with these values (in Ball.Initialize()) later, as needed
             speedupFactor = new Dictionary<int, float> {
-                {4, 1.15f },
-                {12, 1.25f },
-                {36, 1.35f },
-                {62, 1.45f }
+                {4, 1.5f },
+                {12, 1.15f },
+                {36, 1.2f },
+                {62, 1.25f }
             };
 
             velocity = new Vector2(0, 0);  //Initially at rest -> moving with the paddle
@@ -39,10 +39,10 @@ namespace Breakout.Game_elements
 
         //LATER: keep messing around with these values (in Ball.GiveVelocity()), as needed
         public void GiveVelocity()
-                {            
-                    velocity.X = 0.3f; //45 degrees to the right, I think. <--positive is right, negative is left
-                    velocity.Y = -0.3f; 
-                }
+        {            
+            velocity.X = 0.3f; //45 degrees to the right, I think. <--positive is right, negative is left
+            velocity.Y = -0.3f; 
+        }
 
         internal bool IsAtRest()
         {
@@ -187,6 +187,26 @@ namespace Breakout.Game_elements
                                         //Debug.Print($"Row {i} clear; increasing score by 25");
                                         gpv.score.IncreaseScore(25);
                                     }
+
+                                    //IN PROGRESS: check to see if all bricks have been hit; if so, trigger a 'you win' screen          //IN PROGRESS
+                                    bool anyUnHitBricksAtAll = false;
+                                    for(int k = 0; k < bg.Count; k++)
+                                    {
+                                        for (int l = 0; l < bg[i].Count; l++)
+                                        {
+                                            if (!bg[k][l].hasBeenHit)
+                                                anyUnHitBricksAtAll = true;
+                                        }
+                                    }
+                                    if (!anyUnHitBricksAtAll)
+                                    {
+                                        //TODO: end the game, show the 'you win' screen, ...what else?  change to a new game state, I'd imagine
+                                        Debug.Print("You won! \\(^ ^ )/");
+
+                                    }
+
+
+
 
                                 }//END if (CollisionDetection.DoTheyIntersect(bg[i][j].position, test_position))
 

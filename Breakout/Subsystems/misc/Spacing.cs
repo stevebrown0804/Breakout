@@ -10,9 +10,7 @@ namespace Breakout.Subsystems.misc
 {
     public class Spacing
     {
-        //ONGOING: Figure out the spacing of the various regions of the game screen
-        // ...and give stuff (public) variable names.  *thumbs up*
-
+        //Some of these are unused! Which ones? Who knows! \(^ ^ )/
         public int topAreaHeight;
         public int middleAreaHeight;
         public int paddleAreaHeight;

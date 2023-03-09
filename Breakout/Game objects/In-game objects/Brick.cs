@@ -7,12 +7,8 @@ using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Reflection.Metadata;
 
-/* "Every time a brick is hit, a tasteful explosion of particles occurs.  The explosion happens by having particles take up the same space (surface area) as the brick and then explode out based upon their position relative to the center.  Alternatively, the explosion could be the particles falling down, with a stickiness based upon their relative position on the brick (higher in the brick, the stickier).
-"*/
-
 namespace Breakout.Game_elements
 {
-    //IN PROGRESS: Brick class (Remaining: exploding bricks, ..?)
     internal class Brick : GameObject
     {
         bool areSubsystemsStashed = false;
@@ -101,7 +97,6 @@ namespace Breakout.Game_elements
                 else
                 {
                     isExploding = false;
-                    //Debug.Print("Brick.Explode says: isExploding has been set to false (after 3sec elapsed)");
                 }
                 elapsedTime += gameTime.ElapsedGameTime;
 
@@ -109,7 +104,7 @@ namespace Breakout.Game_elements
 
         }//END Explode()
 
-        public void DrawExplosion(/*SpriteBatch spriteBatch*/)
+        public void DrawExplosion()
         {            
             particleEmitter1.draw(spriteBatch, renderer);
             particleEmitter2.draw(spriteBatch, renderer);

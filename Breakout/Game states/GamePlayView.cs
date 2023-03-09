@@ -220,17 +220,27 @@ namespace Breakout.Game_states
 
             //TEMPORARY!!!!!                                                            <--EVENTUALLY: Delete this
             //Marking all bricks except the top row as hasBeenHit
-            /*for(int i = 1; i < numRowsOfBricks; i++)
+            for (int i = 0; i < numRowsOfBricks; i++)
             {
-                for (int j = 0; j < numBricksPerRow; j++)
+                if(i == 0)
                 {
-                    bg[i][j].hasBeenHit = true;
+                    for (int j = 0; j < numBricksPerRow - 1; j++)
+                    {
+                        bg[0][j].hasBeenHit = true;
+                    }
                 }
-            }*/
+                else
+                {
+                    for (int j = 0; j < numBricksPerRow; j++)
+                    {
+                        bg[i][j].hasBeenHit = true;
+                    }
+                }
+            }
             //END TEMPORARY!!!
 
             //the 'row regions'
-            // NOTE: we'll reuse x,y,w,h.  (h, in particular.  don't change h from line 179!)
+            // NOTE: we'll reuse x,y,w,h.  (h, in particular.  don't change h from line...w.e it is)
             for (int i = 0; i < numRowsOfBricks; i++)
             {
                 x = brickGrid.position.X; // + spacing.intraBrickHorizontalSpacing;
@@ -481,7 +491,7 @@ namespace Breakout.Game_states
         }
 
         //NOTE: GamePlayView.render() contains a line that skips base.render() on certain states
-        //ONGOING: Check any new GamePlayStates to see if it should be added to the conditional
+        //NOTE: Check any new GamePlayStates to see if it should be added to the conditional
         public override void render(GameTime gameTime)
         {
             //Debug.Print("Now in GamePlayView.render()");
