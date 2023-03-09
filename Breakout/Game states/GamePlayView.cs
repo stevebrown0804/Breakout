@@ -24,6 +24,7 @@ namespace Breakout.Game_states
         PaddleShrinkingToNothing,
         ResettingLevel,
         GameOver,
+        YouWin,
         Cleanup //what else?  TBD
     }
 
@@ -220,7 +221,7 @@ namespace Breakout.Game_states
 
             //TEMPORARY!!!!!                                                            <--EVENTUALLY: Delete this
             //Marking all bricks except the top row as hasBeenHit
-            for (int i = 0; i < numRowsOfBricks; i++)
+            /*for (int i = 0; i < numRowsOfBricks; i++)
             {
                 if(i == 0)
                 {
@@ -236,7 +237,7 @@ namespace Breakout.Game_states
                         bg[i][j].hasBeenHit = true;
                     }
                 }
-            }
+            }*/
             //END TEMPORARY!!!
 
             //the 'row regions'
@@ -334,7 +335,7 @@ namespace Breakout.Game_states
                     //MAYBE: Remove states from this OR as necessary
                     if (/*gamePlayState == GamePlayState.Initializing ||*/ gamePlayState == GamePlayState.Countdown
                     || gamePlayState == GamePlayState.InGame /*|| gamePlayState == GamePlayState.Paused */
-                    || gamePlayState == GamePlayState.GameOver /*|| gamePlayState == GamePlayState.ResettingLevel*/ /*|| GamePlayState.Cleanup*/)
+                    || gamePlayState == GamePlayState.GameOver || gamePlayState == GamePlayState.YouWin /*|| gamePlayState == GamePlayState.ResettingLevel*/ /*|| GamePlayState.Cleanup*/)
                     {
                         if (keyboard.IsKeyPressed(Keys.S))  //toggle showRegions
                         {
@@ -482,6 +483,16 @@ namespace Breakout.Game_states
                             return GameStateEnum.MainMenu;
                         }
                     }
+                    else if (gamePlayState == GamePlayState.YouWin)
+                    {
+                        if (keyboard.IsKeyPressed(Keys.Escape))
+                        {
+                            gamePlayState = GamePlayState.Cleanup;
+                            audioPlayer.StopBGM();
+                            isBGMPlaying = false;
+                            return GameStateEnum.MainMenu;
+                        }
+                    }
 
                 }//END if(!waitingOnRender)
 
@@ -508,8 +519,8 @@ namespace Breakout.Game_states
 
             if (!isBGMPlaying && gamePlayState != GamePlayState.Cleanup)
             {
-                //TODO: uncomment this before submitting
-                //audioPlayer.PlayBGM();        
+                //TODO: uncomment the following line before submitting
+                audioPlayer.PlayBGM();        
                 isBGMPlaying = true;
             } 
 
@@ -532,7 +543,7 @@ namespace Breakout.Game_states
                 {
                     DrawGame(gameTime);
 
-                    //is the if() necessary?  Not sure; TBD
+                    //is the if() necessary?  Not sure; TBD (maybe)
                     if (!pauseMenu.isPaused)
                         countdown.DoCountdown(1000, gameTime, this);
 
@@ -558,7 +569,13 @@ namespace Breakout.Game_states
                 else if (gamePlayState == GamePlayState.GameOver)
                 {
                     DrawGame(gameTime);
-                    DrawGameOver(gameTime);
+                    DrawEndGame(gameTime, EndGameType.GameOver);
+                }
+                else if (gamePlayState == GamePlayState.YouWin)
+                {
+                    balls.Clear();
+                    DrawGame(gameTime);
+                    DrawEndGame(gameTime, EndGameType.YouWin);
                 }
                 else if (gamePlayState == GamePlayState.Cleanup)
                 {
@@ -789,13 +806,24 @@ namespace Breakout.Game_states
             score.loadContent();
         }
 
-        private void DrawGameOver(GameTime gameTime)
+        enum EndGameType
         {
-            string str = "Game Over";
+            GameOver,
+            YouWin
+        }
+
+        private void DrawEndGame(GameTime gameTime, EndGameType gameOverType)
+        {
+            string str;
+            if (gameOverType == EndGameType.GameOver)
+                str = "Game Over";
+            else if (gameOverType == EndGameType.YouWin)
+                str = "You Won!";
+            else
+                throw new Exception("GamePlayView.DrawEndGame says: Unrecognized EndGameType");
             string str2 = "Press Escape to return to the main menu";
 
-            //Debug.Print("GamePlayView.DrawGameOver() says: TODO!");
-            (float bottom, Vector2 vec) = stringRenderer.RenderStringHVCentered(str, gameOverFont, interiorToWalls.position);
+             (float bottom, Vector2 vec) = stringRenderer.RenderStringHVCentered(str, gameOverFont, interiorToWalls.position);
             vec.Y -= 150;   //<--manually adding an offset, for the sake of appearance
             GameElement el = new(RenderType.Text, gameOverFont, str, vec, Color.Red);
 

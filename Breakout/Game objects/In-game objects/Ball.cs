@@ -28,7 +28,7 @@ namespace Breakout.Game_elements
         {
             //LATER: Keep messing with these values (in Ball.Initialize()) later, as needed
             speedupFactor = new Dictionary<int, float> {
-                {4, 1.5f },
+                {4, 1.3f },
                 {12, 1.15f },
                 {36, 1.2f },
                 {62, 1.25f }
@@ -55,7 +55,6 @@ namespace Breakout.Game_elements
             hitBricksAtSpawnTime = hitBricks;
         }
 
-        //IN PROGRESS: Ball.Move() (Remaining: 'you win' screen)
         internal void Move(GameTime gameTime, GamePlayView gpv)
         {
             if (!isActive)  //we'll bail out quickly if the ball is inactive
@@ -104,9 +103,6 @@ namespace Breakout.Game_elements
                 if(CollisionDetection.FromTheTop(position, deltaY, gpv.paddle.position))
                     velocity.Y = -(velocity.Y);
             }
-
-            //TODO: Add a 'you win' screen when the last brick has been destroyed
-            //MAYBE: Adapt the game over screen to this
 
             //...and the bricks
             if (CollisionDetection.DoTheyIntersect(gpv.brickGrid.position, test_position))
@@ -188,7 +184,7 @@ namespace Breakout.Game_elements
                                         gpv.score.IncreaseScore(25);
                                     }
 
-                                    //IN PROGRESS: check to see if all bricks have been hit; if so, trigger a 'you win' screen          //IN PROGRESS
+                                    //Check to see if all bricks have been hit; if so, trigger a 'you win' screen
                                     bool anyUnHitBricksAtAll = false;
                                     for(int k = 0; k < bg.Count; k++)
                                     {
@@ -199,14 +195,17 @@ namespace Breakout.Game_elements
                                         }
                                     }
                                     if (!anyUnHitBricksAtAll)
-                                    {
-                                        //TODO: end the game, show the 'you win' screen, ...what else?  change to a new game state, I'd imagine
-                                        Debug.Print("You won! \\(^ ^ )/");
+                                    {                                        
+                                        //Debug.Print("You won! \\(^ ^ )/");
 
+                                        if (highScores.AddSortChop(new HighScore(gpv.score.score), 5))
+                                        {
+                                            hsiom.SaveHighScores(gpv.highScores);
+                                            hsiom.WaitToFinish();
+                                        }
+
+                                        gpv.gamePlayState = GamePlayState.YouWin;
                                     }
-
-
-
 
                                 }//END if (CollisionDetection.DoTheyIntersect(bg[i][j].position, test_position))
 
@@ -241,7 +240,7 @@ namespace Breakout.Game_elements
                             isAnotherActiveBall = true;
                     }
 
-                    if (gpv.gamePlayState != GamePlayState.ResettingLevel && gpv.gamePlayState != GamePlayState.GameOver)
+                    if (gpv.gamePlayState != GamePlayState.ResettingLevel && gpv.gamePlayState != GamePlayState.GameOver && gpv.gamePlayState != GamePlayState.YouWin)
                     {
                         if (!isAnotherActiveBall)
                         {
