@@ -13,11 +13,11 @@
 
 #---------------------------------- Content ---------------------------------#
 
-#begin BGM/Powerful-Trap-.mp3
+#begin BGM/BGM.mp3
 /importer:Mp3Importer
 /processor:SongProcessor
 /processorParam:Quality=Best
-/build:BGM/Powerful-Trap-.mp3;BGM/BGM.mp3
+/build:BGM/BGM.mp3
 
 #begin Fonts/about-screen-smaller.spritefont
 /importer:FontDescriptionImporter
